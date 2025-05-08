@@ -1,10 +1,11 @@
 package View;
 
+import Model.Block;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Objects;
-import Model.Block;
 
 public class SugarPanel extends JPanel {
 
