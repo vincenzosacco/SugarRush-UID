@@ -4,10 +4,12 @@ import Model.Block;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Objects;
 
-public class SugarPanel extends JPanel {
+public class SugarPanel extends JPanel implements ActionListener{
 
     int rowCount=21;
     int columnCount=19;
@@ -25,6 +27,8 @@ public class SugarPanel extends JPanel {
     Block sugar;
     final HashSet<Block> spaces;
 
+    Timer gameloop;
+
     public SugarPanel() {
         setPreferredSize(new Dimension(boardWidth, boardHeight));
         Color skyblue= new Color(0, 188, 220);
@@ -39,7 +43,10 @@ public class SugarPanel extends JPanel {
 
         MapParser mapParser = new MapParser(this);
 
-        mapParser.loadMap(MapParser.MAP_1); // at the moment keep it here
+        mapParser.loadMap(MapParser.MAP_1);
+
+        gameloop = new Timer(50,this);// 20 fps
+        gameloop.start();
     }
 
     public void paintComponent(Graphics g){
@@ -57,5 +64,10 @@ public class SugarPanel extends JPanel {
         for (Block space : spaces){
             g.fillRect(space.x,space.y,space.width,space.height);
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
     }
 }
