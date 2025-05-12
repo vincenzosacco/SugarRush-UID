@@ -1,7 +1,7 @@
 package View;
 
 import Controller.SugarController;
-import Model.Game;
+import Model.game.Game;
 
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
@@ -12,7 +12,7 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Image;
 
-import static config.View.*;
+import static Config.View.*;
 
 
 /**

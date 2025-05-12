@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Game;
+import Model.game.Game;
 import View.SugarPanel;
 
 import java.awt.event.KeyAdapter;

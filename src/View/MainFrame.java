@@ -2,13 +2,13 @@ package View;
 
 
 import Controller.SugarController;
-import Model.Game;
+import Model.game.Game;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import static config.View.BOARD_HEIGHT;
-import static config.View.BOARD_WIDTH;
+import static Config.View.BOARD_HEIGHT;
+import static Config.View.BOARD_WIDTH;
 
 /**
  *

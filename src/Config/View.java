@@ -1,7 +1,7 @@
-package config;
+package Config;
 
-import static config.Model.COL_COUNT;
-import static config.Model.ROW_COUNT;
+import static Config.Model.COL_COUNT;
+import static Config.Model.ROW_COUNT;
 
 /**
  * All common constants in the application

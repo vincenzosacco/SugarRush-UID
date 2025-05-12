@@ -1,5 +1,6 @@
-package Model;
+package Model.game;
 
+import Model.IModel;
 import utils.Cell;
 
 import java.util.List;
