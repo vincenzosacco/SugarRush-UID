@@ -6,6 +6,9 @@ import View.SugarPanel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import static Model.game.Constants.Direction.*;
+
+
 // MOVEMENT:
 //
 
@@ -29,10 +32,10 @@ public class SugarController extends KeyAdapter implements IController{
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()){
-            case KeyEvent.VK_UP -> this.model.moveCreature(Game.UP);
-            case KeyEvent.VK_DOWN -> this.model.moveCreature(Game.DOWN);
-            case KeyEvent.VK_LEFT -> this.model.moveCreature(Game.LEFT);
-            case KeyEvent.VK_RIGHT -> this.model.moveCreature(Game.RIGHT);
+            case KeyEvent.VK_UP -> this.model.moveCreature(UP);
+            case KeyEvent.VK_DOWN -> this.model.moveCreature(DOWN);
+            case KeyEvent.VK_LEFT -> this.model.moveCreature(LEFT);
+            case KeyEvent.VK_RIGHT -> this.model.moveCreature(RIGHT);
         }
         view.repaint();
     }

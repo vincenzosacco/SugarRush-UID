@@ -1,5 +1,7 @@
 package Model.game;
 
+import Model.game.Constants.Block;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,28 +11,31 @@ import java.util.ArrayList;
 import static Config.Model.COL_COUNT;
 import static Config.Model.ROW_COUNT;
 
-/**
- * This class act as parse
- */
-public class MapParser {
-    private final Game game;
 
+/**
+ * <p>
+ * The {@code MapParser} class provides utility methods to parse map files and populate the game board with blocks.
+ * This class is designed to read map configurations from resource files, parse them into a structured format,
+ * and update the game map with appropriate elements, such as walls, spaces, the creature, and sugar pieces.
+ * </p>
+ * <p>
+ * It supports reading textual representations of maps stored in `.txt` files and translating each character
+ * into the corresponding {@code Block} element, which can then be used in the game.
+ * </p>
+ * @apiNote This class is intended for internal use within the game's infrastructure to load and initialize map data.
+ */
+class MapParser {
     final static String MAP_1 = "/map1.txt";
     final static String MAP_2 = "/map2.txt";
-
-
-    MapParser(Game game) {
-        this.game = game;
-    }
 
     /**
      * Read a .txt file a convert each line to a String element of the returned Array.
      * @return a String[] containing lines
      */
-    private String[] readMapResource(String mapResourcePath) {
+    private static String[] readMapResource(String mapResourcePath) {
         try {
             // Get the resource as a stream
-            InputStream inputStream = getClass().getResourceAsStream(mapResourcePath);
+            InputStream inputStream = MapParser.class.getResourceAsStream(mapResourcePath);
             if (inputStream == null) {
                 throw new IllegalArgumentException("Resource not found: " + mapResourcePath);
             }
@@ -54,8 +59,7 @@ public class MapParser {
      * @throws IllegalArgumentException if the map file contains invalid characters or is malformed
      * @apiNote
      */
-    public void loadMap(String map){
-        GameMatrix mat = game.gameMat;
+    static void loadMap(String map, GameMatrix mat ){
         mat.clear();
 
         String[] tileMap = readMapResource(map);
@@ -69,13 +73,13 @@ public class MapParser {
 
                 // add the corresponding block to mat[r]
                 switch (tileMapChar) {
-                    case 'x'-> mat.get(row).add(Game.Block.WALL);
-                    case 'c' -> {
-                        mat.get(row).add(Game.Block.CREATURE);
-                        game.creatureCell.setCoord(row,col);
+                    case 'x'-> mat.get(row).add(Block.WALL);
+                    case 'c' ->{
+                        mat.get(row).add(Block.CREATURE);
+                        mat.creatureCell.setCoord(row, col);
                     }
-                    case 's'-> mat.get(row).add(Game.Block.SUGAR);
-                    case ' '-> mat.get(row).add(Game.Block.SPACE);
+                    case 's'-> mat.get(row).add(Block.SUGAR);
+                    case ' '-> mat.get(row).add(Block.SPACE);
                     default -> throw new IllegalArgumentException("Invalid char in map file '" + map + "': "
                             + tileMapChar+ " at row: " + row + " col: " + col);
                 }

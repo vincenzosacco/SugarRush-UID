@@ -1,16 +1,12 @@
 package View;
 
 import Controller.SugarController;
-import Model.game.Game;
+import Model.game.Constants.Block;
 
-import javax.swing.JPanel;
-import javax.swing.ImageIcon;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.awt.Color;
-import java.awt.Image;
 
 import static Config.View.*;
 
@@ -55,7 +51,7 @@ public class SugarPanel extends JPanel {
             throw new IllegalStateException("Controller is null");
         }
 
-        List<List<Game.Block>> gameMatrix = controller.getModel().gameMatReadOnly;
+        List<List<Block>> gameMatrix = controller.getModel().gameMatView;
 
 
         // DRAW //
@@ -64,7 +60,8 @@ public class SugarPanel extends JPanel {
             for (int col = 0; col < gameMatrix.get(row).size(); col++) {
                 int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
 
-                Game.Block block = gameMatrix.get(row).get(col);
+
+                Block block = gameMatrix.get(row).get(col);
 
                 switch (block) {
                     case WALL -> g.drawImage(wallImage, x, y, TILE_SIZE, TILE_SIZE, null);
