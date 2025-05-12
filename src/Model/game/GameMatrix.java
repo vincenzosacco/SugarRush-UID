@@ -1,7 +1,7 @@
 package Model.game;
 
 
-import utils.Cell;
+import Model.game.utils.Cell;
 import Model.game.Constants.Direction;
 import Model.game.Constants.Block;
 

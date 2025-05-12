@@ -1,4 +1,4 @@
-package utils;
+package Model.game.utils;
 
 /**
  * Represent a cell in a matrix

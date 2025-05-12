@@ -1,7 +1,7 @@
 package View;
 
-import Controller.SugarController;
 import Model.game.Constants.Block;
+import Model.game.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,16 +14,12 @@ import static Config.View.*;
 /**
  * Main game panel
  */
-public class SugarPanel extends JPanel {
-
-    private SugarController controller;
-
+public class GamePanel extends AbsView{
     Image wallImage;
     Image creatureImage;
     Image sugarImage;
 
-
-    public SugarPanel() {
+    public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
         Color skyblue = new Color(0, 188, 220);
         setBackground(skyblue);
@@ -35,23 +31,15 @@ public class SugarPanel extends JPanel {
         sugarImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/sugar.jpg"))).getImage();
     }
 
-    public void setController(SugarController controller) {
-        this.controller = controller;
-        this.addKeyListener(controller);
-        this.requestFocusInWindow();
-    }
+    @Override
+    protected void draw(Graphics g) {
+        // assert controller != null  is done in AbsView.paintComponent()
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        draw(g);
-    }
+        Game model = (Game) this.controller.getModel();
+        assert model != null : "Model should not be null here";
 
-    public void draw(Graphics g) {
-        if (controller == null) {
-            throw new IllegalStateException("Controller is null");
-        }
-
-        List<List<Block>> gameMatrix = controller.getModel().gameMatView;
+        List<List<Block>> gameMatrix = model.gameMatView;
+        assert gameMatrix != null && !gameMatrix.isEmpty();
 
         // DRAW //
         for (int row = 0; row < gameMatrix.size(); row++) {
@@ -71,5 +59,6 @@ public class SugarPanel extends JPanel {
             }
         }
     }
+
 
 }

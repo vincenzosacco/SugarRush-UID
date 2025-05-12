@@ -1,9 +1,9 @@
 package Controller;
 
+import Controller._abstract.AbsKeyController;
 import Model.game.Game;
-import View.SugarPanel;
+import View.GamePanel;
 
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import static Model.game.Constants.Direction.*;
@@ -15,30 +15,25 @@ import static Model.game.Constants.Direction.*;
 /**
  * Controller of 'SugarPanel'
  */
-public class SugarController extends KeyAdapter implements IController{
-    private final SugarPanel view;
-    private final Game model;
+public class GameController extends AbsKeyController {
 
-    public SugarController(SugarPanel sugarPanel, Game model){
-        this.view = sugarPanel;
-//        this.view.setController(this);
-        this.model = model;
-    }
-
-    public Game getModel(){
-        return this.model;
+    public GameController(Game model, GamePanel gamePanel){
+        super(model, gamePanel);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        Game gameModel = (Game) this.model;
+
         switch (e.getKeyCode()){
-            case KeyEvent.VK_UP -> this.model.moveCreature(UP);
-            case KeyEvent.VK_DOWN -> this.model.moveCreature(DOWN);
-            case KeyEvent.VK_LEFT -> this.model.moveCreature(LEFT);
-            case KeyEvent.VK_RIGHT -> this.model.moveCreature(RIGHT);
+            case KeyEvent.VK_UP -> gameModel.moveCreature(UP);
+            case KeyEvent.VK_DOWN -> gameModel.moveCreature(DOWN);
+            case KeyEvent.VK_LEFT -> gameModel.moveCreature(LEFT);
+            case KeyEvent.VK_RIGHT -> gameModel.moveCreature(RIGHT);
         }
         view.repaint();
     }
+
 
     // DOESN'T WORK with arrows -> https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
 //    public void keyTyped(KeyEvent e) {
