@@ -1,25 +1,26 @@
-package View;
-
-import Model.Block;
+package Model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashSet;
+import java.util.ArrayList;
+
+import static config.Model.COL_COUNT;
+import static config.Model.ROW_COUNT;
 
 /**
  * This class act as parse
  */
 public class MapParser {
-    private final SugarPanel sugarPanel;
+    private final Game game;
 
     final static String MAP_1 = "/map1.txt";
     final static String MAP_2 = "/map2.txt";
 
 
-    MapParser(SugarPanel sugarPanel) {
-        this.sugarPanel = sugarPanel;
+    MapParser(Game game) {
+        this.game = game;
     }
 
     /**
@@ -50,34 +51,33 @@ public class MapParser {
      * placed in the corresponding position on the board.
      *
      * @param map the path to the map resource file to be loaded
+     * @throws IllegalArgumentException if the map file contains invalid characters or is malformed
+     * @apiNote
      */
     public void loadMap(String map){
-        sugarPanel.walls = new HashSet<>();
-        sugarPanel.spaces.clear();
+        GameMatrix mat = game.gameMat;
+        mat.clear();
+
         String[] tileMap = readMapResource(map);
 
+        for (int row = 0; row < ROW_COUNT; row++) {
+            // add row to game matrix
+            mat.add(new ArrayList<>());
 
-        for (int r = 0; r < sugarPanel.rowCount; r++) {
-            for (int c = 0; c < sugarPanel.columnCount; c++) {
-                String row = tileMap[r];
-                char tileMapChar = row.charAt(c);
+            for (int col = 0; col < COL_COUNT; col++) {
+                char tileMapChar = tileMap[row].charAt(col);
 
-                int x = c * sugarPanel.tileSize;
-                int y = r * sugarPanel.tileSize;
-
-                if (tileMapChar == 'x') {
-                    Block wall = new Block(sugarPanel.wallImage, x, y, sugarPanel.tileSize, sugarPanel.tileSize);
-                    sugarPanel.walls.add(wall);
-                }
-                else if (tileMapChar == 'c') {
-                    sugarPanel.creature = new Block(sugarPanel.creatureImage, x, y, sugarPanel.tileSize, sugarPanel.tileSize);
-                }
-                else if (tileMapChar == 's') {
-                    sugarPanel.sugar = new Block(sugarPanel.sugarImage, x, y, sugarPanel.tileSize, sugarPanel.tileSize);
-                }
-                else if (tileMapChar == ' '){
-                    Block space = new Block(null, x, y, 0, 0);
-                    sugarPanel.spaces.add(space);
+                // add the corresponding block to mat[r]
+                switch (tileMapChar) {
+                    case 'x'-> mat.get(row).add(Game.Block.WALL);
+                    case 'c' -> {
+                        mat.get(row).add(Game.Block.CREATURE);
+                        game.creatureCell.setCoord(row,col);
+                    }
+                    case 's'-> mat.get(row).add(Game.Block.SUGAR);
+                    case ' '-> mat.get(row).add(Game.Block.SPACE);
+                    default -> throw new IllegalArgumentException("Invalid char in map file '" + map + "': "
+                            + tileMapChar+ " at row: " + row + " col: " + col);
                 }
             }
         }

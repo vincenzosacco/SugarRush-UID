@@ -1,61 +1,79 @@
 package View;
 
-import Model.Block;
+import Controller.SugarController;
+import Model.Game;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashSet;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import java.util.List;
 import java.util.Objects;
+import java.awt.Graphics;
+import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Image;
 
+import static config.View.*;
+
+
+/**
+ * Main game panel
+ */
 public class SugarPanel extends JPanel {
 
-    int rowCount=21;
-    int columnCount=19;
-    int tileSize=32;
-    int boardWidth= columnCount * tileSize;
-    int boardHeight= rowCount * tileSize;
+    private SugarController controller;
 
     Image wallImage;
     Image creatureImage;
     Image sugarImage;
 
 
-    HashSet<Block> walls;
-    Block creature;
-    Block sugar;
-    final HashSet<Block> spaces;
-
     public SugarPanel() {
-        setPreferredSize(new Dimension(boardWidth, boardHeight));
-        Color skyblue= new Color(0, 188, 220);
+        setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        Color skyblue = new Color(0, 188, 220);
         setBackground(skyblue);
-
-        spaces = new HashSet<>();
+        this.setFocusable(true);
 
         //load images
         wallImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/wall.jpg"))).getImage();
         creatureImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/creature.jpg"))).getImage();
         sugarImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/sugar.jpg"))).getImage();
-
-        MapParser mapParser = new MapParser(this);
-
-        mapParser.loadMap(MapParser.MAP_1); // at the moment keep it here
     }
 
-    public void paintComponent(Graphics g){
+    public void setController(SugarController controller) {
+        this.controller = controller;
+        this.addKeyListener(controller);
+        this.requestFocusInWindow();
+    }
+
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
     }
 
-    public void draw(Graphics g){
-        g.drawImage(creatureImage,creature.x,creature.y,creature.width,creature.height,null);
-        g.drawImage(sugarImage,sugar.x,sugar.y,sugar.width,sugar.height,null);
-        for (Block wall : walls){
-            g.drawImage(wallImage,wall.x,wall.y,wall.width,wall.height, null);
+    public void draw(Graphics g) {
+        if (controller == null) {
+            throw new IllegalStateException("Controller is null");
         }
-        g.setColor(Color.WHITE);
-        for (Block space : spaces){
-            g.fillRect(space.x,space.y,space.width,space.height);
+
+        List<List<Game.Block>> gameMatrix = controller.getModel().gameMatReadOnly;
+
+
+        // DRAW //
+        for (int row = 0; row < gameMatrix.size(); row++) {
+                int y = row * TILE_SIZE; // iterating row in model matrix corresponds to moving on y-axis(from top to bottom) on graphics coordinates.
+            for (int col = 0; col < gameMatrix.get(row).size(); col++) {
+                int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
+
+                Game.Block block = gameMatrix.get(row).get(col);
+
+                switch (block) {
+                    case WALL -> g.drawImage(wallImage, x, y, TILE_SIZE, TILE_SIZE, null);
+                    case SUGAR -> g.drawImage(sugarImage, x, y, TILE_SIZE, TILE_SIZE, null);
+                    case CREATURE -> g.drawImage(creatureImage, x, y, TILE_SIZE, TILE_SIZE, null);
+                    // space is not drawn
+                }
+            }
         }
     }
+
 }
