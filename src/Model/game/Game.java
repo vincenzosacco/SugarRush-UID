@@ -43,30 +43,10 @@ public class Game implements IModel {
 
     // GAME ACTIONS //
      /**
-     * @see GameMatrix#moveCreature(int)
+     * @see GameMatrix#moveCreature(Constants.Direction)
      */
     public boolean moveCreature(Constants.Direction direction){
         return gameMat.moveCreature(direction);
     }
-
-    // GETTERS
-    // Map
-//    final GameMatrix gameMat = new GameMatrix();
-//
-//    /**
-//     * Provides a read-only view of the game's map matrix. This variable is a two-dimensional, unmodifiable structure
-//     * backed by the game's internal {@code GameMatrix}, where each element represents a {@code Block} type.
-//     * The {@code Block} enumeration is used to specify the nature of each position in the map, such as walls, spaces,
-//     * the creature's location, or the sugar piece.
-//     *
-//     * This list is immutable and is designed to prevent modifications to the game's map matrix outside the
-//     * {@code Game} class logic. It ensures that the map can be inspected but not altered, maintaining data integrity during gameplay.
-//     *
-//     * @see Block
-//     * @see Game
-//     * @implNote unmodifiable reference to {@code gameMat} field, created using {@link GameMatrix#readOnly()}
-//     * */
-//    public final List<List<Block>> gameMatReadOnly = gameMat.readOnly();
-
 
 }

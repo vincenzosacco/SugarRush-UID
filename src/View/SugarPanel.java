@@ -53,7 +53,6 @@ public class SugarPanel extends JPanel {
 
         List<List<Block>> gameMatrix = controller.getModel().gameMatView;
 
-
         // DRAW //
         for (int row = 0; row < gameMatrix.size(); row++) {
                 int y = row * TILE_SIZE; // iterating row in model matrix corresponds to moving on y-axis(from top to bottom) on graphics coordinates.

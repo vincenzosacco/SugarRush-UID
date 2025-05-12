@@ -22,7 +22,6 @@ import java.util.List;
 class GameMatrix extends ArrayList<ArrayList<Block>> {
 
     // MOVEMENT //
-
     final Cell creatureCell = new Cell(); // coord are setted to null
 
     /**
