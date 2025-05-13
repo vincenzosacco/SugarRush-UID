@@ -43,10 +43,19 @@ public class Game implements IModel {
 
     // GAME ACTIONS //
      /**
-     * @see GameMatrix#moveCreature(Constants.Direction)
+      *
+      *
      */
-    public boolean moveCreature(Constants.Direction direction){
-        return gameMat.moveCreature(direction);
+    public void moveCreature(Constants.Direction direction){
+        // Move until creature is on a valid position //
+        Constants.Block newPosBlock = gameMat.moveCreature(direction);
+
+
+        // even if newPosBlock is never null,
+        // this loop cannot be infinite because the creature can't move out of the map
+        while (newPosBlock != null){
+            newPosBlock = gameMat.moveCreature(direction);
+        }
     }
 
 }

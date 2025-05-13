@@ -32,10 +32,10 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
      *
      * @param direction the direction in which the creature should move, which must be one of the predefined constants
      *                  (UP, DOWN, LEFT, RIGHT)
-     * @return true if the creature successfully moves to the new position, otherwise false
+     * @return The Block type at the new position if the move was successful, null otherwise
      * @throws IllegalArgumentException if the provided direction is invalid
      */
-    public boolean moveCreature(Direction direction){
+    public Block moveCreature(Direction direction){
         int newRow = creatureCell.getRow();
         int newCol = creatureCell.getCol();
 
@@ -51,21 +51,20 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
         // if it's in the matrix range:
         if (newRow > 0 && newRow < this.size() && newCol > 0 && newCol < this.get(newRow).size()){
             // if it's a SPACE or SUGAR :
-            if (this.get(newRow).get(newCol) == Block.SPACE || this.get(newRow).get(newCol) == Block.SUGAR){
-                // HERE MOVE IS LEGAL
-
+            if (this.get(newRow).get(newCol) != Block.WALL){
+                // here move is legal
                 // MOVE CREATURE //
                 this.get(creatureCell.getRow()).set(creatureCell.getCol(), Block.SPACE); // reset the old creature coordinates
                 this.get(newRow).set(newCol, Block.CREATURE); // set the new creature coordinates
                 creatureCell.setCoord(newRow, newCol); // update the fast reference to creature's position
 
-                return true;
+                return this.get(newRow).get(newCol) ; // return the new block type
             }
         }
-        return false;
+        return null;
     }
 
-    //
+
     /**
      * Returns the type of the block at the specified coordinates in the game matrix.
      * The returned value corresponds to the {@code Block} enumeration.
