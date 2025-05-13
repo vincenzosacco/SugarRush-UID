@@ -11,3 +11,6 @@
     - `Config/` # Configurationi e costanti
     - `Main` # lancia l'applicazione
     - `MvcManager` # accoppia i componenti MVC per permettere la comunicazione tra essi
+
+
+Prova denmis
