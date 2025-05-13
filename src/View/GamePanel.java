@@ -2,6 +2,7 @@ package View;
 
 import Model.game.Constants.Block;
 import Model.game.Game;
+import View.settings.GameSettingsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,8 @@ public class GamePanel extends AbsView{
         Color skyblue = new Color(0, 188, 220);
         setBackground(skyblue);
         this.setFocusable(true);
+
+        this.add(gameSettingsPanel);
 
         //load images
         wallImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/wall.jpg"))).getImage();
@@ -60,5 +63,12 @@ public class GamePanel extends AbsView{
         }
     }
 
-
+    // SETTINGS
+    private final GameSettingsPanel gameSettingsPanel = new GameSettingsPanel();
+    public GameSettingsPanel toggleSettingsPanel(){
+        gameSettingsPanel.setOpen(!gameSettingsPanel.isOpen());
+        gameSettingsPanel.setVisible(gameSettingsPanel.isOpen()); // if isOpen == false set gameSettingsPanel invisible
+        this.revalidate();
+        return gameSettingsPanel;
+    }
 }

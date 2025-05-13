@@ -24,13 +24,21 @@ public class GameController extends AbsKeyController {
     @Override
     public void keyPressed(KeyEvent e) {
         Game gameModel = (Game) this.model;
+        GamePanel view = (GamePanel) this.view;
 
+        // NOTIFY MODEL
         switch (e.getKeyCode()){
             case KeyEvent.VK_UP -> gameModel.moveCreature(UP);
             case KeyEvent.VK_DOWN -> gameModel.moveCreature(DOWN);
             case KeyEvent.VK_LEFT -> gameModel.moveCreature(LEFT);
             case KeyEvent.VK_RIGHT -> gameModel.moveCreature(RIGHT);
+            case KeyEvent.VK_ESCAPE ->{
+                gameModel.openSetting();
+                view.toggleSettingsPanel();
+            }
         }
+
+        // NOTIFY VIEW
         view.repaint();
     }
 

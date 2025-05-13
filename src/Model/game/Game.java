@@ -58,4 +58,8 @@ public class Game implements IModel {
         }
     }
 
+    public void openSetting() {
+        System.out.println("Settings opened");
+        // stop time
+    }
 }

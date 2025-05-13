@@ -1,6 +1,8 @@
 package View;
 
 
+import View.settings.GameSettingsPanel;
+
 import javax.swing.*;
 
 import static Config.View.BOARD_HEIGHT;
@@ -50,4 +52,6 @@ public class MainFrame extends JFrame {
         this.pack();
         return gamePanel;
     }
+
+
 }
