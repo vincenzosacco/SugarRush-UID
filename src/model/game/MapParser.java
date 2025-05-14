@@ -1,6 +1,6 @@
-package Model.game;
+package model.game;
 
-import Model.game.Constants.Block;
+import model.game.Constants.Block;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,8 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import static Config.Model.COL_COUNT;
-import static Config.Model.ROW_COUNT;
+import static config.Model.COL_COUNT;
+import static config.Model.ROW_COUNT;
 
 
 /**

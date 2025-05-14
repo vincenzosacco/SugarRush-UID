@@ -1,4 +1,4 @@
-package Model.game;
+package model.game;
 
 /**
  * The {@code Constants} interface contains fundamental constants and enumerations

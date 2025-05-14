@@ -1,4 +1,4 @@
-package Config;
+package config;
 
 public interface Model {
     int ROW_COUNT =21;

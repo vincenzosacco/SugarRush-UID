@@ -1,4 +1,4 @@
-package Model.entities;
+package model.game.entities;
 
 /**
  * Model for Creature entity

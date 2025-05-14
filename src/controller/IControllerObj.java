@@ -1,6 +1,6 @@
-package Controller;
+package controller;
 
-import Model.IModel;
+import model.IModelObj;
 
 import java.util.EventListener;
 
@@ -10,15 +10,5 @@ import java.util.EventListener;
  * between the view and the model in an application. Implementations of this interface
  * are expected to handle user input, process it, and update the view and/or model accordingly.
  */
-public interface IController extends EventListener {
-    /**
-     * @return the model associated with this controller.
-     */
-    IModel getModel();
-
-    /**
-     * Notifies the view that the model has changed.
-     */
-    void notifyView();
-
+public interface IControllerObj {
 }

@@ -1,9 +1,9 @@
-package Model.game;
+package model.game;
 
 
-import Model.game.utils.Cell;
-import Model.game.Constants.Direction;
-import Model.game.Constants.Block;
+import model.game.utils.Cell;
+import model.game.Constants.Direction;
+import model.game.Constants.Block;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,7 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
      * @return The Block type at the new position if the move was successful, null otherwise
      * @throws IllegalArgumentException if the provided direction is invalid
      */
-    public Block moveCreature(Direction direction){
+     Block moveCreature(Direction direction){
         int newRow = creatureCell.getRow();
         int newCol = creatureCell.getCol();
 
@@ -66,21 +66,6 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
 
 
     /**
-     * Returns the type of the block at the specified coordinates in the game matrix.
-     * The returned value corresponds to the {@code Block} enumeration.
-     *
-     * @apiNote the value returned by this method should be compared with the {@code Block} enumeration values.
-     * <p></p><i>EXAMPLE<i/>: {@code if (game.isBlock(i,j) == Block.CREATURE) ...}
-     *
-     * @param i the row index of the block in the game matrix
-     * @param j the column index of the block in the game matrix
-     * @return the ordinal value of the block type at the specified location
-     */
-    public int isBlock(int i, int j){
-        return this.get(i).get(j).ordinal(); // ordinal() returns the index of the element in the enumerated type.
-    }
-
-    /**
      * Instantiate and return a read-only view of the game matrix.
      * The returned list is an unmodifiable representation of the current game state,
      * where each element corresponds to a {@code Block} in the game's matrix.
@@ -90,7 +75,7 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
      * @see Collections#unmodifiableList(List)
      * @see <a href="https://docs.oracle.com/en/java/javase/11/core/creating-immutable-lists-sets-and-maps.html#GUID-DD066F67-9C9B-444E-A3CB-820503735951">Help Guide</a>
     */
-    public List<List<Block>> makeReadOnly(){
+     List<List<Block>> makeReadOnly(){
         return Collections.unmodifiableList(this);
     }
 }

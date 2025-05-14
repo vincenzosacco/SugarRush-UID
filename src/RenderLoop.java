@@ -1,4 +1,4 @@
-import View.MainFrame;
+import view.View;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -7,7 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RenderLoop implements Runnable {
     private final ScheduledExecutorService executor;
-    private final static double UPDATE_RATE = 1.0/60.0; // 60 FPS
+    private final static double FPS = 5.0;
+    private final static double UPDATE_RATE = 1.0/FPS;
     private volatile boolean running = false;
     private ScheduledFuture<?> gameLoop;
 
@@ -89,7 +90,7 @@ public class RenderLoop implements Runnable {
         // - Asynchronous - doesn't immediately paint -> (maybe can cause some issue, let's see...)
         // - Used for visual updates only
         // - Lighter weight than `revalidate()`
-        MainFrame.getInstance().repaint();
+        View.getInstance().updateView();
 
     }
 }

@@ -1,13 +1,12 @@
-package View.settings;
+package view.settings;
 
-import View.AbsView;
-
+import javax.swing.*;
 import java.awt.*;
 
 /**
  * Panel for game settings
  */
-public class GameSettingsPanel extends AbsView {
+public class GameSettingsPanel extends JPanel {
     private boolean isOpen = false;
 
     public GameSettingsPanel(){
@@ -35,8 +34,4 @@ public class GameSettingsPanel extends AbsView {
         this.add(languageLabel);
     }
 
-    @Override
-    protected void draw(Graphics g) {
-
-    }
 }
