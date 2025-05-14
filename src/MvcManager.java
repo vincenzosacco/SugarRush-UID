@@ -22,6 +22,7 @@ public class MvcManager {
         gamePanel.setController(gameController);
 
         MainFrame.getInstance().launch();
+        RenderLoop.getInstance().start();
     }
 
 }

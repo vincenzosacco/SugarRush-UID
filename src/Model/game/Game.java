@@ -46,7 +46,7 @@ public class Game implements IModel {
       *
       *
      */
-    public void moveCreature(Constants.Direction direction){
+    public void moveCreature(Constants.Direction direction) throws InterruptedException {
         // Move until creature is on a valid position //
         Constants.Block newPosBlock = gameMat.moveCreature(direction);
 
