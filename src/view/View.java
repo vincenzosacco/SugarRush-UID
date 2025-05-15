@@ -63,9 +63,6 @@ public class View {
     }
 
     // VIEW ACTIONS //
-    public void updateView(){
-        Window.repaint();
-    }
 
     public void launchView(){
         Window.setVisible(true);
