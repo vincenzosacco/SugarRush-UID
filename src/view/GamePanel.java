@@ -16,7 +16,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,8 +37,6 @@ public class GamePanel extends JPanel implements IViewComp {
 
         this.add(gameSettings);
 
-        this.setVisible(true);
-
         //load images
         wallImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/wall.jpg"))).getImage();
         creatureImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/creature.jpg"))).getImage();
@@ -55,10 +52,29 @@ public class GamePanel extends JPanel implements IViewComp {
             throw new IllegalStateException("Cannot have more than one key listener");
         }
 
-        this.addKeyListener((KeyListener) controller);
+        this.addKeyListener((GameController) controller);
 
         this.setFocusable(true);
-        this.requestFocusInWindow();
+    }
+
+    /**
+     * Calls {@code super().setVisible(aFlag)} and {@code if aFlag == true}:
+     * <p>
+     *     - calls {@code this.requestFocusInWindow()} -> so this panel can get input from user
+     * </p>
+     * <p>
+     *     - show 'start new game' messageDialog.
+     * </p>
+     */
+    @Override
+    public void setVisible(boolean aFlag) {
+        super.setVisible(aFlag);
+        if (aFlag) {
+            this.requestFocusInWindow(); // needed to get user input
+            assert this.getParent() != null ;
+            JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
+                    "New Game",JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     @Override
@@ -90,13 +106,6 @@ public class GamePanel extends JPanel implements IViewComp {
                 }
             }
         }
-    }
-
-    // VIEW ACTIONS//
-    public void newGameMsg(){
-        assert this.getParent() != null ;
-        JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
-                "New Game",JOptionPane.INFORMATION_MESSAGE);
     }
 
     // SETTINGS

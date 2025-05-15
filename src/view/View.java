@@ -47,16 +47,19 @@ public class View {
         Window.setTitle("Sugar Rush");
         // using setSize() because component doesnt have a parent neither a layout manager.ù
         // setSize() sets the absolute size instead setPreferredSize() is more an 'hint' to layout manager.
-        Window.setSize(BOARD_WIDTH, BOARD_HEIGHT);
         Window.setLocationRelativeTo(null); // center on screen
         Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Window.setResizable(false);
+
+        // CONTAINER
         Window.setContentPane(Container);
 
         // COMPONENTS
         Container.setLayout(cardLayout);
         Container.add(gamePanel, PanelName.GAME.getName());
         Container.add(startMenuPanel, PanelName.START_MENU.getName());
+
+        Window.pack();
     }
 
     // VIEW ACTIONS //
@@ -71,6 +74,7 @@ public class View {
     public void showPanel(String panelName){
         assert panelName != null;
         cardLayout.show(Container, panelName);
+        Container.revalidate();
     }
 
     private final GamePanel gamePanel = new GamePanel();
@@ -82,18 +86,6 @@ public class View {
     public StartMenuPanel getStartMenuPanel(){
         return startMenuPanel;
     }
-//    /**
-//     * Displays the specified panel.
-//     *
-//     * @param panelName the panel to be displayed, represented as an enumeration constant
-//     *                  defining the type of panel and its associated unique name.
-//     * @return the displayed view component, cast as an {@code AbsViewComp}, for further manipulation if needed.
-//     * @see PanelName
-//     */
-//    public JPanel showPanel(PanelName panelName){
-//        cardLayout.show(Container, panelName.getName());
-//        return new JPanel(); // todo FIX this
-//    }
 
 
 

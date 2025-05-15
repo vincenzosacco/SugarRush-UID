@@ -17,7 +17,6 @@ public class GameSettingsPanel extends JPanel {
 
         this.setFocusable(true);
         this.setVisible(false);
-        this.requestFocusInWindow();
     }
 
     public boolean isOpen() {

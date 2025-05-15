@@ -25,7 +25,6 @@ public class GameController extends KeyAdapter implements IControllerObj {
         GamePanel view = View.getInstance().getGamePanel();
 
         // NOTIFY MODEL
-
         switch (e.getKeyCode()){
             case KeyEvent.VK_UP -> model.performMove(UP);
             case KeyEvent.VK_DOWN -> model.performMove(DOWN);
@@ -38,6 +37,7 @@ public class GameController extends KeyAdapter implements IControllerObj {
         }
 
         // VIEW repainting is delegated to RenderLoop
+        view.repaint();
     }
 
 
