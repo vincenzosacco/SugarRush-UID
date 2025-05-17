@@ -79,6 +79,7 @@ class MapParser {
                         mat.creatureCell.setCoord(row, col);
                     }
                     case 's'-> mat.get(row).add(Block.SUGAR);
+                    case 't' -> mat.get(row).add(Block.THORNS);
                     case ' '-> mat.get(row).add(Block.SPACE);
                     default -> throw new IllegalArgumentException("Invalid char in map file '" + map + "': "
                             + tileMapChar+ " at row: " + row + " col: " + col);
