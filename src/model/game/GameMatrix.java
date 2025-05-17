@@ -49,7 +49,13 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
 
         // CHECK IF MOVEMENT IS LEGAL //
         // if it's in the matrix range:
-        if (newRow > 0 && newRow < this.size() && newCol > 0 && newCol < this.get(newRow).size()){
+        if (newRow >= 0 && newRow < this.size() && newCol >= 0 && newCol < this.get(newRow).size()){
+            // if it's a THORNS:
+            if(this.get(newRow).get(newCol) == Block.THORNS){
+                //you die
+                //temporarily if you touch it the application closes
+                System.exit(0);
+            }
             // if it's a SPACE or SUGAR :
             if (this.get(newRow).get(newCol) != Block.WALL){
                 // here move is legal
