@@ -96,21 +96,8 @@ public class Game implements IModelObj {
     public void performMove(Constants.Direction direction) {
         for (Entity entity : entities) {
                 if (entity instanceof Creature creature){
-                     creature.moveCreature(direction);
+                     creature.setDirection(direction);
                 }
-
-        // Move until creature is on a valid position //
-        Constants.Block newPosBlock = Constants.Block.SPACE; // just to init, no semantic reason
-
-        // even if newPosBlock is never null,
-        // this loop cannot be infinite because the creature can't move out of the map
-//        while (newPosBlock != null) {
-//            for (Entity entity : entities) {
-//                if (entity instanceof Creature creature){
-//                    newPosBlock = creature.moveCreature(direction);
-//                }
-//            }
-//            View.getInstance().notifyView(); // notify that the model changed
         }
 
     }

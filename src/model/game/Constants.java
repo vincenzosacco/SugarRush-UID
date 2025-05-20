@@ -18,9 +18,10 @@ public interface Constants {
      * - {@code DOWN}: Represents downward movement.
      * - {@code LEFT}: Represents leftward movement.
      * - {@code RIGHT}: Represents rightward movement.|
+     * - {@code NONE}: Represents no movement. This is used to represent the creature's idle state.
      * </p>
      */
-    enum Direction{UP, DOWN, LEFT, RIGHT}
+    enum Direction{UP, DOWN, LEFT, RIGHT, NONE}
 
     /**
      * Enum representing different types of blocks that can exist within the game map.

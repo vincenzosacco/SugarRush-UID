@@ -14,7 +14,7 @@ class GameLoop implements Runnable {
     // Flag to control game loop execution
     private boolean running = false;
     // Target frames per second
-    private final int targetFPS = 60;
+    private final int targetFPS = 120;
     // Time per frame in nanoseconds
     private final long targetTime = 1000000000 / targetFPS; // nano seconds
     // Thread for running the game loop

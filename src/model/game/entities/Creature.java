@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class Creature extends Entity{
     private int sugarCount = 0;
+    private Direction direction = Direction.NONE;
 
     @Override
     public Constants.Block blockType() {
@@ -31,11 +32,13 @@ public class Creature extends Entity{
     // Do nothing beacause the creature is moved by the user
     @Override
     public void performAction() {
+        // MOVE BY ONE BLOCK IN DIRECTION
+        moveCreature(direction);
 
     }
 
 
-    public void moveCreature(Direction direction) {
+    private void moveCreature(Direction direction) {
          int newRow = this.coord.getRow();
          int newCol = this.coord.getCol();
 
@@ -44,6 +47,9 @@ public class Creature extends Entity{
              case Direction.DOWN -> ++newRow; // going down means incrementing the row index by 1
              case Direction.LEFT -> --newCol; // going left means decrementing the col index by 1
              case Direction.RIGHT -> ++newCol; // going right means incrementing the col index by 1
+             case Direction.NONE -> {
+                 return;
+             }
              default -> throw new IllegalArgumentException("Invalid direction: " + direction);
          }
 
@@ -53,33 +59,16 @@ public class Creature extends Entity{
         }
      }
 
-
-//        // CHECK IF MOVEMENT IS LEGAL //
-//        // if it's in the matrix range:
-//        if (newRow >= 0 && newRow < this.size() && newCol >= 0 && newCol < this.get(newRow).size()){
-//            // if it's a THORNS:
-//            if(this.get(newRow).get(newCol) == Block.THORNS){
-//                //you die
-//                //temporarily if you touch it the application closes
-//                System.exit(0);
-//            }
-//
-//            // if it's a SPACE or SUGAR :
-//            if (this.get(newRow).get(newCol) != Block.WALL){
-//                // here move is legal
-//                // MOVE CREATURE //
-//                this.get(newRow).set(newCol, Block.CREATURE); // set the new creature coordinates
-//
-//                return this.get(newRow).get(newCol) ; // return the new block type
-//            }
-//        }
-//        return null;
-
-
-
-
     public void addSugar(){
         sugarCount++;
+    }
+
+    // GETTERS & SETTERS //
+    public Direction getDirection() {
+        return direction;
+    }
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     public int getSugarCount(){
