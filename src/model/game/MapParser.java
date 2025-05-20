@@ -80,7 +80,6 @@ class MapParser {
                     case 'x'-> mat.get(row).add(Block.WALL);
                     case 'c' ->{
                         mat.get(row).add(Block.CREATURE);
-                        mat.creatureCell.setCoord(row, col); // TODO remove
                         game.entities.add(new Creature(row, col));
                     }
                     case 's'-> mat.get(row).add(Block.SUGAR);

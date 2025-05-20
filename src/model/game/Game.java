@@ -21,6 +21,7 @@ public class Game implements IModelObj {
     final GameMatrix gameMat = new GameMatrix();
     final ArrayList<Entity> entities = new ArrayList<>() ;
 
+
     /**
      * <p>
      * Contains a read-only view of the game's map matrix.
@@ -57,17 +58,24 @@ public class Game implements IModelObj {
     }
 
     public void updateState(){
+        // TODO find if there is a better way to do this.
+        // Clean matrix
+        for (int i = 0; i < gameMat.size(); i++) {
+            for (int j = 0; j < gameMat.get(i).size(); j++) {
+                if (gameMat.get(i).get(j) != Constants.Block.WALL && gameMat.get(i).get(j) != Constants.Block.THORNS){
+                    gameMat.get(i).set(j, Constants.Block.SPACE);
+                }
+            }
+        }
+
         // PERFORM ENTITIES ACTION  //
         entities.forEach(Entity::performAction);
 
-        // DETECT COLLISIONS //
-        //TODO
-        // RESOLVE COLLISIONS //
-
-        // APPLY NEW COORDS IN THE GAME MATRIX //
         for (Entity entity : entities) {
             int row = entity.getCoord().getRow();
             int col = entity.getCoord().getCol();
+
+            // APPLY NEW COORDS IN THE GAME MATRIX //
             gameMat.get(row).set(col, entity.blockType());
         }
     }
@@ -86,13 +94,22 @@ public class Game implements IModelObj {
      * @throws IllegalArgumentException if an invalid direction is provided
      */
     public void performMove(Constants.Direction direction) {
+        for (Entity entity : entities) {
+                if (entity instanceof Creature creature){
+                     creature.moveCreature(direction);
+                }
+
         // Move until creature is on a valid position //
         Constants.Block newPosBlock = Constants.Block.SPACE; // just to init, no semantic reason
 
         // even if newPosBlock is never null,
         // this loop cannot be infinite because the creature can't move out of the map
-        while (newPosBlock != null) {
-            newPosBlock = gameMat.moveCreature(direction);
+//        while (newPosBlock != null) {
+//            for (Entity entity : entities) {
+//                if (entity instanceof Creature creature){
+//                    newPosBlock = creature.moveCreature(direction);
+//                }
+//            }
 //            View.getInstance().notifyView(); // notify that the model changed
         }
 
