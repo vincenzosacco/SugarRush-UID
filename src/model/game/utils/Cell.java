@@ -13,6 +13,7 @@ public class Cell {
     public Cell(Integer row, Integer col) {
         setCoord(row,col);
     }
+    public Cell(Cell cell){setCoord(cell.getRow(),cell.getCol());}
 
     /**
      * Default constructor for Cell. Initializes all fields to null to prevent usage of uninitialized Cells.
@@ -21,6 +22,22 @@ public class Cell {
         row = null;
         col = null;
     }
+
+    public void incrRow(){
+        setRow(getRow()+1);
+    }
+    public void incrCol(){
+        setCol(getCol()+1);
+    }
+
+    public void decrRow(){
+        setRow(getRow()-1);
+    }
+    public void decrCol(){
+        setCol(getCol()-1);
+    }
+
+    // GETTERS & SETTERS //
 
     public void setCoord(int row, int col){
         setRow(row);
@@ -62,6 +79,10 @@ public class Cell {
         assert col >= 0;
         this.col = col;
     }
+
+
+
+
 
 
 }

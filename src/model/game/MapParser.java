@@ -1,6 +1,8 @@
 package model.game;
 
 import model.game.Constants.Block;
+import model.game.entities.Creature;
+import model.game.entities.evil.Enemy1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -59,7 +61,9 @@ class MapParser {
      * @throws IllegalArgumentException if the map file contains invalid characters or is malformed
      * @apiNote
      */
-    static void loadMap(String map, GameMatrix mat ){
+    static void loadMap(String map, Game game ){
+        GameMatrix mat = game.gameMat;
+
         mat.clear();
 
         String[] tileMap = readMapResource(map);
@@ -76,9 +80,14 @@ class MapParser {
                     case 'x'-> mat.get(row).add(Block.WALL);
                     case 'c' ->{
                         mat.get(row).add(Block.CREATURE);
-                        mat.creatureCell.setCoord(row, col);
+                        mat.creatureCell.setCoord(row, col); // TODO remove
+                        game.entities.add(new Creature(row, col));
                     }
                     case 's'-> mat.get(row).add(Block.SUGAR);
+                    case 'e' -> {
+                        mat.get(row).add(Block.ENEMY1);
+                        game.entities.add(new Enemy1(row,col));
+                    }
                     case ' '-> mat.get(row).add(Block.SPACE);
                     default -> throw new IllegalArgumentException("Invalid char in map file '" + map + "': "
                             + tileMapChar+ " at row: " + row + " col: " + col);

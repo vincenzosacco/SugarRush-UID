@@ -26,9 +26,8 @@ import static config.View.*;
  * Main game panel
  */
 public class GamePanel extends JPanel implements IViewComp {
-    Image wallImage;
-    Image creatureImage;
-    Image sugarImage;
+    private final Image wallImage, creatureImage, sugarImage, enemy1Image;
+
 
     public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
@@ -37,10 +36,11 @@ public class GamePanel extends JPanel implements IViewComp {
 
         this.add(gameSettings);
 
-        //load images
+        //load images TODO move from here, there are more efficiente approach. Use BufferedReader
         wallImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/wall.jpg"))).getImage();
         creatureImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/creature.jpg"))).getImage();
         sugarImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/sugar.jpg"))).getImage();
+        enemy1Image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/enemy1.jpg"))).getImage();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class GamePanel extends JPanel implements IViewComp {
     protected void draw(Graphics g) {
         Game game = Model.getInstance().getGame();
 
-        List<List<Block>> gameMatrix = game.getGameState();
+        List<List<Block>> gameMatrix = game.getState();
         assert gameMatrix != null && !gameMatrix.isEmpty();
 
         // DRAW //
@@ -102,6 +102,7 @@ public class GamePanel extends JPanel implements IViewComp {
                     case WALL -> g.drawImage(wallImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     case SUGAR -> g.drawImage(sugarImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     case CREATURE -> g.drawImage(creatureImage, x, y, TILE_SIZE, TILE_SIZE, null);
+                    case ENEMY1 -> g.drawImage(enemy1Image, x, y, TILE_SIZE, TILE_SIZE, null);
                     // space is not drawn
                 }
             }

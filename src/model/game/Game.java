@@ -1,8 +1,10 @@
 package model.game;
 
 import model.IModelObj;
-import view.View;
+import model.game.entities.Creature;
+import model.game.entities.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,25 +17,9 @@ public class Game implements IModelObj {
     /**
      * @see GameMatrix
      */
-    private final GameMatrix gameMat = new GameMatrix();
-
-    /**
-     * A lock instance used to manage concurrent access to the game state.
-     * Designed to be used for synchronizing game state modifications, <b>preventing race conditions</b>
-     * during operations such as moving the creature, updating the game map, or retrieving game data.
-     * <i>EXAMPLE</i>:
-     * What happens if {@code gameMat} is updated when it has been reading?
-     * This lock ensures that the game state remains consistent and prevents race conditions
-     * by allowing only one thread to access or modify {@code gameMat} at a time.
-     * <p>
-     * How?
-     * Simply all methods that either update or return {@code gameMat} ( or a reference to it)
-     * must acquire the {@code stateLock} before proceeding. This guarantees exclusive access
-     * during critical operations.
-     * </p>
-
-     */
-    private final Object stateLock = new Object();
+    // package visibility needed for MapParser
+    final GameMatrix gameMat = new GameMatrix();
+    final ArrayList<Entity> entities = new ArrayList<>() ;
 
     /**
      * <p>
@@ -53,13 +39,43 @@ public class Game implements IModelObj {
 
     public Game() {
         // LOAD MAP FROM RESOURCE
-        MapParser.loadMap(MapParser.MAP_1, gameMat); // update map related fields
+        MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
     }
 
-    void restart(){
-        MapParser.loadMap(MapParser.MAP_1, gameMat);
+    // MODEL //
+    /**
+     * Retrieves the current state of the game as a two-dimensional, read-only list of blocks.
+     * Each block represents a specific element within the game's map, such as walls, spaces,
+     * the creature, or collectible items. Access is synchronized to ensure thread-safe state retrieval.
+     *
+     * @return a two-dimensional unmodifiable list where each element is a {@code Constants.Block}
+     * representing the current state of the game map.
+     * @see Constants.Block
+     */
+    public List<List<Constants.Block>> getState() {
+        return gameMatRO;
     }
+
+    public void updateState(){
+        // PERFORM ENTITIES ACTION  //
+        entities.forEach(Entity::performAction);
+
+        // DETECT COLLISIONS //
+        //TODO
+        // RESOLVE COLLISIONS //
+
+        // APPLY NEW COORDS IN THE GAME MATRIX //
+        for (Entity entity : entities) {
+            int row = entity.getCoord().getRow();
+            int col = entity.getCoord().getCol();
+            gameMat.get(row).set(col, entity.)
+        }
+    }
+
     // GAME ACTIONS //
+    void restart(){
+        MapParser.loadMap(MapParser.MAP_1, this);
+    }
 
     /**
      * Moves the creature in the specified direction until it reaches an invalid position.
@@ -76,11 +92,8 @@ public class Game implements IModelObj {
         // even if newPosBlock is never null,
         // this loop cannot be infinite because the creature can't move out of the map
         while (newPosBlock != null) {
-            // the caller Thread need to acquire lock to move creature
-            synchronized (stateLock) {
-                newPosBlock = gameMat.moveCreature(direction);
-            }
-            // Here RenderLoop can call <getGameState()> to update the view
+            newPosBlock = gameMat.moveCreature(direction);
+//            View.getInstance().notifyView(); // notify that the model changed
         }
 
     }
@@ -95,20 +108,5 @@ public class Game implements IModelObj {
         // stop time
     }
 
-    // GAME GETTERS //
 
-    /**
-     * Retrieves the current state of the game as a two-dimensional, read-only list of blocks.
-     * Each block represents a specific element within the game's map, such as walls, spaces,
-     * the creature, or collectible items. Access is synchronized to ensure thread-safe state retrieval.
-     *
-     * @return a two-dimensional unmodifiable list where each element is a {@code Constants.Block}
-     * representing the current state of the game map.
-     * @see Constants.Block
-     */
-    public List<List<Constants.Block>> getGameState() {
-        synchronized (stateLock) {
-            return gameMatRO;
-        }
-    }
 }

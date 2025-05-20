@@ -64,6 +64,16 @@ public class View {
 
     // VIEW ACTIONS //
 
+    /**
+     * Notifies the view to refresh or update its state.
+     * This method is typically responsible for ensuring that changes
+     * to the underlying model or controller data are reflected
+     * in the user interface elements currently displayed.
+     */
+    public void notifyView(){
+        Window.repaint();
+    }
+
     public void launchView(){
         Window.setVisible(true);
     }
