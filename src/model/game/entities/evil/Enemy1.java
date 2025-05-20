@@ -27,7 +27,7 @@ public class Enemy1 extends Enemy {
 
     @Override
     public void performAction() {
-        this.coord.incrCol();
+//        this.coord.incrCol();
     }
 
 
