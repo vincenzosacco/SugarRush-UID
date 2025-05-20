@@ -30,5 +30,5 @@ public interface Constants {
      * - {@code CREATURE}: The current position of the creature in the game.
      * - {@code SUGAR}: A collectible item in the game that can be consumed by the creature.
      */
-    enum Block{SPACE, WALL, CREATURE, SUGAR}
+    enum Block{SPACE, WALL, CREATURE, SUGAR, ENEMY1}
 }

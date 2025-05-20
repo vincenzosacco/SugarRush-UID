@@ -18,6 +18,8 @@ import static model.game.Constants.Direction.*;
  * Controller of 'SugarPanel'
  */
 public class GameController extends KeyAdapter implements IControllerObj {
+    private final GameLoop gameLoop = new GameLoop();
+
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -34,10 +36,11 @@ public class GameController extends KeyAdapter implements IControllerObj {
                 model.openSetting();
                 view.toggleSettingsPanel();
             }
+            case KeyEvent.VK_ENTER -> gameLoop.start();
         }
 
         // VIEW repainting is delegated to RenderLoop
-        view.repaint();
+//        view.repaint();
     }
 
 

@@ -21,8 +21,12 @@ import java.util.List;
  */
 class GameMatrix extends ArrayList<ArrayList<Block>> {
 
+
+
+
     // MOVEMENT //
     final Cell creatureCell = new Cell(); // coord are setted to null
+
 
     /**
      * Moves the creature by 1 block in the specified direction if the movement is valid.
