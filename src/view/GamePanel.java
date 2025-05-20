@@ -26,8 +26,7 @@ import static config.View.*;
  * Main game panel
  */
 public class GamePanel extends JPanel implements IViewComp {
-    private final Image wallImage, creatureImage, sugarImage, enemy1Image;
-
+    private final Image wallImage, creatureImage, sugarImage, enemy1Image, thornsImage;
 
     public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
@@ -41,6 +40,7 @@ public class GamePanel extends JPanel implements IViewComp {
         creatureImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/creature.jpg"))).getImage();
         sugarImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/sugar.jpg"))).getImage();
         enemy1Image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/enemy1.jpg"))).getImage();
+        thornsImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/thorns.jpg"))).getImage();
     }
 
     @Override
@@ -103,6 +103,7 @@ public class GamePanel extends JPanel implements IViewComp {
                     case SUGAR -> g.drawImage(sugarImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     case CREATURE -> g.drawImage(creatureImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     case ENEMY1 -> g.drawImage(enemy1Image, x, y, TILE_SIZE, TILE_SIZE, null);
+                    case THORNS -> g.drawImage(thornsImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     // space is not drawn
                 }
             }

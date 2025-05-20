@@ -68,7 +68,7 @@ public class Game implements IModelObj {
         for (Entity entity : entities) {
             int row = entity.getCoord().getRow();
             int col = entity.getCoord().getCol();
-            gameMat.get(row).set(col, entity.)
+            gameMat.get(row).set(col, entity.blockType());
         }
     }
 

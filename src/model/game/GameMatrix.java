@@ -60,6 +60,7 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
                 //temporarily if you touch it the application closes
                 System.exit(0);
             }
+
             // if it's a SPACE or SUGAR :
             if (this.get(newRow).get(newCol) != Block.WALL){
                 // here move is legal

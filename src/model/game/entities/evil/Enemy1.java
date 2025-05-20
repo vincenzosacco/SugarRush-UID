@@ -1,5 +1,6 @@
 package model.game.entities.evil;
 
+import model.game.Constants;
 import model.game.utils.Cell;
 
 /**
@@ -10,6 +11,11 @@ import model.game.utils.Cell;
  * </p>
  */
 public class Enemy1 extends Enemy {
+
+    @Override
+    public Constants.Block blockType() {
+        return Constants.Block.ENEMY1;
+    }
 
     public Enemy1(int row, int col) {
         super(row,col);

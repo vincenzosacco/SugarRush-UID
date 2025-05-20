@@ -1,5 +1,6 @@
 package model.game.entities;
 
+import model.game.Constants;
 import model.game.utils.Cell;
 
 /**
@@ -7,6 +8,11 @@ import model.game.utils.Cell;
  */
 public class Creature extends Entity{
     private int sugarCount = 0;
+
+    @Override
+    public Constants.Block blockType() {
+        return Constants.Block.CREATURE;
+    }
 
     public Creature(int row, int col){
         super(row,col);

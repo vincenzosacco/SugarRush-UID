@@ -29,6 +29,7 @@ public interface Constants {
      * - {@code WALL}: An impassable block representing a boundary or obstacle within the map.
      * - {@code CREATURE}: The current position of the creature in the game.
      * - {@code SUGAR}: A collectible item in the game that can be consumed by the creature.
+     * - {@code THORNS}: A block that if you touch it you die.
      */
-    enum Block{SPACE, WALL, CREATURE, SUGAR, ENEMY1}
+    enum Block{SPACE, WALL, CREATURE, SUGAR, ENEMY1, THORNS}
 }

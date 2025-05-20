@@ -4,7 +4,7 @@ import model.game.Constants;
 import model.game.utils.Cell;
 
 public abstract class Entity {
-     Constants.Block blockType;
+    public abstract Constants.Block blockType();
 
 
     protected Cell coord;

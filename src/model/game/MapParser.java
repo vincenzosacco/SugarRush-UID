@@ -88,6 +88,7 @@ class MapParser {
                         mat.get(row).add(Block.ENEMY1);
                         game.entities.add(new Enemy1(row,col));
                     }
+                    case 't' -> mat.get(row).add(Block.THORNS);
                     case ' '-> mat.get(row).add(Block.SPACE);
                     default -> throw new IllegalArgumentException("Invalid char in map file '" + map + "': "
                             + tileMapChar+ " at row: " + row + " col: " + col);
