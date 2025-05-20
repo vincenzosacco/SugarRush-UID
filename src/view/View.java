@@ -47,7 +47,6 @@ public class View {
         Window.setTitle("Sugar Rush");
         // using setSize() because component doesnt have a parent neither a layout manager.ù
         // setSize() sets the absolute size instead setPreferredSize() is more an 'hint' to layout manager.
-        Window.setLocationRelativeTo(null); // center on screen
         Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Window.setResizable(false);
 
@@ -60,6 +59,8 @@ public class View {
         Container.add(startMenuPanel, PanelName.START_MENU.getName());
 
         Window.pack();
+
+        Window.setLocationRelativeTo(null); // center on screen
     }
 
     // VIEW ACTIONS //
