@@ -62,7 +62,7 @@ public class Game implements IModelObj {
         // Clean matrix
         for (int i = 0; i < gameMat.size(); i++) {
             for (int j = 0; j < gameMat.get(i).size(); j++) {
-                if (gameMat.get(i).get(j) != Constants.Block.WALL && gameMat.get(i).get(j) != Constants.Block.THORNS){
+                if (gameMat.get(i).get(j) != Constants.Block.WALL && gameMat.get(i).get(j) != Constants.Block.THORNS && gameMat.get(i).get(j) != Constants.Block.SUGAR){
                     gameMat.get(i).set(j, Constants.Block.SPACE);
                 }
             }
