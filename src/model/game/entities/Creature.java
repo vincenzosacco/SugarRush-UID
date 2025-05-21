@@ -16,9 +16,8 @@ public class Creature extends Entity{
     private int sugarCount = 0;
     private Direction direction = Direction.NONE;
 
-    @Override
-    public Constants.Block blockType() {
-        return Constants.Block.CREATURE;
+    public Creature() {
+        super();
     }
 
     public Creature(int row, int col){
@@ -27,6 +26,11 @@ public class Creature extends Entity{
 
     public Creature(Cell coord) {
         super(coord);
+    }
+
+    @Override
+    public Constants.Block blockType() {
+        return Constants.Block.CREATURE;
     }
 
     // Do nothing beacause the creature is moved by the user

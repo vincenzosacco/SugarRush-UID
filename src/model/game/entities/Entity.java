@@ -3,11 +3,18 @@ package model.game.entities;
 import model.game.Constants;
 import model.game.utils.Cell;
 
-public abstract class Entity {
-    public abstract Constants.Block blockType();
 
-
+public abstract class Entity{
     protected Cell coord;
+
+    /**
+     * Retrieves the block type associated with the entity.
+     * The block type represents the specific kind of block that the entity occupies or is represented as
+     * within the game's environment.
+     *
+     * @return the block type of the entity, as an instance of {@link Constants.Block}
+     */
+    public abstract Constants.Block blockType();
 
     public Entity(int row, int col){
         this.coord = new Cell(row,col);
@@ -15,6 +22,13 @@ public abstract class Entity {
 
     public Entity(Cell coord){
         this.coord = coord;
+    }
+
+    public Entity() {
+        // A default cell is safe because it can be instantiated, but no operations can be done on it.
+        // Using this allows declaring a final Cell field and setting its coordinates later,
+        // but without the risk of making operations on it before coordinates are set.
+        this.coord = new Cell();
     }
 
     /**

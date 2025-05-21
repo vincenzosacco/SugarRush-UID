@@ -7,12 +7,6 @@ import model.game.entities.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Core game model that manages the game state and logic.
- * This singleton class handles the game map, creature movement, and provides thread-safe access
- * to the game state through synchronized methods. It serves as the central model for maintaining
- * game data integrity during concurrent operations like rendering and state updates.
- */
 public class Game implements IModelObj {
     /**
      * @see GameMatrix
@@ -20,7 +14,6 @@ public class Game implements IModelObj {
     // package visibility needed for MapParser
     final GameMatrix gameMat = new GameMatrix();
     final ArrayList<Entity> entities = new ArrayList<>() ;
-
 
     /**
      * <p>
@@ -60,10 +53,10 @@ public class Game implements IModelObj {
     public void updateState(){
         // TODO find if there is a better way to do this.
         // Clean matrix
-        for (int i = 0; i < gameMat.size(); i++) {
-            for (int j = 0; j < gameMat.get(i).size(); j++) {
-                if (gameMat.get(i).get(j) != Constants.Block.WALL && gameMat.get(i).get(j) != Constants.Block.THORNS){
-                    gameMat.get(i).set(j, Constants.Block.SPACE);
+        for (ArrayList<Constants.Block> blocks : gameMat) {
+            for (int j = 0; j < blocks.size(); j++) {
+                if (blocks.get(j) != Constants.Block.WALL && blocks.get(j) != Constants.Block.THORNS) {
+                    blocks.set(j, Constants.Block.SPACE);
                 }
             }
         }

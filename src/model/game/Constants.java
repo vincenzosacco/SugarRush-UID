@@ -26,11 +26,18 @@ public interface Constants {
     /**
      * Enum representing different types of blocks that can exist within the game map.
      * Each block type corresponds to a specific element within the game's environment:
-     * - {@code SPACE}: An empty space where the creature can move freely.
-     * - {@code WALL}: An impassable block representing a boundary or obstacle within the map.
-     * - {@code CREATURE}: The current position of the creature in the game.
-     * - {@code SUGAR}: A collectible item in the game that can be consumed by the creature.
-     * - {@code THORNS}: A block that if you touch it you die.
      */
-    enum Block{SPACE, WALL, CREATURE, SUGAR, ENEMY1, THORNS}
+    enum Block{
+        /** An empty space where the creature can move freely.*/
+        SPACE,
+        /**An impassable block representing a boundary or obstacle within the map.*/
+        WALL,
+        /**The current position of the creature in the game.*/
+        CREATURE,
+        /**A collectible item in the game that can be consumed by the creature.*/
+        SUGAR,
+        ENEMY1,
+        /** A block that if you touch it you die.*/
+        THORNS
+    }
 }

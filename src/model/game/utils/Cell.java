@@ -70,7 +70,6 @@ public class Cell {
         return col;
     }
 
-
     public void setRow(int row) {
         assert row >= 0;
         this.row = row;
