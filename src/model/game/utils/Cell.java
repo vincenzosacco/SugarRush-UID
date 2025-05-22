@@ -47,6 +47,10 @@ public class Cell {
         setRow(row);
         setCol(col);
     }
+    public void setCoord(Cell cell){
+        setRow(cell.getRow());
+        setCol(cell.getCol());
+    }
 
     /**
      * Get the row index of the cell.

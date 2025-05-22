@@ -40,10 +40,20 @@ public abstract class Entity{
     }
 
     /**
+     * Computes but not executes the action or behavior specific to the entity.
+     * This method is intended to be overridden by subclasses
+     * @return
+     */
+    public abstract Cell computeAction();
+
+    public abstract boolean manageCollision(Constants.Block block);
+
+    /**
      * Executes the action or behavior specific to the entity
      * and then update his internal state (not the Game state).
      * This method must be defined by subclasses to provide their concrete implementation of the action.
      */
-    public abstract void performAction();
+    public abstract void performAction(Cell newCoord);
+
 
 }

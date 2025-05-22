@@ -3,6 +3,7 @@ package model.game;
 import model.IModelObj;
 import model.game.entities.Creature;
 import model.game.entities.Entity;
+import model.game.utils.Cell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,21 +86,19 @@ public class Game implements IModelObj {
         }
 
         for (Entity ent : entities) {
-            // PERFORM ENTITIES ACTION  //
-            ent.performAction();
+            // COMPUTE ENTITIES ACTION  //
+            Cell toMove = ent.computeAction();
 
             // MANAGE COLLISIONS //
+            boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
 
+            // PERFORM ACTION //
+            if (canPerform) ent.performAction(toMove);
 
             // APPLY NEW COORDS IN THE GAME MATRIX //
             gameMat.setCell(ent.getCoord(), ent.blockType());
         }
     }
-
-    private static void manageCollision() {
-
-    }
-
 
     // GAME ACTIONS //
     void restart() {
