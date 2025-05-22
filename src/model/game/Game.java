@@ -13,7 +13,7 @@ public class Game implements IModelObj {
      */
     // package visibility needed for MapParser
     final GameMatrix gameMat = new GameMatrix();
-    final ArrayList<Entity> entities = new ArrayList<>() ;
+    final ArrayList<Entity> entities = new ArrayList<>();
 
     /**
      * <p>
@@ -37,6 +37,7 @@ public class Game implements IModelObj {
     }
 
     // MODEL //
+
     /**
      * Retrieves the current state of the game as a two-dimensional, read-only list of blocks.
      * Each block represents a specific element within the game's map, such as walls, spaces,
@@ -50,7 +51,29 @@ public class Game implements IModelObj {
         return gameMatRO;
     }
 
-    public void updateState(){
+    /**
+     * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.
+     * <p>
+     * Updates the current state of the game by performing several critical operations
+     * in sequential order. This method represents the core logic for maintaining and
+     * refreshing the game map and entities to reflect the latest game state.
+     * </p>
+     * The operations include:
+     * <p>
+     * 2. Executing actions for all active game entities. Each entity's specific action is
+     * performed via its {@code performAction} method.
+     * </p>
+     * <p>
+     * 3. Resolving any interactions or collisions between entities and the game environment.
+     * </p>
+     * <p>
+     * 4. Updating the game matrix with the new positions and block types of all entities.
+     * </p>
+     * This method is central to the game's functionality and should be invoked regularly
+     * to keep the game running smoothly. Modifications to this method should ensure the
+     * preservation of each step's intended functionality.
+     */
+    public void updateState() {
         // TODO find if there is a better way to do this.
         // Clean matrix
         for (ArrayList<Constants.Block> blocks : gameMat) {
@@ -61,20 +84,25 @@ public class Game implements IModelObj {
             }
         }
 
-        // PERFORM ENTITIES ACTION  //
-        entities.forEach(Entity::performAction);
+        for (Entity ent : entities) {
+            // PERFORM ENTITIES ACTION  //
+            ent.performAction();
 
-        for (Entity entity : entities) {
-            int row = entity.getCoord().getRow();
-            int col = entity.getCoord().getCol();
+            // MANAGE COLLISIONS //
+
 
             // APPLY NEW COORDS IN THE GAME MATRIX //
-            gameMat.get(row).set(col, entity.blockType());
+            gameMat.setCell(ent.getCoord(), ent.blockType());
         }
     }
 
+    private static void manageCollision() {
+
+    }
+
+
     // GAME ACTIONS //
-    void restart(){
+    void restart() {
         MapParser.loadMap(MapParser.MAP_1, this);
     }
 
@@ -88,11 +116,10 @@ public class Game implements IModelObj {
      */
     public void performMove(Constants.Direction direction) {
         for (Entity entity : entities) {
-                if (entity instanceof Creature creature){
-                     creature.setDirection(direction);
-                }
+            if (entity instanceof Creature creature) {
+                creature.setDirection(direction);
+            }
         }
-
     }
 
     /**
