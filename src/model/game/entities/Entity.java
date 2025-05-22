@@ -40,8 +40,9 @@ public abstract class Entity{
     }
 
     /**
-     * Executes the action or behavior specific to the entity. This method must be
-     * defined by subclasses to provide their concrete implementation of the action.
+     * Executes the action or behavior specific to the entity
+     * and then update his internal state (not the Game state).
+     * This method must be defined by subclasses to provide their concrete implementation of the action.
      */
     public abstract void performAction();
 

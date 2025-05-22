@@ -50,6 +50,28 @@ public class Game implements IModelObj {
         return gameMatRO;
     }
 
+    /**
+     * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.
+     * <p>
+     * Updates the current state of the game by performing several critical operations
+     * in sequential order. This method represents the core logic for maintaining and
+     * refreshing the game map and entities to reflect the latest game state.
+     * </p>
+     * The operations include:
+     * <p>
+     * 2. Executing actions for all active game entities. Each entity's specific action is
+     *    performed via its {@code performAction} method.
+     *</p>
+     *<p>
+     * 3. Resolving any interactions or collisions between entities and the game environment.
+     *</p>
+     *<p>
+     * 4. Updating the game matrix with the new positions and block types of all entities.
+     *</p>
+     * This method is central to the game's functionality and should be invoked regularly
+     * to keep the game running smoothly. Modifications to this method should ensure the
+     * preservation of each step's intended functionality.
+     */
     public void updateState(){
         // TODO find if there is a better way to do this.
         // Clean matrix
@@ -64,14 +86,17 @@ public class Game implements IModelObj {
         // PERFORM ENTITIES ACTION  //
         entities.forEach(Entity::performAction);
 
-        for (Entity entity : entities) {
-            int row = entity.getCoord().getRow();
-            int col = entity.getCoord().getCol();
+        // MANAGE COLLISIONS //
 
-            // APPLY NEW COORDS IN THE GAME MATRIX //
-            gameMat.get(row).set(col, entity.blockType());
-        }
+        // APPLY NEW COORDS IN THE GAME MATRIX //
+        entities.forEach( entity -> gameMat.setCell(entity.getCoord(), entity.blockType()));
     }
+
+    private void detectCollision(){
+
+    }
+
+
 
     // GAME ACTIONS //
     void restart(){
@@ -92,7 +117,6 @@ public class Game implements IModelObj {
                      creature.setDirection(direction);
                 }
         }
-
     }
 
     /**
