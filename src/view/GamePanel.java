@@ -25,7 +25,7 @@ import static config.View.*;
 /**
  * Main game panel
  */
-public class GamePanel extends JPanel implements IViewComp {
+public class GamePanel extends JPanel implements ViewComp {
     private final Image wallImage, creatureImage, sugarImage, enemy1Image, thornsImage;
 
     public GamePanel() {
@@ -43,6 +43,11 @@ public class GamePanel extends JPanel implements IViewComp {
         thornsImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/thorns.jpg"))).getImage();
     }
 
+    /**
+     * Binds the controller to the view component.
+     * Only one controller can be bound to this view component.
+     * @param controller the controller to be bound to the view component, must be a {@link GameController}
+     */
     @Override
     public void bindController(IControllerObj controller) {
         if (!(controller instanceof GameController)) {

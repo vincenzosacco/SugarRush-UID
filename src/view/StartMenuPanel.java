@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 
-public class StartMenuPanel extends JPanel implements IViewComp {
+public class StartMenuPanel extends JPanel implements ViewComp {
 
     private final JButton startGameButton = new JButton("Start Game");
 

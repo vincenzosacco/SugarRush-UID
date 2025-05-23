@@ -1,6 +1,14 @@
 # Dettagli per sviluppatori
 
-# Development Details
+## Come lavorare al progetto
+### Aggiungere un oggetto view
+1. Creare una classe che implementa [ViewComp](src/view/ViewComp.java)
+2. Implementare il metodo `bindController` richiesto dalla java interface, 
+questo metodo verrà chiamato dalla interfaccia [Controller](src/controller/Controller.java)
+per legare il controller specifico alla specifica view.
+3. 
+
+
 
 ## Project Structure
 
@@ -10,7 +18,7 @@
     - `controller/` 
     - `config/` # Configurationi e costanti
     - `Main` # lancia l'applicazione
-    - `MvcManager` # accoppia i componenti MVC per permettere la comunicazione tra essi
+
 
 # DA IMPLEMENTARE
 
