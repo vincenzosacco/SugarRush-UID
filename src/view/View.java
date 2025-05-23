@@ -22,7 +22,6 @@ public class View {
     }
 
 
-
     // VIEW //
     /**
      * An enumeration representing the different panels or views that can be displayed in the application.

@@ -1,26 +1,19 @@
 package model.game;
 
-import model.IModelObj;
 import model.game.entities.Creature;
 import model.game.entities.Entity;
+import model.game.utils.Cell;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Core game model that manages the game state and logic.
- * This singleton class handles the game map, creature movement, and provides thread-safe access
- * to the game state through synchronized methods. It serves as the central model for maintaining
- * game data integrity during concurrent operations like rendering and state updates.
- */
-public class Game implements IModelObj {
+public class Game {
     /**
      * @see GameMatrix
      */
     // package visibility needed for MapParser
     final GameMatrix gameMat = new GameMatrix();
-    final ArrayList<Entity> entities = new ArrayList<>() ;
-
+    final ArrayList<Entity> entities = new ArrayList<>();
 
     /**
      * <p>
@@ -44,6 +37,7 @@ public class Game implements IModelObj {
     }
 
     // MODEL //
+
     /**
      * Retrieves the current state of the game as a two-dimensional, read-only list of blocks.
      * Each block represents a specific element within the game's map, such as walls, spaces,
@@ -57,31 +51,56 @@ public class Game implements IModelObj {
         return gameMatRO;
     }
 
-    public void updateState(){
+    /**
+     * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.
+     * <p>
+     * Updates the current state of the game by performing several critical operations
+     * in sequential order. This method represents the core logic for maintaining and
+     * refreshing the game map and entities to reflect the latest game state.
+     * </p>
+     * The operations include:
+     * <p>
+     * 2. Executing actions for all active game entities. Each entity's specific action is
+     * performed via its {@code performAction} method.
+     * </p>
+     * <p>
+     * 3. Resolving any interactions or collisions between entities and the game environment.
+     * </p>
+     * <p>
+     * 4. Updating the game matrix with the new positions and block types of all entities.
+     * </p>
+     * This method is central to the game's functionality and should be invoked regularly
+     * to keep the game running smoothly. Modifications to this method should ensure the
+     * preservation of each step's intended functionality.
+     */
+    public void updateState() {
         // TODO find if there is a better way to do this.
         // Clean matrix
-        for (int i = 0; i < gameMat.size(); i++) {
-            for (int j = 0; j < gameMat.get(i).size(); j++) {
-                if (gameMat.get(i).get(j) != Constants.Block.WALL && gameMat.get(i).get(j) != Constants.Block.THORNS && gameMat.get(i).get(j) != Constants.Block.SUGAR){
-                    gameMat.get(i).set(j, Constants.Block.SPACE);
+        for (ArrayList<Constants.Block> blocks : gameMat) {
+            for (int j = 0; j < blocks.size(); j++) {
+                if (blocks.get(j) != Constants.Block.WALL && blocks.get(j) != Constants.Block.THORNS) {
+                    blocks.set(j, Constants.Block.SPACE);
                 }
             }
         }
 
-        // PERFORM ENTITIES ACTION  //
-        entities.forEach(Entity::performAction);
+        for (Entity ent : entities) {
+            // COMPUTE ENTITIES ACTION  //
+            Cell toMove = ent.computeAction();
 
-        for (Entity entity : entities) {
-            int row = entity.getCoord().getRow();
-            int col = entity.getCoord().getCol();
+            // MANAGE COLLISIONS //
+            boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
+
+            // PERFORM ACTION //
+            if (canPerform) ent.performAction(toMove);
 
             // APPLY NEW COORDS IN THE GAME MATRIX //
-            gameMat.get(row).set(col, entity.blockType());
+            gameMat.setCell(ent.getCoord(), ent.blockType());
         }
     }
 
     // GAME ACTIONS //
-    void restart(){
+    void restart() {
         MapParser.loadMap(MapParser.MAP_1, this);
     }
 
@@ -95,11 +114,10 @@ public class Game implements IModelObj {
      */
     public void performMove(Constants.Direction direction) {
         for (Entity entity : entities) {
-                if (entity instanceof Creature creature){
-                     creature.setDirection(direction);
-                }
+            if (entity instanceof Creature creature) {
+                creature.setDirection(direction);
+            }
         }
-
     }
 
     /**

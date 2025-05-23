@@ -33,5 +33,16 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
      List<List<Block>> makeReadOnly(){
         return Collections.unmodifiableList(this);
     }
+
+
+    /** Alias for {@code get(row).get(col)} */
+    public Block getCell(Cell coord){
+        return get(coord.getRow()).get(coord.getCol());
+    }
+
+    /** Alias for {@code get(row).set(col, block)} */
+    public void setCell(Cell coord, Block block){
+        get(coord.getRow()).set(coord.getCol(), block);
+    }
 }
 
