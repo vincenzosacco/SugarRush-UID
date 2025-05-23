@@ -1,9 +1,5 @@
 package controller;
 
-import model.IModelObj;
-
-import java.util.EventListener;
-
 
 /**
  * Represents a generic controller interface that defines the contract for communication
@@ -11,4 +7,5 @@ import java.util.EventListener;
  * are expected to handle user input, process it, and update the view and/or model accordingly.
  */
 public interface IControllerObj {
+ // at the moment it is only a marker interface
 }

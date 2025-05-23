@@ -1,6 +1,5 @@
 package model.game;
 
-import model.IModelObj;
 import model.game.entities.Creature;
 import model.game.entities.Entity;
 import model.game.utils.Cell;
@@ -8,7 +7,7 @@ import model.game.utils.Cell;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game implements IModelObj {
+public class Game {
     /**
      * @see GameMatrix
      */
