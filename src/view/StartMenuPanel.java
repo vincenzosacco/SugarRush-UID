@@ -1,6 +1,6 @@
 package view;
 
-import controller.IControllerObj;
+import controller.ControllerObj;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -24,7 +24,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
      * @param actionListener the {@code ActionListener} to be added to the start game button, defining the action to be executed upon interaction.
      */
     @Override
-    public void bindController(IControllerObj actionListener) {
+    public void bindController(ControllerObj actionListener) {
         if ( startGameButton.getActionListeners().length != 0){
             throw new IllegalStateException("Cannot have more than one controller");
         }

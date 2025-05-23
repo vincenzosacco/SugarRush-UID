@@ -1,6 +1,6 @@
 package view;
 
-import controller.IControllerObj;
+import controller.ControllerObj;
 
 public interface ViewComp {
     /**
@@ -9,5 +9,5 @@ public interface ViewComp {
      * @implNote this method should contain the logic to bind the controller to the view component specific to the ViewComponent
      * @param controller the controller to be bound to the view component
      */
-    void bindController(IControllerObj controller);
+    void bindController(ControllerObj controller);
 }

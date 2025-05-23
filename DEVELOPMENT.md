@@ -1,15 +1,28 @@
 # Dettagli per sviluppatori
 
 ## Come lavorare al progetto
+
 ### Aggiungere un oggetto view
 1. Creare una classe che implementa [ViewComp](src/view/ViewComp.java)
 2. Implementare il metodo `bindController` richiesto dalla java interface, 
 questo metodo verrà chiamato dalla interfaccia [Controller](src/controller/Controller.java)
 per legare il controller specifico alla specifica view.
-3. 
+3. Se necessario (ad esempio è una view può essere mostrata dal controller, come un menù collegato a un button) , aggiungere il viewComponent all'interfaccia [View](src/view/View.java).
 
+**Ricorda che se necessario, un viewComponent deve poter essere richiamato *solamente* attraverso l'interfaccia [View](src/view/View.java).**
 
+### Aggiungere un oggetto controller
+1. Creare una classe che implementa [ControllerObj](src/controller/ControllerObj.java).
+2. Attualmente questa interfaccia serve solo come 'marker'.
+Nel dettaglio, l'interfaccia al modulo [Controller](src/controller/Controller.java) necessita di un type comune a tutti gli oggetti controller.
+3. Per far si che l'oggetto controller venga legato al componente view:
+   - Implementare come l'oggetto controller viene legato alla view nel metodo `bindController` in [ViewComp](src/view/ViewComp.java).
+   - Chiamare `viewComponent.bindController(new ControllerObj())` nel metodo `bind` in [Controller](src/controller/Controller.java). *(Sostituire controllerObj e viewComponent con i nomi veri)*
 
+### Aggiungere un oggetto model
+Attualmente non è necessario implementare o estendere alcuna classe per gli ogetti model.
+
+**Ricorda che se necessario, un oggetto model deve poter essere richiamato *solamente* attraverso l'interfaccia [Model](src/model/Model.java).**
 ## Project Structure
 
 - src/
