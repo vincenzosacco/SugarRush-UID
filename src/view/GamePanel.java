@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements ViewComp {
 
     public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
-        Color skyblue = new Color(0, 188, 220);
+        Color skyblue = new Color(0, 188, 250);
         setBackground(skyblue);
 
         this.add(gameSettings);
