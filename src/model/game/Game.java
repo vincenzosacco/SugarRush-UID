@@ -78,7 +78,7 @@ public class Game {
         // Clean matrix
         for (ArrayList<Constants.Block> blocks : gameMat) {
             for (int j = 0; j < blocks.size(); j++) {
-                if (blocks.get(j) != Constants.Block.WALL && blocks.get(j) != Constants.Block.THORNS) {
+                if (blocks.get(j) != Constants.Block.WALL && blocks.get(j) != Constants.Block.THORNS && blocks.get(j) != Constants.Block.SUGAR) {
                     blocks.set(j, Constants.Block.SPACE);
                 }
             }

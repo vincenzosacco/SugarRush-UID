@@ -28,15 +28,27 @@ public class GameController extends KeyAdapter implements ControllerObj {
 
         // NOTIFY MODEL
         switch (e.getKeyCode()){
-            case KeyEvent.VK_UP -> model.performMove(UP);
-            case KeyEvent.VK_DOWN -> model.performMove(DOWN);
-            case KeyEvent.VK_LEFT -> model.performMove(LEFT);
-            case KeyEvent.VK_RIGHT -> model.performMove(RIGHT);
+            case KeyEvent.VK_UP -> {
+                gameLoop.start();
+                model.performMove(UP);
+            }
+            case KeyEvent.VK_DOWN ->{
+                gameLoop.start();
+                model.performMove(DOWN);
+            }
+            case KeyEvent.VK_LEFT ->{
+                gameLoop.start();
+                model.performMove(LEFT);
+            }
+            case KeyEvent.VK_RIGHT ->{
+                    gameLoop.start();
+                    model.performMove(RIGHT);
+            }
             case KeyEvent.VK_ESCAPE ->{
                 model.openSetting();
                 view.toggleSettingsPanel();
             }
-            case KeyEvent.VK_ENTER -> gameLoop.start();
+            //case KeyEvent.VK_ENTER -> gameLoop.start();
         }
 
         // VIEW repainting is delegated to RenderLoop
