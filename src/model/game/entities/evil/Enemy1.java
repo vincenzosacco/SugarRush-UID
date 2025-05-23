@@ -1,8 +1,12 @@
 package model.game.entities.evil;
 
+import model.Model;
 import model.game.Constants;
+import model.game.Game;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
+
+import java.util.List;
 
 /**
  * The Enemy1 has the following behavior:
@@ -20,7 +24,9 @@ public class Enemy1 extends Enemy {
     }
 
     public Enemy1(int row, int col) {
+
         super(row,col);
+        setMoveDelay(20);
     }
     public Enemy1(Cell coord) {
         super(coord);
@@ -28,24 +34,46 @@ public class Enemy1 extends Enemy {
 
     @Override
     public Cell computeAction() {
-        int newRow = this.coord.getRow();
-        int newCol = this.coord.getCol();
+        Game game = Model.getInstance().getGame();
+        List<List<Constants.Block>> state = game.getState(); // current game map
 
-        // randomly change direction ( TODO: remove this line when the enemy is implemented )
-        if (Math.random() < 0.1) {
-            DIRECTION = Direction.values()[(int) (Math.random() * Direction.values().length)];
-        }
+        int attempts = 0;
+        Cell target;
 
-        switch (DIRECTION) {
-            case Direction.NONE -> {return getCoord();} // no movement
-            case Direction.UP -> --newRow; // going up means decrementing the row index by 1
-            case Direction.DOWN -> ++newRow; // going down means incrementing the row index by 1
-            case Direction.LEFT -> --newCol; // going left means decrementing the col index by 1
-            case Direction.RIGHT -> ++newCol; // going right means incrementing the col index by 1
-            default -> throw new IllegalStateException("Unknown direction: " + DIRECTION);
-        }
-        return new Cell(newRow, newCol);
+        do {
+            // Change direction after a few attempts
+            if (attempts == 0){
+                DIRECTION = Direction.values()[(int) (Math.random() * Direction.values().length)];
+            }
 
+            int newRow = coord.getRow();
+            int newCol = coord.getCol();
+
+            switch (DIRECTION) {
+                case UP -> newRow--;
+                case DOWN -> newRow++;
+                case LEFT -> newCol--;
+                case RIGHT -> newCol++;
+            }
+
+            target = new Cell(newRow, newCol);
+
+            // Check if it's off the map
+            boolean outOfBounds = newRow < 0 || newCol < 0 ||
+                    newRow >= state.size() ||
+                    newCol >= state.get(0).size();
+
+            // if BLOCK is not SPACE or CREATURE or is out of map -> change direction
+            if (!outOfBounds && (state.get(newRow).get(newCol) == Constants.Block.SPACE || state.get(newRow).get(newCol) == Constants.Block.CREATURE)){
+                return target; // valid direction found
+            }
+
+            attempts++;
+        } while (attempts < 10); // avoid infinite loop
+
+        // He hasn't found a valid direction: he remains still
+        DIRECTION = Direction.NONE;
+        return getCoord();
     }
 
     @Override

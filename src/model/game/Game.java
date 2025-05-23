@@ -85,15 +85,14 @@ public class Game {
         }
 
         for (Entity ent : entities) {
-            // COMPUTE ENTITIES ACTION  //
-            Cell toMove = ent.computeAction();
-
-            // MANAGE COLLISIONS //
-            boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
-
-            // PERFORM ACTION //
-            if (canPerform) ent.performAction(toMove);
-
+            if (ent.shouldMove()) {
+                // COMPUTE ENTITIES ACTION  //
+                Cell toMove = ent.computeAction();
+                // MANAGE COLLISIONS //
+                boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
+                // PERFORM ACTION //
+                if (canPerform) ent.performAction(toMove);
+            }
             // APPLY NEW COORDS IN THE GAME MATRIX //
             gameMat.setCell(ent.getCoord(), ent.blockType());
         }

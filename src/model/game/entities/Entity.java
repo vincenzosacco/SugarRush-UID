@@ -7,6 +7,27 @@ import model.game.utils.Cell;
 public abstract class Entity{
     protected Cell coord;
 
+    private int frameCounter = 0;
+    private int moveDelay = 5; // Default: moves every 5 frame (~24 times/sec if FPS = 120)
+
+    /**
+     * indicates whether the entity's movement is allowed or not based on the framecounter
+     * */
+    public boolean shouldMove() {
+        frameCounter++;
+        if (frameCounter >= moveDelay) {
+            frameCounter = 0;
+            return true;
+        }
+        return false;
+    }
+    /**
+     * set movedelay based on entity
+     * */
+    public void setMoveDelay(int delay) {
+        this.moveDelay = delay;
+    }
+
     /**
      * Retrieves the block type associated with the entity.
      * The block type represents the specific kind of block that the entity occupies or is represented as

@@ -21,7 +21,9 @@ public class Creature extends Entity{
     }
 
     public Creature(int row, int col){
+
         super(row,col);
+        setMoveDelay(3);
     }
 
     public Creature(Cell coord) {
