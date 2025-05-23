@@ -1,12 +1,12 @@
 package controller.menu;
 
-import controller.IControllerObj;
+import controller.ControllerObj;
 import view.View;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class StartMenuController  implements ActionListener, IControllerObj {
+public class StartMenuController  implements ActionListener, ControllerObj {
     // when start game is pressed
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -17,7 +17,7 @@ import static model.game.Constants.Direction.*;
 /**
  * Controller of 'SugarPanel'
  */
-public class GameController extends KeyAdapter implements IControllerObj {
+public class GameController extends KeyAdapter implements ControllerObj {
     private final GameLoop gameLoop = new GameLoop();
 
 

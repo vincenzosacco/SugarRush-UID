@@ -1,7 +1,7 @@
 package view;
 
 import controller.GameController;
-import controller.IControllerObj;
+import controller.ControllerObj;
 import model.Model;
 import model.game.Constants.Block;
 import model.game.Game;
@@ -49,7 +49,7 @@ public class GamePanel extends JPanel implements ViewComp {
      * @param controller the controller to be bound to the view component, must be a {@link GameController}
      */
     @Override
-    public void bindController(IControllerObj controller) {
+    public void bindController(ControllerObj controller) {
         if (!(controller instanceof GameController)) {
             throw new IllegalArgumentException("controller must be instance of GameController");
         }
