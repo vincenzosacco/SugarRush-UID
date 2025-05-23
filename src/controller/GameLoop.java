@@ -97,4 +97,5 @@ class GameLoop implements Runnable {
     private void renderView() {
         View.getInstance().notifyView();
     }
+
 }
