@@ -7,25 +7,42 @@ import model.game.utils.Cell;
 public abstract class Entity{
     protected Cell coord;
 
+    /** Counter for the number of frames since the last move.
+     * This is used to control the frequency of movement updates for the entity.
+     * The entity will only move when this counter reaches the {@code moveDelay} value.
+     * @see #actionDelay
+     * @see #shouldPerform()
+     * */
     private int frameCounter = 0;
-    private int moveDelay = 5; // Default: moves every 5 frame (~24 times/sec if FPS = 120)
 
     /**
-     * indicates whether the entity's movement is allowed or not based on the framecounter
+     * This value determines how often the entity can perform its action.
+     * For example, if {@code moveDelay} is set to 5, the entity will perform its action every 5 frames.
+     * @apiNote  This is used to simulate different entity velocities.
+     */
+    private int actionDelay = 5; // Default: action every 5 frame (~24 times/sec if FPS = 120)
+
+    /**
+     * Indicates whether the entity's action is allowed or not based on the {@code frameCounter}
+     * and other possible conditions strictly related to the type of entity.
      * */
-    public boolean shouldMove() {
+    public boolean shouldPerform() {
         frameCounter++;
-        if (frameCounter >= moveDelay) {
+        if (frameCounter >= actionDelay) {
             frameCounter = 0;
             return true;
         }
         return false;
     }
     /**
-     * set movedelay based on entity
+     * set {@code moveDelay}
      * */
-    public void setMoveDelay(int delay) {
-        this.moveDelay = delay;
+    public void setActionDelay(int delay) {
+        if (delay <= 0) {
+            throw new IllegalArgumentException("Action delay must be a positive integer.");
+        }
+
+        this.actionDelay = delay;
     }
 
     /**
@@ -52,10 +69,7 @@ public abstract class Entity{
         this.coord = new Cell();
     }
 
-    /**
-     * Retrieves a copy of the current coordinate.
-     * @return a new {@code Cell} instance representing the current coordinates of the entity
-     */
+    /** @return a new {@code Cell} instance representing the current coordinates of the entity */
     public Cell getCoord() {
         return new Cell(coord);
     }
@@ -63,10 +77,20 @@ public abstract class Entity{
     /**
      * Computes but not executes the action or behavior specific to the entity.
      * This method is intended to be overridden by subclasses
-     * @return
+     * @return a new {@code Cell} instance representing the next coordinates of the entity.
      */
     public abstract Cell computeAction();
 
+    /**
+     * Manages the collision of the entity with a block in the game.
+     * This method must implement <b>how the entity interacts with the block</b>,
+     * such as whether it can pass through, destroy, or be affected by the block.
+     * <p>
+     * What happens in this method must affect <b>only</b> the entity's internal state.
+     * </p>
+     * @param block the block with which the entity is colliding
+     * @return true if the entity can perform its action after the collision, false otherwise
+     */
     public abstract boolean manageCollision(Constants.Block block);
 
     /**

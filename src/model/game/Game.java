@@ -85,7 +85,7 @@ public class Game {
         }
 
         for (Entity ent : entities) {
-            if (ent.shouldMove()) {
+            if (ent.shouldPerform()) {
                 // COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction();
                 // MANAGE COLLISIONS //
@@ -96,6 +96,22 @@ public class Game {
             // APPLY NEW COORDS IN THE GAME MATRIX //
             gameMat.setCell(ent.getCoord(), ent.blockType());
         }
+    }
+
+
+    /**
+     * Checks if in {@code cell} coordinates contains a block of type {@code blockType}.
+     * @param cell the cell to check
+     * @param blockType the type of block to compare against
+     * @return true if the cell contains the specified block type, false otherwise
+     */
+    public boolean isBlock(Cell cell, Constants.Block blockType) {
+        return gameMat.getCell(cell) == blockType;
+    }
+
+    /**@return the block at the specified cell in the game matrix*/
+    public Constants.Block blockAt(Cell cell) {
+        return gameMat.getCell(cell);
     }
 
     // GAME ACTIONS //

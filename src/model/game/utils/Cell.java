@@ -23,16 +23,32 @@ public class Cell {
         col = null;
     }
 
+    /**
+     * Increments the row index of the cell by 1.
+     * @see Cell#getRow()
+     */
     public void incrRow(){
         setRow(getRow()+1);
     }
+    /**
+     * Increments the column index of the cell by 1.
+     * @see Cell#getCol()
+     */
     public void incrCol(){
         setCol(getCol()+1);
     }
 
+    /**
+     * Decrements the row index of the cell by 1.
+     * @see Cell#getRow()
+     */
     public void decrRow(){
         setRow(getRow()-1);
     }
+    /**
+     * Decrements the column index of the cell by 1.
+     * @see Cell#getCol()
+     */
     public void decrCol(){
         setCol(getCol()-1);
     }

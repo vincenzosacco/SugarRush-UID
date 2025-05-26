@@ -1,12 +1,8 @@
 package model.game.entities;
 
-import model.Model;
 import model.game.Constants;
-import model.game.Game;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
-
-import java.util.List;
 
 
 /**
@@ -23,7 +19,7 @@ public class Creature extends Entity{
     public Creature(int row, int col){
 
         super(row,col);
-        setMoveDelay(3);
+        setActionDelay(1); // at the moment, the fastest entity in the game
     }
 
     public Creature(Cell coord) {
