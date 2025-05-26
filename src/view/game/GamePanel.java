@@ -4,9 +4,7 @@ import controller.GameController;
 import controller.ControllerObj;
 import model.Model;
 import model.game.Constants;
-import model.game.Entity;
 import model.game.Game;
-import model.game.entities.evil.Enemy1;
 import view.ViewComp;
 import view.settings.GameSettingsPanel;
 
@@ -103,7 +101,7 @@ public class GamePanel extends JPanel implements ViewComp {
                 int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
 
                 Constants.Block block = gameMatrix.get(row).get(col);
-                Image image = EntitiesView.getIcon(block); // get the image for the block type
+                Image image = EntitiesView.getImage(block, null); // get the image for the block type
                 if (! (image == null))
                     g.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
             }
