@@ -4,7 +4,7 @@ import model.game.Constants;
 import model.game.Entity;
 import model.game.utils.Cell;
 
-abstract class Enemy extends Entity {
+public abstract class Enemy extends Entity {
     /** Direction in which the enemy would move*/
     protected static Constants.Direction DIRECTION = Constants.Direction.NONE;
 

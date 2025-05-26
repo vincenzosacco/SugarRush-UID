@@ -55,7 +55,6 @@ public class GameController extends KeyAdapter implements ControllerObj {
                 // RESTORE GAME when the game menu is closed
                 else gameLoop.start();
 
-                model.openSetting();
                 view.toggleSettingsPanel();
             }
         }

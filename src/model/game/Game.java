@@ -125,9 +125,14 @@ public class Game {
 
 
     // GAME ACTIONS //
-    void restart() {
-        MapParser.loadMap(MapParser.MAP_1, this);
+    private boolean isStarted = false;
+    public boolean isStarted() {
+        return isStarted;
     }
+    public void start(){
+        if (!isStarted) isStarted = true;
+    }
+
 
     /**
      * Moves the creature in the specified direction until it reaches an invalid position.
@@ -144,16 +149,5 @@ public class Game {
             }
         }
     }
-
-    /**
-     * Opens the game settings panel.
-     * This method triggers the settings interface and will eventually handle game state
-     * changes related to settings like pausing the game timer.
-     */
-    public void openSetting() {
-        System.out.println("Settings opened");
-        // stop time
-    }
-
 
 }

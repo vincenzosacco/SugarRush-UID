@@ -32,6 +32,7 @@ class GameLoop implements Runnable {
 
         gameThread = new Thread(this);
         gameThread.start();
+        Model.getInstance().getGame().start();
     }
 
     /**
