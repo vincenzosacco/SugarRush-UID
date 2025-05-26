@@ -1,6 +1,6 @@
 package model.game.entities.evil;
 
-import model.game.entities.Entity;
+import model.game.Entity;
 import model.game.utils.Cell;
 
 abstract class Enemy extends Entity {

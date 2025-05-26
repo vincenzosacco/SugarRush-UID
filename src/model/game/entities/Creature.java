@@ -1,6 +1,7 @@
 package model.game.entities;
 
 import model.game.Constants;
+import model.game.Entity;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
 
@@ -8,23 +9,15 @@ import model.game.Constants.Direction;
 /**
  * Model for Creature entity
  */
-public class Creature extends Entity{
+public class Creature extends Entity {
     private int sugarCount = 0;
     private Direction direction = Direction.NONE;
 
-    public Creature() {
-        super();
-    }
-
     public Creature(int row, int col){
-
         super(row,col);
         setActionDelay(1); // at the moment, the fastest entity in the game
     }
 
-    public Creature(Cell coord) {
-        super(coord);
-    }
 
     @Override
     public Constants.Block blockType() {

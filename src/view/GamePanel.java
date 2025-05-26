@@ -107,12 +107,16 @@ public class GamePanel extends JPanel implements ViewComp {
                     case WALL -> g.drawImage(wallImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     case SUGAR -> g.drawImage(sugarImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     case CREATURE -> g.drawImage(creatureImage, x, y, TILE_SIZE, TILE_SIZE, null);
-                    case ENEMY1 -> g.drawImage(enemy1Image, x, y, TILE_SIZE, TILE_SIZE, null);
+                    case ENEMY1 -> drawEnemy1(g, x, y);
                     case THORNS -> g.drawImage(thornsImage, x, y, TILE_SIZE, TILE_SIZE, null);
                     // space is not drawn
                 }
             }
         }
+    }
+
+    private void drawEnemy1(Graphics g, int x, int y) {
+        g.drawImage(enemy1Image, x, y, TILE_SIZE, TILE_SIZE, null);
     }
 
     // SETTINGS

@@ -1,7 +1,6 @@
 package model.game;
 
 import model.game.entities.Creature;
-import model.game.entities.Entity;
 import model.game.utils.Cell;
 
 import java.util.ArrayList;
@@ -113,6 +112,7 @@ public class Game {
     public Constants.Block blockAt(Cell cell) {
         return gameMat.getCell(cell);
     }
+
 
     // GAME ACTIONS //
     void restart() {
