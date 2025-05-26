@@ -1,10 +1,13 @@
-package view;
+package view.game;
 
 import controller.GameController;
 import controller.ControllerObj;
 import model.Model;
-import model.game.Constants.Block;
+import model.game.Constants;
+import model.game.Entity;
 import model.game.Game;
+import model.game.entities.evil.Enemy1;
+import view.ViewComp;
 import view.settings.GameSettingsPanel;
 
 import javax.swing.JPanel;
@@ -26,7 +29,7 @@ import static config.View.*;
  * Main game panel
  */
 public class GamePanel extends JPanel implements ViewComp {
-    private final Image wallImage, creatureImage, sugarImage, enemy1Image, thornsImage;
+    private final Image wallImage, creatureImage, sugarImage,thornsImage;
 
     public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
@@ -39,7 +42,6 @@ public class GamePanel extends JPanel implements ViewComp {
         wallImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/wall.jpg"))).getImage();
         creatureImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/creature.jpg"))).getImage();
         sugarImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/sugar.jpg"))).getImage();
-        enemy1Image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/enemy1.jpg"))).getImage();
         thornsImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/thorns.jpg"))).getImage();
     }
 
@@ -85,13 +87,13 @@ public class GamePanel extends JPanel implements ViewComp {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        draw(g);
+        drawStartUp(g);
     }
 
-    protected void draw(Graphics g) {
+    private void drawStartUp(Graphics g){
         Game game = Model.getInstance().getGame();
 
-        List<List<Block>> gameMatrix = game.getState();
+        List<List<Constants.Block>> gameMatrix = game.getState();
         assert gameMatrix != null && !gameMatrix.isEmpty();
 
         // DRAW //
@@ -100,24 +102,21 @@ public class GamePanel extends JPanel implements ViewComp {
             for (int col = 0; col < gameMatrix.get(row).size(); col++) {
                 int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
 
-
-                Block block = gameMatrix.get(row).get(col);
-
-                switch (block) {
-                    case WALL -> g.drawImage(wallImage, x, y, TILE_SIZE, TILE_SIZE, null);
-                    case SUGAR -> g.drawImage(sugarImage, x, y, TILE_SIZE, TILE_SIZE, null);
-                    case CREATURE -> g.drawImage(creatureImage, x, y, TILE_SIZE, TILE_SIZE, null);
-                    case ENEMY1 -> drawEnemy1(g, x, y);
-                    case THORNS -> g.drawImage(thornsImage, x, y, TILE_SIZE, TILE_SIZE, null);
-                    // space is not drawn
-                }
+                Constants.Block block = gameMatrix.get(row).get(col);
+                Image image = EntitiesView.getIcon(block); // get the image for the block type
+                if (! (image == null))
+                    g.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
             }
         }
     }
 
-    private void drawEnemy1(Graphics g, int x, int y) {
-        g.drawImage(enemy1Image, x, y, TILE_SIZE, TILE_SIZE, null);
+    private void drawUpdate(Graphics g) {
+        // TODO implement this method to draw the game state after each update
+        // This method is intended to draw only the updated state of the game, not the entire game state each time.
+        // PURPOSE: to improve performance and reduce flickering.
     }
+
+
 
     // SETTINGS
     private final GameSettingsPanel gameSettings = new GameSettingsPanel();

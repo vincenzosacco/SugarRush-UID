@@ -2,7 +2,7 @@ package controller;
 
 import model.Model;
 import model.game.Game;
-import view.GamePanel;
+import view.game.GamePanel;
 import view.View;
 
 import java.awt.event.KeyAdapter;

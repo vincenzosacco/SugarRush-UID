@@ -4,6 +4,8 @@ import model.game.entities.Creature;
 import model.game.utils.Cell;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -13,6 +15,7 @@ public class Game {
     // package visibility needed for MapParser
     final GameMatrix gameMat = new GameMatrix();
     final ArrayList<Entity> entities = new ArrayList<>();
+
 
     /**
      * <p>
@@ -29,6 +32,9 @@ public class Game {
      * @see GameMatrix#makeReadOnly()
      */
     private final List<List<Constants.Block>> gameMatRO = gameMat.makeReadOnly();
+
+    // experimental approach
+    private final List<Entity> entitiesRO = Collections.unmodifiableList(entities);
 
     public Game() {
         // LOAD MAP FROM RESOURCE
@@ -48,6 +54,10 @@ public class Game {
      */
     public List<List<Constants.Block>> getState() {
         return gameMatRO;
+    }
+
+    public List<Entity> getEntities() {
+        return entitiesRO;
     }
 
     /**

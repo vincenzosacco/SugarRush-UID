@@ -1,11 +1,10 @@
 package view;
 
 
+import view.game.GamePanel;
+
 import javax.swing.*;
 import java.awt.*;
-
-import static config.View.BOARD_HEIGHT;
-import static config.View.BOARD_WIDTH;
 
 /**
  * Singleton Interface to the View.

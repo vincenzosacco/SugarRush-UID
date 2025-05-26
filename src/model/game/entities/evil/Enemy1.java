@@ -13,7 +13,9 @@ import model.game.Constants.Direction;
  * </p>
  */
 public class Enemy1 extends Enemy {
-    private static Direction DIRECTION = Direction.LEFT; // remove this line when the enemy is implemented
+    static {
+        DIRECTION = Direction.LEFT; // remove this line when the enemy is implemented
+    }
 
     // CONSTRUCTORS //
     @Override
