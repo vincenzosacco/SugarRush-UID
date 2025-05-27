@@ -8,8 +8,6 @@ import model.game.Constants.Direction;
 
 import java.util.List;
 
-import static config.View.TILE_SIZE;
-
 /**
  * The Enemy1 has the following behavior:
  * <p>
@@ -19,9 +17,6 @@ import static config.View.TILE_SIZE;
  */
 public class Enemy1 extends Enemy {
     private static Direction DIRECTION = Direction.LEFT; // remove this line when the enemy is implemented
-    private int pixelX;
-    private int pixelY;
-    private static final int PIXELS_PER_MOVE = 4;
 
     @Override
     public Constants.Block blockType() {
@@ -29,65 +24,57 @@ public class Enemy1 extends Enemy {
     }
 
     public Enemy1(int row, int col) {
-        super(row, col);
-        setMoveDelay(10);
 
-        // Initialize pixel position from cell position
-        this.pixelX = col * TILE_SIZE;
-        this.pixelY = row * TILE_SIZE;
+        super(row,col);
+        setMoveDelay(20);
     }
     public Enemy1(Cell coord) {
         super(coord);
-        this.pixelX = coord.getCol() * TILE_SIZE;
-        this.pixelY = coord.getRow() * TILE_SIZE;
     }
-
 
     @Override
     public Cell computeAction() {
         Game game = Model.getInstance().getGame();
-        List<List<Constants.Block>> state = game.getState();
+        List<List<Constants.Block>> state = game.getState(); // current game map
 
-        // Determine the current cell
-        int curRow = pixelY / TILE_SIZE;
-        int curCol = pixelX / TILE_SIZE;
+        int attempts = 0;
+        Cell target;
 
-        // Calculate movement
-        if (DIRECTION == Direction.LEFT) {
-            pixelX -= PIXELS_PER_MOVE;
-        } else if (DIRECTION == Direction.RIGHT) {
-            pixelX += PIXELS_PER_MOVE;
-        }
-
-        // Determine the target cell after movement
-        int newRow = pixelY / TILE_SIZE;
-        int newCol = pixelX / TILE_SIZE;
-
-        // Out of bounds or invalid movement?
-        boolean outOfBounds = newCol < 0 || newCol >= state.get(0).size();
-        boolean hitsWall = !outOfBounds && state.get(newRow).get(newCol) != Constants.Block.SPACE;
-
-        // If out of bounds or hit a wall, reverse direction and adjust position
-        if (outOfBounds || hitsWall) {
-            if (DIRECTION == Direction.LEFT) {
-                DIRECTION = Direction.RIGHT;
-            } else if (DIRECTION == Direction.RIGHT) {
-                DIRECTION = Direction.LEFT;
+        do {
+            // Change direction after a few attempts
+            if (attempts == 0){
+                DIRECTION = Direction.values()[(int) (Math.random() * Direction.values().length)];
             }
 
-            // Adjust pixel position to avoid overlap
-            if (DIRECTION == Direction.LEFT) {
-                pixelX = (curCol + 1) * TILE_SIZE - 1; // Snap to the right edge of the cell
-            } else if (DIRECTION == Direction.RIGHT) {
-                pixelX = curCol * TILE_SIZE; // Snap to the left edge of the cell
-            }
-        }
+            int newRow = coord.getRow();
+            int newCol = coord.getCol();
 
-        // Return the current cell position for collision handling
-        return new Cell(pixelY / TILE_SIZE, pixelX / TILE_SIZE);
+            switch (DIRECTION) {
+                case UP -> newRow--;
+                case DOWN -> newRow++;
+                case LEFT -> newCol--;
+                case RIGHT -> newCol++;
+            }
+
+            target = new Cell(newRow, newCol);
+
+            // Check if it's off the map
+            boolean outOfBounds = newRow < 0 || newCol < 0 ||
+                    newRow >= state.size() ||
+                    newCol >= state.get(0).size();
+
+            // if BLOCK is not SPACE or CREATURE or is out of map -> change direction
+            if (!outOfBounds && (state.get(newRow).get(newCol) == Constants.Block.SPACE || state.get(newRow).get(newCol) == Constants.Block.CREATURE)){
+                return target; // valid direction found
+            }
+
+            attempts++;
+        } while (attempts < 10); // avoid infinite loop
+
+        // He hasn't found a valid direction: he remains still
+        DIRECTION = Direction.NONE;
+        return getCoord();
     }
-
-
 
     @Override
     public boolean manageCollision(Constants.Block block) {
@@ -100,6 +87,8 @@ public class Enemy1 extends Enemy {
     public void performAction(Cell newCoord) {
         this.coord = newCoord;
     }
+
+
 
 
 

@@ -3,6 +3,8 @@ package controller;
 import model.Model;
 import view.View;
 
+//TODO maybe can be singleton to avoid using multiple GameLoop on the same Game model
+
 /**
  * Represents the main game loop responsible for controlling the update and rendering
  * processes of a game. The class maintains a fixed update rate to ensure consistent game behavior
@@ -25,10 +27,12 @@ class GameLoop implements Runnable {
      * Creates and starts a new thread for the game loop.
      */
     public void start() {
-        if (running) return;
-        running = true;
+        if (running) throw new IllegalStateException("Game loop is already running.");
+        else running = true;
+
         gameThread = new Thread(this);
         gameThread.start();
+        Model.getInstance().getGame().start();
     }
 
     /**
@@ -96,5 +100,9 @@ class GameLoop implements Runnable {
      */
     private void renderView() {
         View.getInstance().notifyView();
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

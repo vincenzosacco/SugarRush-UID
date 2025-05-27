@@ -6,22 +6,38 @@ package model.game;
  * and block types in the game's map.
  */
 public interface Constants {
+
     /**
      * <p>
      * The {@code Direction} enum defines the possible movement directions within the game.
      * It is used to represent directional movement, typically for navigating the game map
      * or controlling entities such as a creature.
-     * </p>
-     * <p>
-     * The enum consists of four directions:
-     * - {@code UP}: Represents upward movement.
-     * - {@code DOWN}: Represents downward movement.
-     * - {@code LEFT}: Represents leftward movement.
-     * - {@code RIGHT}: Represents rightward movement.|
-     * - {@code NONE}: Represents no movement. This is used to represent the creature's idle state.
-     * </p>
      */
-    enum Direction{UP, DOWN, LEFT, RIGHT, NONE}
+    enum Direction{
+        /**Represents upward movement.*/
+        UP,
+        /**Represents downward movement.*/
+        DOWN,
+        /**Represents leftward movement.*/
+        LEFT,
+        /**Represents rightward movement.*/
+        RIGHT,
+        /**Represents no movement, typically used when the creature is idle or not moving.*/
+        NONE;
+
+        /**
+         * @return opposite direction.
+         */
+        public Direction opposite() { // just a utility
+            return switch (this) {
+                case UP -> DOWN;
+                case DOWN -> UP;
+                case LEFT -> RIGHT;
+                case RIGHT -> LEFT;
+                case NONE -> NONE; // no opposite for NONE
+            };
+        }
+    }
 
     /**
      * Enum representing different types of blocks that can exist within the game map.

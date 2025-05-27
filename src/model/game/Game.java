@@ -1,10 +1,11 @@
 package model.game;
 
 import model.game.entities.Creature;
-import model.game.entities.Entity;
 import model.game.utils.Cell;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -14,6 +15,7 @@ public class Game {
     // package visibility needed for MapParser
     final GameMatrix gameMat = new GameMatrix();
     final ArrayList<Entity> entities = new ArrayList<>();
+
 
     /**
      * <p>
@@ -30,6 +32,9 @@ public class Game {
      * @see GameMatrix#makeReadOnly()
      */
     private final List<List<Constants.Block>> gameMatRO = gameMat.makeReadOnly();
+
+    // experimental approach
+    private final List<Entity> entitiesRO = Collections.unmodifiableList(entities);
 
     public Game() {
         // LOAD MAP FROM RESOURCE
@@ -49,6 +54,10 @@ public class Game {
      */
     public List<List<Constants.Block>> getState() {
         return gameMatRO;
+    }
+
+    public List<Entity> getEntities() {
+        return entitiesRO;
     }
 
     /**
@@ -85,7 +94,7 @@ public class Game {
         }
 
         for (Entity ent : entities) {
-            if (ent.shouldMove()) {
+            if (ent.shouldPerform()) {
                 // COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction();
                 // MANAGE COLLISIONS //
@@ -98,10 +107,32 @@ public class Game {
         }
     }
 
-    // GAME ACTIONS //
-    void restart() {
-        MapParser.loadMap(MapParser.MAP_1, this);
+
+    /**
+     * Checks if in {@code cell} coordinates contains a block of type {@code blockType}.
+     * @param cell the cell to check
+     * @param blockType the type of block to compare against
+     * @return true if the cell contains the specified block type, false otherwise
+     */
+    public boolean isBlock(Cell cell, Constants.Block blockType) {
+        return gameMat.getCell(cell) == blockType;
     }
+
+    /**@return the block at the specified cell in the game matrix*/
+    public Constants.Block blockAt(Cell cell) {
+        return gameMat.getCell(cell);
+    }
+
+
+    // GAME ACTIONS //
+    private boolean isStarted = false;
+    public boolean isStarted() {
+        return isStarted;
+    }
+    public void start(){
+        if (!isStarted) isStarted = true;
+    }
+
 
     /**
      * Moves the creature in the specified direction until it reaches an invalid position.
@@ -118,16 +149,5 @@ public class Game {
             }
         }
     }
-
-    /**
-     * Opens the game settings panel.
-     * This method triggers the settings interface and will eventually handle game state
-     * changes related to settings like pausing the game timer.
-     */
-    public void openSetting() {
-        System.out.println("Settings opened");
-        // stop time
-    }
-
 
 }

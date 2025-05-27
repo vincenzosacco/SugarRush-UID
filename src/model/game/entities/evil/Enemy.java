@@ -1,9 +1,13 @@
 package model.game.entities.evil;
 
-import model.game.entities.Entity;
+import model.game.Constants;
+import model.game.Entity;
 import model.game.utils.Cell;
 
-abstract class Enemy extends Entity {
+public abstract class Enemy extends Entity {
+    /** Direction in which the enemy would move*/
+    protected static Constants.Direction DIRECTION = Constants.Direction.NONE;
+
     public Enemy(Cell coord) {
         super(coord);
     }
@@ -12,10 +16,7 @@ abstract class Enemy extends Entity {
         super(row,col);
     }
 
-//    /**
-//     * Defines the movement behavior of an enemy entity.
-//     * This method must be implemented by subclasses of the Enemy class
-//     * to specify the actions the enemy takes to change its position or state.
-//     */
-//    public abstract void performMove();
+    public Constants.Direction getDirection() {
+        return DIRECTION;
+    }
 }
