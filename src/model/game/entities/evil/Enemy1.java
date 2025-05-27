@@ -26,7 +26,7 @@ public class Enemy1 extends Enemy {
     public Enemy1(int row, int col) {
 
         super(row,col);
-        setMoveDelay(20);
+        //setMoveDelay(20);
     }
     public Enemy1(Cell coord) {
         super(coord);

@@ -7,5 +7,4 @@ public class Main {
         View.getInstance().showPanel(View.PanelName.START_MENU.getName());
         View.getInstance().launchView();
     }
-
 }
