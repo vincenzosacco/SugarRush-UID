@@ -6,6 +6,18 @@ import model.game.utils.Cell;
 public abstract class Entity{
     protected Cell coord;
 
+    /**{@link model.game.Constants.Direction} in which the entity would move.
+     * Defalut is NONE, which means idle. */
+    protected static Constants.Direction DIRECTION = Constants.Direction.NONE;
+
+    /**
+     * @return the current direction where the entity is moving.
+     * @apiNote {@link model.game.Constants.Direction} NONE means the entity is idle.
+     */
+    public Constants.Direction getDirection() {
+        return DIRECTION;
+    }
+
     /** Counter for the number of frames since the last move.
      * This is used to control the frequency of movement updates for the entity.
      * The entity will only move when this counter reaches the {@code moveDelay} value.

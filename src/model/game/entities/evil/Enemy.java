@@ -5,9 +5,6 @@ import model.game.Entity;
 import model.game.utils.Cell;
 
 public abstract class Enemy extends Entity {
-    /** Direction in which the enemy would move*/
-    protected static Constants.Direction DIRECTION = Constants.Direction.NONE;
-
     public Enemy(Cell coord) {
         super(coord);
     }
@@ -16,7 +13,5 @@ public abstract class Enemy extends Entity {
         super(row,col);
     }
 
-    public Constants.Direction getDirection() {
-        return DIRECTION;
-    }
+
 }
