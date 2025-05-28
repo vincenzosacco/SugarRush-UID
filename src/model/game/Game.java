@@ -82,27 +82,21 @@ public class Game {
      * preservation of each step's intended functionality.
      */
     public void updateState() {
-        // TODO find if there is a better way to do this.
-        // Clean matrix
-        for (ArrayList<Constants.Block> blocks : gameMat) {
-            for (int j = 0; j < blocks.size(); j++) {
-                if (blocks.get(j) != Constants.Block.WALL && blocks.get(j) != Constants.Block.THORNS && blocks.get(j) != Constants.Block.SUGAR) {
-                    blocks.set(j, Constants.Block.SPACE);
-                }
-            }
-        }
-
         for (Entity ent : entities) {
             if (ent.shouldPerform()) {
-                // COMPUTE ENTITIES ACTION  //
+                // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
+                gameMat.setCell(ent.getCoord(), Constants.Block.SPACE); // remove the entity from the old position
+
+                // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
-                // MANAGE COLLISIONS //
+                // 2 -MANAGE COLLISIONS //
                 boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
-                // PERFORM ACTION //
+                // 3 -PERFORM ACTION //
                 if (canPerform) ent.performAction(toMove);
+
+                // APPLY NEW COORDS IN THE GAME MATRIX //
+                gameMat.setCell(ent.getCoord(), ent.blockType());
             }
-            // APPLY NEW COORDS IN THE GAME MATRIX //
-            gameMat.setCell(ent.getCoord(), ent.blockType());
         }
     }
 
