@@ -1,5 +1,6 @@
 package model.game;
 
+import controller.GameLoop;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
 
@@ -125,13 +126,18 @@ public class Game {
 
 
     // GAME ACTIONS //
-    private boolean isStarted = false;
-    public boolean isStarted() {
-        return isStarted;
+    private final GameLoop gameLoop = new GameLoop();
+
+    public boolean isRunning(){
+        return gameLoop.isRunning();
     }
     public void start(){
-        if (!isStarted) isStarted = true;
+        gameLoop.start();
     }
+    public void stop(){
+        gameLoop.stop();
+    }
+
 
 
     /**

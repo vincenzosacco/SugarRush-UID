@@ -1,6 +1,8 @@
 package view.menu;
 
 import controller.ControllerObj;
+import controller.GameController;
+import controller.menu.GameMenuController;
 import view.ViewComp;
 
 import javax.swing.*;
@@ -12,6 +14,17 @@ import java.awt.*;
 public class GameMenuPanel extends JPanel implements ViewComp {
     @Override
     public void bindController(ControllerObj controller) {
+        if (!(controller instanceof GameMenuController)) {
+            throw new IllegalArgumentException("controller must be instance of GameMenuController");
+        }
+//        if (this.getKeyListeners().length != 0){
+//            throw new IllegalStateException("Cannot have more than one key listener");
+//        }
+
+        GameMenuController gameMenuController = (GameMenuController) controller;
+
+        Label1.addActionListener(e -> gameMenuController.onContinue());
+
 
     }
 
@@ -35,23 +48,25 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         isOpen = open;
     }
 
+
+    private JButton Label1, Label2, Label3;
     /** add all components to this panel */
     private void addComponents() {
         // Use a BoxLayout for vertical alignment
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        Label languageLabel1 = new Label("Continue");
-        Label languageLabel2 = new Label("Restart");
-        Label languageLabel3 = new Label("Exit");
+        Label1 = new JButton("Continue");
+        Label2 = new JButton("Restart");
+        Label3 = new JButton("Exit");
 
-        // Align labels to the center horizontally
-        languageLabel1.setAlignment(Label.CENTER);
-        languageLabel2.setAlignment(Label.CENTER);
-        languageLabel3.setAlignment(Label.CENTER);
+//        // Align labels to the center horizontally
+//        Label1.setAlignment(Label.CENTER);
+//        Label2.setAlignment(Label.CENTER);
+//        Label3.setAlignment(Label.CENTER);
 
-        this.add(languageLabel1);
-        this.add(languageLabel2);
-        this.add(languageLabel3);
+        this.add(Label1);
+        this.add(Label2);
+        this.add(Label3);
     }
 
 }

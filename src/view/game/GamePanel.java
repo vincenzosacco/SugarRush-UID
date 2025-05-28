@@ -2,6 +2,7 @@ package view.game;
 
 import controller.GameController;
 import controller.ControllerObj;
+import controller.menu.GameMenuController;
 import model.Model;
 import model.game.Constants;
 import model.game.Entity;
@@ -35,7 +36,7 @@ public class GamePanel extends JPanel implements ViewComp {
         Color skyblue = new Color(0, 188, 250);
         setBackground(skyblue);
 
-        this.add(gameSettings);
+        this.add(gameMenu);
 
     }
 
@@ -54,7 +55,7 @@ public class GamePanel extends JPanel implements ViewComp {
         }
 
         this.addKeyListener((GameController) controller);
-
+        gameMenu.bindController(new GameMenuController(gameMenu));
         this.setFocusable(true);
     }
 
@@ -147,12 +148,12 @@ public class GamePanel extends JPanel implements ViewComp {
 
 
     // SETTINGS
-    private final GameMenuPanel gameSettings = new GameMenuPanel();
+    private final GameMenuPanel gameMenu = new GameMenuPanel();
     public GameMenuPanel toggleSettingsPanel(){
-        gameSettings.setOpen(!gameSettings.isOpen());
-        gameSettings.setVisible(gameSettings.isOpen()); // if isOpen == false set gameSettingsPanel invisible
+        gameMenu.setOpen(!gameMenu.isOpen());
+        gameMenu.setVisible(gameMenu.isOpen()); // if isOpen == false set gameSettingsPanel invisible
         this.revalidate();
-        return gameSettings;
+        return gameMenu;
     }
 
 

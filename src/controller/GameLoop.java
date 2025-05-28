@@ -12,7 +12,7 @@ import view.View;
  *
  * @implNote Implements the Runnable interface to allow the loop to run in a dedicated thread.
  */
-class GameLoop implements Runnable {
+public class GameLoop implements Runnable {
     // Flag to control game loop execution
     private boolean running = false;
     // Target frames per second
