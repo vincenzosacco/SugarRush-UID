@@ -38,7 +38,7 @@ public class Game {
 
     public Game() {
         // LOAD MAP FROM RESOURCE
-        MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
+        MapParser.loadMap(MapParser.MAP_2, this); // update map related fields
     }
 
     // MODEL //
