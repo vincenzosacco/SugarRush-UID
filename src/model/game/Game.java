@@ -5,7 +5,6 @@ import model.game.entities.Creature;
 import model.game.utils.Cell;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,27 +83,21 @@ public class Game {
      * preservation of each step's intended functionality.
      */
     public void updateState() {
-        // TODO find if there is a better way to do this.
-        // Clean matrix
-        for (ArrayList<Constants.Block> blocks : gameMat) {
-            for (int j = 0; j < blocks.size(); j++) {
-                if (blocks.get(j) != Constants.Block.WALL && blocks.get(j) != Constants.Block.THORNS && blocks.get(j) != Constants.Block.SUGAR) {
-                    blocks.set(j, Constants.Block.SPACE);
-                }
-            }
-        }
-
         for (Entity ent : entities) {
             if (ent.shouldPerform()) {
-                // COMPUTE ENTITIES ACTION  //
+                // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
+                gameMat.setCell(ent.getCoord(), Constants.Block.SPACE); // remove the entity from the old position
+
+                // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
-                // MANAGE COLLISIONS //
+                // 2 -MANAGE COLLISIONS //
                 boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
-                // PERFORM ACTION //
+                // 3 -PERFORM ACTION //
                 if (canPerform) ent.performAction(toMove);
+
+                // APPLY NEW COORDS IN THE GAME MATRIX //
+                gameMat.setCell(ent.getCoord(), ent.blockType());
             }
-            // APPLY NEW COORDS IN THE GAME MATRIX //
-            gameMat.setCell(ent.getCoord(), ent.blockType());
         }
     }
 
@@ -140,20 +133,24 @@ public class Game {
 
 
 
-    /**
-     * Moves the creature in the specified direction until it reaches an invalid position.
-     * The movement is synchronized using stateLock to prevent concurrent modifications to the game state.
-     * The creature will continue moving in the given direction until it encounters a wall or map boundary.
-     *
-     * @param direction The direction to move the creature (UP, DOWN, LEFT, RIGHT)
-     * @throws IllegalArgumentException if an invalid direction is provided
-     */
-    public void performMove(Constants.Direction direction) {
+    private Creature getCreature(){
         for (Entity entity : entities) {
             if (entity instanceof Creature creature) {
-                creature.setDirection(direction);
+                return creature;
             }
         }
+        throw new AssertionError("Creature not found in the game entities. This should never happen.");
     }
 
+    /** Sets the direction of the creature. On the next {@link #updateState()} call,
+     * the creature will move in the specified direction.
+     * @param direction the direction to set for the creature
+     */
+    public void setCreatureDirection(Constants.Direction direction) {
+        getCreature().setDirection(direction);
+    }
+
+    public void killCreature() {
+        System.exit(0);
+    }
 }
