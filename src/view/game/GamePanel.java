@@ -9,7 +9,7 @@ import model.game.Game;
 import model.game.entities.evil.Enemy;
 import model.game.utils.Cell;
 import view.ViewComp;
-import view.settings.GameSettingsPanel;
+import view.menu.GameSettingsPanel;
 
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;

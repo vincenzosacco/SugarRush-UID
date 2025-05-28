@@ -38,7 +38,7 @@ public class Game {
 
     public Game() {
         // LOAD MAP FROM RESOURCE
-        MapParser.loadMap(MapParser.MAP_2, this); // update map related fields
+        MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
     }
 
     // MODEL //
@@ -96,7 +96,7 @@ public class Game {
         for (Entity ent : entities) {
             if (ent.shouldPerform()) {
                 // COMPUTE ENTITIES ACTION  //
-                Cell toMove = ent.computeAction();
+                Cell toMove = ent.computeAction(); // tell the entity where he wants to move
                 // MANAGE COLLISIONS //
                 boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
                 // PERFORM ACTION //

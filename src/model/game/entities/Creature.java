@@ -51,7 +51,9 @@ public class Creature extends Entity {
             case SUGAR ->addSugar();
             case SPACE -> {/*do nothing*/}
             case THORNS -> System.exit(0); // add kill method
-
+            case CREATURE -> {
+                throw new AssertionError("Creature cannot collide with creature, there is a bug somewhere");
+            }
             case WALL -> {
                 setDirection(Direction.NONE);
                 return false;
