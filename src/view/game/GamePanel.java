@@ -27,7 +27,6 @@ import static config.View.*;
  */
 public class GamePanel extends JPanel implements ViewComp {
 
-
     private BufferedImage staticBackground = null;
 
     public GamePanel() {

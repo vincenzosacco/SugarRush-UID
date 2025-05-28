@@ -58,6 +58,7 @@ public class Creature extends Entity {
                 setDirection(Direction.NONE);
                 return false;
             }
+            case ENEMY1 -> System.exit(0);// TODO add kill method
 
             default -> throw new IllegalStateException("Unexpected value: " + block);
         }
