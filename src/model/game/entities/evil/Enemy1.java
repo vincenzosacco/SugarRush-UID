@@ -2,11 +2,8 @@ package model.game.entities.evil;
 
 import model.Model;
 import model.game.Constants;
-import model.game.Game;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
-
-import java.util.List;
 
 /**
  * The Enemy1 has the following behavior:
@@ -26,7 +23,7 @@ public class Enemy1 extends Enemy {
 
         super(row,col);
         setActionDelay(10);
-        DIRECTION = Direction.LEFT;
+        this.direction = Direction.LEFT;
     }
     public Enemy1(Cell coord) {
         super(coord);
@@ -37,10 +34,10 @@ public class Enemy1 extends Enemy {
         Cell newCoord = getCoord();
 
         // Try to move in the current direction
-        switch (DIRECTION) {
+        switch (this.direction) {
             case LEFT -> newCoord.decrCol();
             case RIGHT -> newCoord.incrCol();
-            default -> throw new IllegalStateException("Unexpected value: " + DIRECTION);
+            default -> throw new IllegalStateException("Unexpected value: " + this.direction);
         }
 
         // If it hits a wall or is out of bounds, change direction
@@ -52,7 +49,7 @@ public class Enemy1 extends Enemy {
 
     @Override
     public boolean manageCollision(Constants.Block block) {
-//        if (DIRECTION == Direction.NONE) return false;
+//        if (this.direction == Direction.NONE) return false;
 
         // CAN MOVE ONLY IF THE BLOCK IS SPACE or CREATURE//
         if (block == Constants.Block.SPACE) {
@@ -63,8 +60,8 @@ public class Enemy1 extends Enemy {
             return true;
         }
         // ELSE CHANGE TO OPPOSITE DIRECTION //
-        assert DIRECTION != Direction.NONE : "Enemy1 cannot have NONE direction";
-        DIRECTION = DIRECTION.opposite();
+        assert this.direction != Direction.NONE : "Enemy1 cannot have NONE direction";
+        this.direction = this.direction.opposite();
         return false;
     }
 

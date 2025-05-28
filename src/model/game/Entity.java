@@ -4,19 +4,18 @@ import model.game.utils.Cell;
 
 
 public abstract class Entity{
+
+    /**
+     * The coordinates of the entity in the game matrix.
+     * Changing this field <b>does not </b> change the entity's position in the game matrix.
+     */
     protected Cell coord;
 
     /**{@link model.game.Constants.Direction} in which the entity would move.
      * Defalut is NONE, which means idle. */
-    protected static Constants.Direction DIRECTION = Constants.Direction.NONE;
+    protected Constants.Direction direction = Constants.Direction.NONE;
 
-    /**
-     * @return the current direction where the entity is moving.
-     * @apiNote {@link model.game.Constants.Direction} NONE means the entity is idle.
-     */
-    public Constants.Direction getDirection() {
-        return DIRECTION;
-    }
+
 
     /** Counter for the number of frames since the last move.
      * This is used to control the frequency of movement updates for the entity.
@@ -61,12 +60,6 @@ public abstract class Entity{
      * @return the block type of the entity, as an instance of {@link Constants.Block}
      */
     public abstract Constants.Block blockType();
-
-
-    /** @return a new {@code Cell} instance representing the current coordinates of the entity */
-    public Cell getCoord() {
-        return new Cell(coord);
-    }
 
 
     // GAME MODEL UPDATE METHODS //
@@ -117,6 +110,32 @@ public abstract class Entity{
         }
 
         this.actionDelay = delay;
+    }
+
+
+    // GETTERS AND SETTERS //
+    /**
+     * @return the current direction where the entity is moving.
+     * @apiNote {@link model.game.Constants.Direction} NONE means the entity is idle.
+     */
+    public Constants.Direction getDirection() {
+        return direction;
+    }
+    /**
+     * Sets the direction of the entity.
+     * @param direction the new direction to set for the entity
+     * @throws IllegalArgumentException if the provided direction is null
+     */
+    public void setDirection(Constants.Direction direction) {
+        if (direction == null) {
+            throw new IllegalArgumentException("Direction cannot be null.");
+        }
+        this.direction = direction;
+    }
+
+    /** @return a new {@code Cell} instance representing the current coordinates of the entity */
+    public Cell getCoord() {
+        return new Cell(coord);
     }
 
 }

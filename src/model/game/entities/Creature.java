@@ -12,7 +12,6 @@ import model.game.Constants.Direction;
  */
 public class Creature extends Entity {
     private int sugarCount = 0;
-    private Direction direction = Direction.NONE;
 
     public Creature(int row, int col) {
         super(row, col);
@@ -25,9 +24,17 @@ public class Creature extends Entity {
         return Constants.Block.CREATURE;
     }
 
+    @Override
+    protected boolean shouldPerform() {
+        // Just to avoid unnecessary computations
+        if (this.direction == Direction.NONE) return false;
+        return super.shouldPerform();
+    }
 
     @Override
     public Cell computeAction() {
+        // Direction.NONE case is handled in shouldPerform
+
         Cell newCoord = getCoord();
 
         switch (this.direction) {
@@ -44,7 +51,7 @@ public class Creature extends Entity {
 
     @Override
     public boolean manageCollision(Constants.Block block) {
-        if (this.direction == Direction.NONE) return false;
+        // Direction.NONE case is handled in shouldPerform
 
         boolean canMove = true;
 
@@ -52,7 +59,7 @@ public class Creature extends Entity {
             case SUGAR -> addSugar();
             case SPACE -> {/*do nothing*/}
             case WALL -> {
-                setDirection(Direction.NONE);
+                this.direction = Direction.NONE;
                 return false;
             }
             // DIE if collides with an enemy or thorns //
@@ -68,7 +75,7 @@ public class Creature extends Entity {
 
     @Override
     public void performAction(Cell newCoord) {
-        if (this.direction == Direction.NONE) return;
+        // Direction.NONE case is handled in shouldPerform
 
         this.coord.setCoord(newCoord);
         // Collision detection is done in <manageCollision> so we don't need to check it here
@@ -80,10 +87,6 @@ public class Creature extends Entity {
     }
 
     // GETTERS & SETTERS //
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
     public int getSugarCount() {
         return sugarCount;
     }
