@@ -135,8 +135,7 @@ public class GamePanel extends JPanel implements ViewComp {
             int y = row * TILE_SIZE;
 
             Constants.Block blockType = entity.blockType();
-            Constants.Direction direction = entity instanceof Enemy enemy ? enemy.getDirection() : null;
-            Image image = EntitiesView.getImage(blockType, direction);
+            Image image = EntitiesView.getImage(blockType,  entity.getDirection());
 
             assert image != null;
             g.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
