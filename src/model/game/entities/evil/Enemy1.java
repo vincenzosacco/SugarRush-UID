@@ -55,16 +55,17 @@ public class Enemy1 extends Enemy {
 //        if (DIRECTION == Direction.NONE) return false;
 
         // CAN MOVE ONLY IF THE BLOCK IS SPACE or CREATURE//
-        if (block == Constants.Block.SPACE || block == Constants.Block.CREATURE) {
+        if (block == Constants.Block.SPACE) {
+            return true;
+        }
+        else if (block == Constants.Block.CREATURE){
+            Model.getInstance().getGame().killCreature();
             return true;
         }
         // ELSE CHANGE TO OPPOSITE DIRECTION //
-        else {
-            assert DIRECTION != Direction.NONE : "Enemy1 cannot have NONE direction";
-            DIRECTION = DIRECTION.opposite();
-            return false;
-        }
-
+        assert DIRECTION != Direction.NONE : "Enemy1 cannot have NONE direction";
+        DIRECTION = DIRECTION.opposite();
+        return false;
     }
 
     @Override

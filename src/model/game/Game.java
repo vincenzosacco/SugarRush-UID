@@ -150,4 +150,12 @@ public class Game {
         }
     }
 
+    public void killCreature() {
+        for (Entity entity : entities) {
+            if (entity instanceof Creature creature) {
+                System.exit(0);
+                break; // Assuming only one creature exists, we can break after finding it
+            }
+        }
+    }
 }

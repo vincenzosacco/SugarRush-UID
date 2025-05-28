@@ -1,7 +1,9 @@
 package model.game.entities;
 
+import model.Model;
 import model.game.Constants;
 import model.game.Entity;
+import model.game.Game;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
 
@@ -13,8 +15,8 @@ public class Creature extends Entity {
     private int sugarCount = 0;
     private Direction direction = Direction.NONE;
 
-    public Creature(int row, int col){
-        super(row,col);
+    public Creature(int row, int col) {
+        super(row, col);
         setActionDelay(1); // at the moment, the fastest entity in the game
     }
 
@@ -31,7 +33,9 @@ public class Creature extends Entity {
         int newCol = this.coord.getCol();
 
         switch (this.direction) {
-            case Direction.NONE -> {return getCoord();} // no movement
+            case Direction.NONE -> {
+                return getCoord();
+            } // no movement
             case Direction.UP -> --newRow; // going up means decrementing the row index by 1
             case Direction.DOWN -> ++newRow; // going down means incrementing the row index by 1
             case Direction.LEFT -> --newCol; // going left means decrementing the col index by 1
@@ -48,18 +52,18 @@ public class Creature extends Entity {
         boolean canMove = true;
 
         switch (block) {
-            case SUGAR ->addSugar();
+            case SUGAR -> addSugar();
             case SPACE -> {/*do nothing*/}
-            case THORNS -> System.exit(0); // add kill method
-            case CREATURE -> {
-                throw new AssertionError("Creature cannot collide with creature, there is a bug somewhere");
-            }
             case WALL -> {
                 setDirection(Direction.NONE);
                 return false;
             }
-            case ENEMY1 -> System.exit(0);// TODO add kill method
+            // DIE if collides with an enemy or thorns //
+            case ENEMY1, THORNS -> Model.getInstance().getGame().killCreature();
 
+            case CREATURE -> {
+                throw new AssertionError("Creature cannot collide with creature, there is a bug somewhere");
+            }
             default -> throw new IllegalStateException("Unexpected value: " + block);
         }
 
@@ -75,7 +79,7 @@ public class Creature extends Entity {
     }
 
 
-    private void addSugar(){
+    private void addSugar() {
         sugarCount++;
     }
 
@@ -84,9 +88,7 @@ public class Creature extends Entity {
         this.direction = direction;
     }
 
-    public int getSugarCount(){
+    public int getSugarCount() {
         return sugarCount;
     }
-
-
 }
