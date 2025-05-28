@@ -38,7 +38,7 @@ class EntitiesView {
         return switch (direction) {
             case UP, LEFT -> EntitiesView.ICONS[4].getImage();
             case DOWN, RIGHT -> EntitiesView.ICONS[5].getImage();
-            case NONE -> throw new IllegalArgumentException("NOT IMPLEMENTED YET");
+            case NONE -> EntitiesView.ICONS[4].getImage(); // TODO retrun real images
         };
     }
 
