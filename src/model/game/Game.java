@@ -4,7 +4,6 @@ import model.game.entities.Creature;
 import model.game.utils.Cell;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -134,28 +133,24 @@ public class Game {
     }
 
 
-    /**
-     * Moves the creature in the specified direction until it reaches an invalid position.
-     * The movement is synchronized using stateLock to prevent concurrent modifications to the game state.
-     * The creature will continue moving in the given direction until it encounters a wall or map boundary.
-     *
-     * @param direction The direction to move the creature (UP, DOWN, LEFT, RIGHT)
-     * @throws IllegalArgumentException if an invalid direction is provided
-     */
-    public void performMove(Constants.Direction direction) {
+    private Creature getCreature(){
         for (Entity entity : entities) {
             if (entity instanceof Creature creature) {
-                creature.setDirection(direction);
+                return creature;
             }
         }
+        throw new AssertionError("Creature not found in the game entities. This should never happen.");
+    }
+
+    /** Sets the direction of the creature. On the next {@link #updateState()} call,
+     * the creature will move in the specified direction.
+     * @param direction the direction to set for the creature
+     */
+    public void setCreatureDirection(Constants.Direction direction) {
+        getCreature().setDirection(direction);
     }
 
     public void killCreature() {
-        for (Entity entity : entities) {
-            if (entity instanceof Creature creature) {
-                System.exit(0);
-                break; // Assuming only one creature exists, we can break after finding it
-            }
-        }
+        System.exit(0);
     }
 }
