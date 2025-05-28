@@ -38,7 +38,6 @@ public class Creature extends Entity {
         Cell newCoord = getCoord();
 
         switch (this.direction) {
-            case Direction.NONE ->{} // no movement
             case Direction.UP -> newCoord.decrRow(); // going up means decrementing the row index by 1
             case Direction.DOWN -> newCoord.incrRow(); // going down means incrementing the row index by 1
             case Direction.LEFT -> newCoord.decrCol(); // going left means decrementing the col index by 1
