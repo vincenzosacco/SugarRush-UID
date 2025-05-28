@@ -9,7 +9,7 @@ import model.game.Game;
 import model.game.entities.evil.Enemy;
 import model.game.utils.Cell;
 import view.ViewComp;
-import view.menu.GameSettingsPanel;
+import view.menu.GameMenuPanel;
 
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
@@ -147,8 +147,8 @@ public class GamePanel extends JPanel implements ViewComp {
 
 
     // SETTINGS
-    private final GameSettingsPanel gameSettings = new GameSettingsPanel();
-    public GameSettingsPanel toggleSettingsPanel(){
+    private final GameMenuPanel gameSettings = new GameMenuPanel();
+    public GameMenuPanel toggleSettingsPanel(){
         gameSettings.setOpen(!gameSettings.isOpen());
         gameSettings.setVisible(gameSettings.isOpen()); // if isOpen == false set gameSettingsPanel invisible
         this.revalidate();

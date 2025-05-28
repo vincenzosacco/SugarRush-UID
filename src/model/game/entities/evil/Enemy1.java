@@ -37,44 +37,43 @@ public class Enemy1 extends Enemy {
         Game game = Model.getInstance().getGame();
         List<List<Constants.Block>> state = game.getState(); // current game map
 
-        int attempts = 0;
-        Cell target;
+        int newRow = coord.getRow();
+        int newCol = coord.getCol();
 
-        do {
-            // Change direction after a few attempts
-            if (attempts == 0){
-                DIRECTION = Direction.values()[(int) (Math.random() * Direction.values().length)];
+        // Try to move in the current direction
+        switch (DIRECTION) {
+            case LEFT -> newCol--;
+            case RIGHT -> newCol++;
+            default -> DIRECTION = Direction.LEFT; // Default direction if NONE
+        }
+
+        // Check if out of bounds
+        boolean outOfBounds = newRow < 0 || newCol < 0 ||
+                newRow >= state.size() ||
+                newCol >= state.get(0).size();
+
+        // Check the block ahead
+        if (!outOfBounds) {
+            Constants.Block nextBlock = state.get(newRow).get(newCol);
+
+            // Check if it's passable
+            if (nextBlock == Constants.Block.SPACE || nextBlock == Constants.Block.CREATURE) {
+                // Valid target cell: proceed to move
+                return new Cell(newRow, newCol);
             }
+        }
 
-            int newRow = coord.getRow();
-            int newCol = coord.getCol();
+        // If it hits a wall or is out of bounds, change direction
+        if (DIRECTION == Direction.LEFT) {
+            DIRECTION = Direction.RIGHT;
+        } else if (DIRECTION == Direction.RIGHT) {
+            DIRECTION = Direction.LEFT;
+        }
 
-            switch (DIRECTION) {
-                case UP -> newRow--;
-                case DOWN -> newRow++;
-                case LEFT -> newCol--;
-                case RIGHT -> newCol++;
-            }
-
-            target = new Cell(newRow, newCol);
-
-            // Check if it's off the map
-            boolean outOfBounds = newRow < 0 || newCol < 0 ||
-                    newRow >= state.size() ||
-                    newCol >= state.get(0).size();
-
-            // if BLOCK is not SPACE or CREATURE or is out of map -> change direction
-            if (!outOfBounds && (state.get(newRow).get(newCol) == Constants.Block.SPACE || state.get(newRow).get(newCol) == Constants.Block.CREATURE)){
-                return target; // valid direction found
-            }
-
-            attempts++;
-        } while (attempts < 10); // avoid infinite loop
-
-        // He hasn't found a valid direction: he remains still
-        DIRECTION = Direction.NONE;
+        // Stay in the same place if no valid move is possible
         return getCoord();
     }
+
 
     @Override
     public boolean manageCollision(Constants.Block block) {
