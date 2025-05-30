@@ -1,3 +1,4 @@
+map=
 xxxxxxxxxxxxxxxxxxx
 xxe               x
 xx             xxxx
@@ -19,3 +20,7 @@ xc      xx        x
 xxxxxxxxxxx xxxxxxx
 xs                x
 xxxxxxxxxxxxxxxxxxx
+
+stars=0,0,0
+
+textRequest=esempio di testo 1,esempio di testo 2,esempio di testo 3

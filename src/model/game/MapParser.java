@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import static config.Model.COL_COUNT;
 import static config.Model.ROW_COUNT;
@@ -29,7 +30,10 @@ import static config.Model.ROW_COUNT;
 class MapParser {
     final static String MAP_1 = "/map1.txt";
     final static String MAP_2 = "/map2.txt";
-
+    final static String MAP_3 = "/map3.txt";
+    final static String MAP_4 = "/map4.txt";
+    final static String MAP_5 = "/map5.txt";
+    final static String MAP_6 = "/map6.txt";
     /**
      * Read a .txt file a convert each line to a String element of the returned Array.
      * @return a String[] containing lines
@@ -42,9 +46,28 @@ class MapParser {
                 throw new IllegalArgumentException("Resource not found: " + mapResourcePath);
             }
 
-            // Read all lines from the file
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                return reader.lines().toArray(String[]::new);
+                List<String> mapLines = new ArrayList<>();
+                boolean readingMap = false;
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.startsWith("map=")) {
+                        readingMap = true;
+                        // The actual content of the map starts on the next line.
+                        continue; // Move to next line immediately
+                    } else if (readingMap) {
+                        if (line.startsWith("coins=") || line.startsWith("textRequest=")) {
+                            break; // fine della sezione mappa
+                        }
+                        // Here you add the lines that are *actually* part of the map.
+                        // If a blank line within the map section is to represent a blank line in the grid,
+                        // then `mapLines.add(line)` is correct for those.
+                        mapLines.add(line);
+                    }
+                }
+
+                return mapLines.toArray(new String[0]);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error reading map file: " + e.getMessage(), e);

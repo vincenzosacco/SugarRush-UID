@@ -34,7 +34,6 @@ public class GameMenuPanel extends JPanel implements ViewComp {
     public void setOpen(boolean open) {
         isOpen = open;
     }
-
     /** add all components to this panel */
     private void addComponents() {
         // Use a BoxLayout for vertical alignment
