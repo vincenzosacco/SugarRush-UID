@@ -2,10 +2,15 @@ package model.game;
 
 import model.game.entities.Creature;
 import model.game.utils.Cell;
+import view.View;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static config.Model.COL_COUNT;
+import static config.Model.ROW_COUNT;
 
 public class Game {
     /**
@@ -161,6 +166,18 @@ public class Game {
     }
 
     public void killCreature() {
-        System.exit(0);
+        SwingUtilities.invokeLater(() -> {
+            View.getInstance().getGamePanel().endGame();
+        });
+    }
+    public void clearGameMatrix() {
+        // Clear the game matrix
+        for (int row = 0; row < ROW_COUNT; row++) {
+        for (int col = 0; col < COL_COUNT; col++) {
+                gameMat.setCell(new Cell(row, col), Constants.Block.SPACE);
+            }
+        }
+        // Clear all entities
+        entities.clear();
     }
 }

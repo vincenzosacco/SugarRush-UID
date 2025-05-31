@@ -18,7 +18,7 @@ import static model.game.Constants.Direction.*;
  * Controller of 'SugarPanel'
  */
 public class GameController extends KeyAdapter implements ControllerObj {
-    private final GameLoop gameLoop = new GameLoop();
+    private final GameLoop gameLoop = GameLoop.getInstance();
     private boolean started = false;
 
 

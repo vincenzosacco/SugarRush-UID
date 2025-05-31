@@ -1,10 +1,9 @@
 package view.menu;
 
-import controller.ControllerObj;
+import controller.GameLoop;
 import model.Model;
 import model.game.LevelData;
 import view.View;
-import view.ViewComp;
 import view.button.RoundCloseButton;
 import view.button.RoundPlayButton;
 
@@ -73,8 +72,9 @@ public class LevelPanel extends JPanel{
 
             // 2. Start the level showing the GamePanel
             Model.getInstance().getGame().setLevel(levelIndex);
+            View.getInstance().getGamePanel().resetPanelForNewLevel();
             View.getInstance().showPanel(View.PanelName.GAME.getName());
-
+            GameLoop.getInstance().start();
         });
 
         // --------------------- TOP PANEL ---------------------
