@@ -38,7 +38,23 @@ public class Game {
 
     public Game() {
         // LOAD MAP FROM RESOURCE
-        MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
+        //MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
+    }
+    //set the current map of the level
+    public void setLevel(int index){
+        if (index==1){
+            MapParser.loadMap(MapParser.MAP_1, this);
+        } else if (index==2){
+            MapParser.loadMap(MapParser.MAP_2, this);
+        } else if (index==3){
+            MapParser.loadMap(MapParser.MAP_3, this);
+        } else if (index==4){
+            MapParser.loadMap(MapParser.MAP_4, this);
+        } else if (index==5){
+            MapParser.loadMap(MapParser.MAP_5, this);
+        }else if (index==6){
+            MapParser.loadMap(MapParser.MAP_6, this);
+        }
     }
 
     // MODEL //
