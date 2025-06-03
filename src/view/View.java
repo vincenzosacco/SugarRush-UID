@@ -5,12 +5,11 @@ import view.editor.LevelEditorPanel;
 import view.game.GamePanel;
 import view.menu.CustomTabbedPane;
 import view.menu.StartMenuPanel;
-import view.settings.SettingsPanel;
+import view.settings.AppSettings;
 import view.shop.ShopPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 /**
  * Singleton Interface to the View.
@@ -51,9 +50,7 @@ public class View {
     private final CardLayout cardLayout = new CardLayout();
 
     private final StartMenuPanel startMenuPanel;
-    private final LevelEditorPanel levelEditorPanel;
-    private final ShopPanel shopPanel;
-    private final SettingsPanel settingsPanel;
+
     private final CustomTabbedPane customTabbedPane;
 
     private View(){
@@ -66,10 +63,7 @@ public class View {
         // CONTAINER
         Window.setContentPane(Container);
 
-        levelEditorPanel=new LevelEditorPanel();
         startMenuPanel = new StartMenuPanel();
-        shopPanel=new ShopPanel();
-        settingsPanel=new SettingsPanel();
         customTabbedPane = new CustomTabbedPane();
 
         // COMPONENTS
@@ -77,9 +71,7 @@ public class View {
         Container.add(gamePanel, PanelName.GAME.getName());
         Container.add(startMenuPanel, PanelName.START_MENU.getName());
         Container.add(customTabbedPane,PanelName.CUSTOM_TABBED_PANE.getName());
-        Container.add(levelEditorPanel,PanelName.LEVEL_EDITOR.getName());
-        Container.add(shopPanel,PanelName.SHOP.getName());
-        Container.add(settingsPanel, PanelName.SETTINGS.getName());
+
 
         Window.pack();
 
@@ -122,18 +114,6 @@ public class View {
     }
 
     //GETTERS
-    public StartMenuPanel getStartMenuPanel(){
-        return startMenuPanel;
-    }
-    public LevelEditorPanel getLevelEditorPanel(){
-        return levelEditorPanel;
-    }
-    public ShopPanel getShopPanel(){
-        return shopPanel;
-    }
-    public SettingsPanel getSettingsPanel(){
-        return settingsPanel;
-    }
     public CustomTabbedPane getCustomTabbedPane(){
         return customTabbedPane;
     }

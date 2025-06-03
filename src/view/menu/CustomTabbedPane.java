@@ -1,7 +1,7 @@
 package view.menu;
 
 import view.editor.LevelEditorPanel;
-import view.settings.SettingsPanel;
+import view.settings.AppSettings;
 import view.shop.ShopPanel;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class CustomTabbedPane extends JPanel{
     private final StartMenuPanel startMenuPanel;
     private final LevelEditorPanel levelEditorPanel;
     private final ShopPanel shopPanel;
-    private final SettingsPanel settingsPanel;
+    private final AppSettings appSettings;
 
     // Getter (not used)
 
@@ -42,8 +42,8 @@ public class CustomTabbedPane extends JPanel{
         return shopPanel;
     }
 
-    public SettingsPanel getSettingsPanel() {
-        return settingsPanel;
+    public AppSettings getSettingsPanel() {
+        return appSettings;
     }
 
     // Arrays to store tab buttons and their underline indicators
@@ -53,7 +53,7 @@ public class CustomTabbedPane extends JPanel{
     public CustomTabbedPane(){
         this.startMenuPanel=new StartMenuPanel();
         this.levelEditorPanel= new LevelEditorPanel();
-        this.settingsPanel= new SettingsPanel();
+        this.appSettings = new AppSettings();
         this.shopPanel= new ShopPanel();
 
         this.cardLayout = new CardLayout(); // This is the CardLayout instance for CustomTabbedPane
@@ -100,7 +100,7 @@ public class CustomTabbedPane extends JPanel{
         contentPanel.add(startMenuPanel, "Start");
         contentPanel.add(levelEditorPanel, "Editor");
         contentPanel.add(shopPanel, "Shop");
-        contentPanel.add(settingsPanel, "Settings");
+        contentPanel.add(appSettings, "Settings");
 
         // Show the initial tab (Map)
         updateTabSelection(0);
