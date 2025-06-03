@@ -3,16 +3,20 @@ package controller;
 import model.Model;
 import view.View;
 
-//TODO maybe can be singleton to avoid using multiple GameLoop on the same Game model
-
 /**
  * Represents the main game loop responsible for controlling the update and rendering
- * processes of a game. The class maintains a fixed update rate to ensure consistent game behavior
+ * processes of a game. This class is implemented as a Singleton to ensure only one
+ * instance of the game loop exists throughout the application, preventing multiple
+ * game loops from operating on the same game model.
+ * It maintains a fixed update rate to ensure consistent game behavior
  * regardless of hardware performance. It also handles smooth rendering while optimizing CPU usage.
  *
  * @implNote Implements the Runnable interface to allow the loop to run in a dedicated thread.
  */
 public class GameLoop implements Runnable {
+    // Singleton instance of GameLoop
+    private static GameLoop instance;
+
     // Flag to control game loop execution
     private boolean running = false;
     // Target frames per second
@@ -23,28 +27,73 @@ public class GameLoop implements Runnable {
     private Thread gameThread;
 
     /**
+     * Private constructor to prevent instantiation from outside the class.
+     */
+    private GameLoop() {
+        // Private constructor for Singleton pattern
+    }
+
+    /**
+     * Returns the singleton instance of the GameLoop.
+     * If the instance does not exist, it creates one.
+     *
+     * @return The single instance of GameLoop.
+     */
+    public static synchronized GameLoop getInstance() {
+        if (instance == null) {
+            instance = new GameLoop();
+        }
+        return instance;
+    }
+
+    /**
      * Starts the game loop if it's not already running.
      * Creates and starts a new thread for the game loop.
      */
     public void start() {
-        if (running) throw new IllegalStateException("Game loop is already running.");
-        else running = true;
+        // Check if the thread is null OR if it is no longer "alive" (has finished its execution)
+        //This allows a new thread to be created only when the previous one is dead or does not exist
+        if (gameThread == null || !gameThread.isAlive()) {
+            running = true; // Set the execution state to true
+            gameThread = new Thread(this);
+            gameThread.start();
+            Model.getInstance().getGame().start(); // Start the game model (if not already started)
+        } else if (running) {
 
-        gameThread = new Thread(this);
-        gameThread.start();
-        Model.getInstance().getGame().start();
+            // Here the game loop is already active with a live thread, do nothing.
+        } else {
+            // This case means that gameThread exists and is alive, but 'running' is false.
+            // This could indicate an inconsistency, but to be safe, reset the state to running=true.
+            running = true;
+        }
     }
 
     /**
      * Stops the game loop and waits for the game thread to finish.
      */
     public void stop() {
-        if (!running) return;
-        running = false;
+        if (!running) {
+            return;
+        }
+
+        running = false; // Set the execution status to false to terminate the loop in run()
+
+        // Interrupt the thread to wake it from any sleep or block
+        if (gameThread != null) {
+            gameThread.interrupt();
+        }
+
         try {
-            gameThread.join();
+            if (gameThread != null) {
+                gameThread.join(2000); // Wait for thread termination for up to 2 seconds
+                if (gameThread.isAlive()) {
+                    System.err.println("GameLoop thread did not terminate gracefully after join.");
+                }
+            }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt(); // Restore the interrupt state
+        } finally {
+            gameThread = null; // IMPORTANT: Reset the thread reference after it finishes
         }
     }
 
@@ -69,6 +118,10 @@ public class GameLoop implements Runnable {
             while (accumulator >= targetTime) {
                 updateModel();
                 accumulator -= targetTime;
+                // Ensure we don't over-accumulate if updates are very slow
+                if (accumulator < 0) {
+                    accumulator = 0;
+                }
             }
 
             // Render the current game state
@@ -76,12 +129,15 @@ public class GameLoop implements Runnable {
 
             // Sleep to not max out CPU
             try {
-                long sleepTime = (targetTime - (System.nanoTime() - currentTime)) / 1000000;
+                long sleepTime = (targetTime - (System.nanoTime() - currentTime)) / 1_000_000; // Convert to milliseconds
                 if (sleepTime > 0) {
                     Thread.sleep(sleepTime);
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                // Restore the interrupted status
+                Thread.currentThread().interrupt();
+                // If interrupted, break out of the loop or handle gracefully
+                running = false;
             }
         }
     }
@@ -102,6 +158,10 @@ public class GameLoop implements Runnable {
         View.getInstance().notifyView();
     }
 
+    /**
+     * Checks if the game loop is currently running.
+     * @return true if the game loop is running, false otherwise.
+     */
     public boolean isRunning() {
         return running;
     }

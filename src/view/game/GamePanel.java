@@ -2,17 +2,17 @@ package view.game;
 
 import controller.GameController;
 import controller.ControllerObj;
-import controller.menu.GameMenuController;
+import controller.GameLoop;
 import model.Model;
 import model.game.Constants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
+import view.View;
 import view.ViewComp;
 import view.menu.GameMenuPanel;
 
-import javax.swing.JPanel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import java.awt.*;
 
@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements ViewComp {
         Color skyblue = new Color(0, 188, 250);
         setBackground(skyblue);
 
-        this.add(gameMenu);
+        this.add(gameSettings);
 
     }
 
@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements ViewComp {
         }
 
         this.addKeyListener((GameController) controller);
-        gameMenu.bindController(new GameMenuController(gameMenu));
+
         this.setFocusable(true);
     }
 
@@ -74,6 +74,7 @@ public class GamePanel extends JPanel implements ViewComp {
             assert this.getParent() != null ;
             JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
                     "New Game",JOptionPane.INFORMATION_MESSAGE);
+            resetPanelForNewLevel();
         }
     }
 
@@ -142,17 +143,31 @@ public class GamePanel extends JPanel implements ViewComp {
         }
     }
 
+    public void resetPanelForNewLevel() {
+        this.staticBackground = null; // Force background to redraw on next paintComponent
+        this.repaint(); // Requires the panel to redraw itself
+    }
+
 
 
     // SETTINGS
-    private final GameMenuPanel gameMenu = new GameMenuPanel();
+    private final GameMenuPanel gameSettings = new GameMenuPanel();
     public GameMenuPanel toggleSettingsPanel(){
-        gameMenu.setOpen(!gameMenu.isOpen());
-        gameMenu.setVisible(gameMenu.isOpen()); // if isOpen == false set gameSettingsPanel invisible
+        gameSettings.setOpen(!gameSettings.isOpen());
+        gameSettings.setVisible(gameSettings.isOpen()); // if isOpen == false set gameSettingsPanel invisible
         this.revalidate();
-        return gameMenu;
+        return gameSettings;
     }
 
+    public void endGame(){
+        // 1. Game model reset
+        Model.getInstance().getGame().clearGameMatrix();
+        GameLoop.getInstance().stop();
+
+        // 2. removing the old panel and adding the new one
+        View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+
+    }
 
 
 }

@@ -1,14 +1,14 @@
 package view.menu;
 
-import controller.ControllerObj;
 import view.editor.LevelEditorPanel;
-import view.menu.StartMenuPanel;
-import view.ViewComp;
 import view.settings.SettingsPanel;
 import view.shop.ShopPanel;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static config.View.BOARD_HEIGHT;
+import static config.View.BOARD_WIDTH;
 
 public class CustomTabbedPane extends JPanel{
     // CardLayout to switch between views (like tabs)
@@ -50,11 +50,11 @@ public class CustomTabbedPane extends JPanel{
     JButton[] buttons = new JButton[4];
     JPanel[] underlinePanels = new JPanel[4];
 
-    public CustomTabbedPane(StartMenuPanel startMenuPanel, LevelEditorPanel levelEditorPanel,ShopPanel shopPanel,SettingsPanel settingsPanel){
-        this.startMenuPanel=startMenuPanel;
-        this.levelEditorPanel=levelEditorPanel;
-        this.settingsPanel=settingsPanel;
-        this.shopPanel=shopPanel;
+    public CustomTabbedPane(){
+        this.startMenuPanel=new StartMenuPanel();
+        this.levelEditorPanel= new LevelEditorPanel();
+        this.settingsPanel= new SettingsPanel();
+        this.shopPanel= new ShopPanel();
 
         this.cardLayout = new CardLayout(); // This is the CardLayout instance for CustomTabbedPane
         this.contentPanel = new JPanel(this.cardLayout); // This contentPanel uses the newly created cardLayout
@@ -97,8 +97,6 @@ public class CustomTabbedPane extends JPanel{
 
 
         // Add panels to CardLayout container with unique keys
-
-        
         contentPanel.add(startMenuPanel, "Start");
         contentPanel.add(levelEditorPanel, "Editor");
         contentPanel.add(shopPanel, "Shop");
@@ -141,6 +139,8 @@ public class CustomTabbedPane extends JPanel{
         // Add tab bar and content area to the panel
         this.add(tabPanel, BorderLayout.PAGE_END);    // Tabs at the bottom
         this.add(contentPanel, BorderLayout.CENTER);  // Main content in the center
+
+        this.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
     }
 
     // Helper method to apply consistent styling to tab buttons

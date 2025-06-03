@@ -22,7 +22,7 @@ public class Controller {
    public static void bind(){
        View view = View.getInstance();
        view.getGamePanel().bindController(new GameController());
-       StartMenuPanel panel = view.getStartMenuPanel();
+       StartMenuPanel panel = view.getCustomTabbedPane().getStartMenuPanel();
        StartMenuController controller = new StartMenuController(panel);
        panel.bindController(controller);
        //view.getLevelEditorPanel().bindController(new LevelEditorController());
