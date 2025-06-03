@@ -18,7 +18,7 @@ import static model.game.Constants.Direction.*;
  * Controller of 'SugarPanel'
  */
 public class GameController extends KeyAdapter implements ControllerObj {
-    private final GameLoop gameLoop = new GameLoop();
+    private final GameLoop gameLoop = GameLoop.getInstance();
     private boolean started = false;
 
 
@@ -32,19 +32,22 @@ public class GameController extends KeyAdapter implements ControllerObj {
             // START GAME
             gameLoop.start();
             started = true;
-            return;
         }
 
         // NOTIFY MODEL
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> model.setCreatureDirection(UP);
-
-            case KeyEvent.VK_DOWN -> model.setCreatureDirection(DOWN);
-
-            case KeyEvent.VK_LEFT -> model.setCreatureDirection(LEFT);
-
-            case KeyEvent.VK_RIGHT -> model.setCreatureDirection(RIGHT);
-
+            case KeyEvent.VK_UP -> {
+                model.performMove(UP);
+            }
+            case KeyEvent.VK_DOWN -> {
+                model.performMove(DOWN);
+            }
+            case KeyEvent.VK_LEFT -> {
+                model.performMove(LEFT);
+            }
+            case KeyEvent.VK_RIGHT -> {
+                model.performMove(RIGHT);
+            }
             case KeyEvent.VK_ESCAPE -> {
                 // PAUSE GAME when the game menu is opened
                 if (gameLoop.isRunning()) gameLoop.stop();

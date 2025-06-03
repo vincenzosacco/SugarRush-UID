@@ -1,11 +1,17 @@
 package model.game;
 
+import controller.GameLoop;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
+import view.View;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static config.Model.COL_COUNT;
+import static config.Model.ROW_COUNT;
 
 public class Game {
     /**
@@ -37,7 +43,23 @@ public class Game {
 
     public Game() {
         // LOAD MAP FROM RESOURCE
-        MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
+        //MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
+    }
+    //set the current map of the level
+    public void setLevel(int index){
+        if (index==1){
+            MapParser.loadMap(MapParser.MAP_1, this);
+        } else if (index==2){
+            MapParser.loadMap(MapParser.MAP_2, this);
+        } else if (index==3){
+            MapParser.loadMap(MapParser.MAP_3, this);
+        } else if (index==4){
+            MapParser.loadMap(MapParser.MAP_4, this);
+        } else if (index==5){
+            MapParser.loadMap(MapParser.MAP_5, this);
+        }else if (index==6){
+            MapParser.loadMap(MapParser.MAP_6, this);
+        }
     }
 
     // MODEL //
@@ -118,13 +140,18 @@ public class Game {
 
 
     // GAME ACTIONS //
-    private boolean isStarted = false;
-    public boolean isStarted() {
-        return isStarted;
+    private final GameLoop gameLoop = new GameLoop();
+
+    public boolean isRunning(){
+        return gameLoop.isRunning();
     }
     public void start(){
-        if (!isStarted) isStarted = true;
+        gameLoop.start();
     }
+    public void stop(){
+        gameLoop.stop();
+    }
+
 
 
     private Creature getCreature(){
@@ -145,6 +172,18 @@ public class Game {
     }
 
     public void killCreature() {
-        System.exit(0);
+        SwingUtilities.invokeLater(() -> {
+            View.getInstance().getGamePanel().endGame();
+        });
+    }
+    public void clearGameMatrix() {
+        // Clear the game matrix
+        for (int row = 0; row < ROW_COUNT; row++) {
+        for (int col = 0; col < COL_COUNT; col++) {
+                gameMat.setCell(new Cell(row, col), Constants.Block.SPACE);
+            }
+        }
+        // Clear all entities
+        entities.clear();
     }
 }

@@ -1,14 +1,14 @@
 map=
 xxxxxxxxxxxxxxxxxxx
 xc           x    x
-x                xx
+x           e    xx
 xx           x xxxx
 xxxxxxxxxxxxtx    x
 x            x    x
 x      xxxx  x    x
 x      x     x    t
 x                 t
-xe         xxxxxxxx
+x          xxxxxxxx
 xx                x
 x                 x
 x                 x

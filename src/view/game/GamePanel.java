@@ -2,16 +2,17 @@ package view.game;
 
 import controller.GameController;
 import controller.ControllerObj;
+import controller.GameLoop;
 import model.Model;
 import model.game.Constants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
+import view.View;
 import view.ViewComp;
 import view.menu.GameMenuPanel;
 
-import javax.swing.JPanel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import java.awt.*;
 
@@ -73,6 +74,7 @@ public class GamePanel extends JPanel implements ViewComp {
             assert this.getParent() != null ;
             JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
                     "New Game",JOptionPane.INFORMATION_MESSAGE);
+            resetPanelForNewLevel();
         }
     }
 
@@ -145,6 +147,11 @@ public class GamePanel extends JPanel implements ViewComp {
         }
     }
 
+    public void resetPanelForNewLevel() {
+        this.staticBackground = null; // Force background to redraw on next paintComponent
+        this.repaint(); // Requires the panel to redraw itself
+    }
+
 
 
     // SETTINGS
@@ -156,6 +163,15 @@ public class GamePanel extends JPanel implements ViewComp {
         return gameSettings;
     }
 
+    public void endGame(){
+        // 1. Game model reset
+        Model.getInstance().getGame().clearGameMatrix();
+        GameLoop.getInstance().stop();
+
+        // 2. removing the old panel and adding the new one
+        View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+
+    }
 
 
 }

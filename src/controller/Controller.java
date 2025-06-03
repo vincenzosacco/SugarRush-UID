@@ -3,6 +3,7 @@ package controller;
 
 import controller.menu.StartMenuController;
 import view.View;
+import view.menu.StartMenuPanel;
 
 /**
  *  Interface to the Model.
@@ -21,7 +22,12 @@ public class Controller {
    public static void bind(){
        View view = View.getInstance();
        view.getGamePanel().bindController(new GameController());
-       view.getStartMenuPanel().bindController(new StartMenuController());
+       StartMenuPanel panel = view.getCustomTabbedPane().getStartMenuPanel();
+       StartMenuController controller = new StartMenuController(panel);
+       panel.bindController(controller);
+       //view.getLevelEditorPanel().bindController(new LevelEditorController());
+       //view.getShopPanel().bindController(new ShopController());
+       //view.getSettingsPanel().bindController(new SettingsController());
    }
 
 }
