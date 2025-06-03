@@ -165,7 +165,7 @@ public class GamePanel extends JPanel implements ViewComp {
         GameLoop.getInstance().stop();
 
         // 2. removing the old panel and adding the new one
-        View.getInstance().showPanel(View.PanelName.START_MENU.getName());
+        View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
 
     }
 

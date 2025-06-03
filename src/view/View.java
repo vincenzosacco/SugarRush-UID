@@ -69,7 +69,7 @@ public class View {
         startMenuPanel = new StartMenuPanel();
         shopPanel=new ShopPanel();
         settingsPanel=new SettingsPanel();
-        customTabbedPane = new CustomTabbedPane(startMenuPanel,levelEditorPanel,shopPanel,settingsPanel);
+        customTabbedPane = new CustomTabbedPane();
 
         // COMPONENTS
         Container.setLayout(cardLayout);

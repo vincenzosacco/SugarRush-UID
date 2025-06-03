@@ -32,7 +32,6 @@ public class GameController extends KeyAdapter implements ControllerObj {
             // START GAME
             gameLoop.start();
             started = true;
-            return;
         }
 
         // NOTIFY MODEL
