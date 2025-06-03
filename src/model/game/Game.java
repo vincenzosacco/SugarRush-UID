@@ -140,7 +140,7 @@ public class Game {
 
 
     // GAME ACTIONS //
-    private final GameLoop gameLoop = new GameLoop();
+    private final GameLoop gameLoop = GameLoop.getInstance();
 
     public boolean isRunning(){
         return gameLoop.isRunning();
