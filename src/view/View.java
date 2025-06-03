@@ -10,6 +10,7 @@ import view.shop.ShopPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * Singleton Interface to the View.
@@ -106,6 +107,13 @@ public class View {
         cardLayout.show(Container, panelName);
         Container.revalidate();
         Container.repaint();
+        // Request focus to the panel that is being shown TODO modfica questo
+        for (Component comp : Container.getComponents()) {
+            if (comp.isVisible() && comp instanceof JComponent) {
+                ((JComponent) comp).requestFocusInWindow();
+                break; // Only request focus for the first visible component
+            }
+        }
     }
 
     private final GamePanel gamePanel = new GamePanel();

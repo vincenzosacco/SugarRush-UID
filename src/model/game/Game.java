@@ -46,6 +46,7 @@ public class Game {
         //MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
     }
     //set the current map of the level
+    private int currentLevel ;
     public void setLevel(int index){
         if (index==1){
             MapParser.loadMap(MapParser.MAP_1, this);
@@ -60,6 +61,7 @@ public class Game {
         }else if (index==6){
             MapParser.loadMap(MapParser.MAP_6, this);
         }
+        currentLevel  = index;
     }
 
     // MODEL //
@@ -185,5 +187,16 @@ public class Game {
         }
         // Clear all entities
         entities.clear();
+    }
+
+    public void restart() {
+        // Clear the game matrix
+        clearGameMatrix();
+        // Reset the game loop
+        gameLoop.stop();
+        gameLoop.start();
+
+        // Reload the level (if needed)
+        setLevel(currentLevel); // or any other level you want to start with
     }
 }

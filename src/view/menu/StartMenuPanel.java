@@ -70,6 +70,8 @@ public class StartMenuPanel extends JPanel implements ViewComp {
 
         // Ensure buttons are positioned correctly after the component is first rendered
         SwingUtilities.invokeLater(this::positionButtons);
+
+        this.setFocusable(true);
     }
 
     // Position the level buttons dynamically based on the current size of the panel
