@@ -39,7 +39,7 @@ class MapParser {
     private static String[] readMapResource(String mapResourcePath) {
         List<String> mapLines = new ArrayList<>();
 
-        try (InputStream inputStream = Resources.getResourceAsStream(mapResourcePath)) {
+        try (InputStream inputStream = Resources.getResourceAsStream(mapResourcePath)) { // this closes automatically
             try {
                 // Use BufferedReader to read the input stream line by line
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {

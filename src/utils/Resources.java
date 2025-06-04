@@ -25,6 +25,12 @@ public class Resources {
     private static final HashMap<String, Image> images = new HashMap<>();
 
 
+    /**
+     * Loads a resource as stream.
+     * @param relPath the relative path to the resource, e.g. "/imgs/icons/coin.png"
+     * @return InputStream of the resource
+     * @apiNote remember to close the InputStream after use to avoid memory leaks
+     */
     public static InputStream getResourceAsStream(String relPath) {
         InputStream inputStream = Resources.class.getResourceAsStream(relPath);
         if (inputStream == null) {
@@ -33,25 +39,30 @@ public class Resources {
         return inputStream;
     }
 
-
+    /**
+     * Gets an image resource by its relative path.
+     * @param relPath the relative path to the image resource, e.g. "/imgs/icons/coin.png"
+     * @return Image object
+     * @throws RuntimeException if the image resource is not found
+     */
     public static Image getImage(String relPath) {
-//        if (!(width == null) == (height == null)){
-//            throw new IllegalArgumentException("Both width and height must be specified or both must be null");
-//        }
-
         Image ret = images.get(relPath);
         if (ret == null) {
             throw new RuntimeException("No such image resource at " + relPath );
         }
-
-//        if (width != null  ) { // && height != null - <height> cannot be null here, because of the check at func beginning
-//            // Resize the image if width and height are specified
-//            ret = ret.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-//        }
-
         return ret;
     }
+
+    /**
+     * Gets an image resource by its relative path and returns it as a BufferedImage.
+     * The BufferedImage is created with the highest quality settings for rendering.
+     * @param relPath the relative path to the image resource, e.g. "/imgs/icons/coin.png"
+     * @param width the desired width of the image
+     * @param height the desired height of the image
+     * @return BufferedImage object with the specified dimensions
+     */
     public static BufferedImage getBestImage(String relPath, int width, int height) {
+        // TODO- non sono sicuro che sia davvero la qualità migliore, vedere dove sta il problema
         Image orig = getImage(relPath).getScaledInstance(width, height, Image.SCALE_SMOOTH);
 //        Image orig = getImage(relPath);
 
@@ -75,12 +86,33 @@ public class Resources {
         return optimizedImage;
     }
 
+    /**
+     * Gets a file resource by its relative path.
+     * This method is useful for accessing files in the classpath.
+     * @param relPath the relative path to the file resource, e.g. "/configs/settings.json"
+     * @return File object representing the resource
+     */
     public static File getFile(String relPath) {
         URL resourceUrl = Objects.requireNonNull(Resources.class.getResource(relPath));
         return new File(resourceUrl.getFile());
     }
 
+
+    private static boolean isLoaded = false;
+    /**
+     * Loads all resources from the classpath asynchronously.
+
+     * @param onComplete a Runnable that will be executed if all resources are loaded without exceptions.
+     * @throws IOException
+     */
     public static void loadAllResources(Runnable onComplete) throws IOException {
+        if (! isLoaded) {
+            isLoaded = true; // Prevent multiple loads
+        } else
+            throw new IllegalStateException("Resources already loaded");
+
+    // -------------------- SCAN RESOURCES CLASS PATH ----------------------------------------------------------------//
+
         // Read all directories in resource classpath recursively to get all resource paths
         List<String> imgPaths = new ArrayList<>();
         collectResourcePaths(imgPaths, new String[]{".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg"});
@@ -93,9 +125,13 @@ public class Resources {
             return;
         }
 
+    // -------------------- LOAD RESOURCES MULTITHREADING ------------------------------------------------------------//
+
         // Use a thread pool for parallel loading
         int numThreads = Math.max(1, Math.min(imgPaths.size(), Runtime.getRuntime().availableProcessors()));
         System.out.println("Using " + numThreads + " threads for resource loading");
+        // TODO - vedere se è possibile velocizzare ulteriormente il caricamento delle immagini
+        //  magari usando ExecutorService diverso.
         ExecutorService pool = Executors.newFixedThreadPool(numThreads);
         CountDownLatch latch = new CountDownLatch(imgPaths.size());
 
@@ -121,7 +157,9 @@ public class Resources {
                 pool.shutdown();
                 System.out.println("Resource loading complete");
                 onComplete.run();
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+                System.err.println("Resource loading interrupted");
+            }
         }).start();
 
 
