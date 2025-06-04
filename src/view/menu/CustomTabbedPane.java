@@ -1,5 +1,6 @@
 package view.menu;
 
+import utils.Resources;
 import view.editor.LevelEditorPanel;
 import view.settings.AppSettings;
 import view.shop.ShopPanel;
@@ -7,8 +8,8 @@ import view.shop.ShopPanel;
 import javax.swing.*;
 import java.awt.*;
 
-import static config.View.BOARD_HEIGHT;
-import static config.View.BOARD_WIDTH;
+import static config.ViewConfig.BOARD_HEIGHT;
+import static config.ViewConfig.BOARD_WIDTH;
 
 public class CustomTabbedPane extends JPanel{
     // CardLayout to switch between views (like tabs)
@@ -19,32 +20,6 @@ public class CustomTabbedPane extends JPanel{
     private final LevelEditorPanel levelEditorPanel;
     private final ShopPanel shopPanel;
     private final AppSettings appSettings;
-
-    // Getter (not used)
-
-    public CardLayout getCardLayout() {
-        return cardLayout;
-    }
-
-    public JPanel getContentPanel() {
-        return contentPanel;
-    }
-
-    public StartMenuPanel getStartMenuPanel() {
-        return startMenuPanel;
-    }
-
-    public LevelEditorPanel getLevelEditorPanel() {
-        return levelEditorPanel;
-    }
-
-    public ShopPanel getShopPanel() {
-        return shopPanel;
-    }
-
-    public AppSettings getSettingsPanel() {
-        return appSettings;
-    }
 
     // Arrays to store tab buttons and their underline indicators
     JButton[] buttons = new JButton[4];
@@ -69,22 +44,23 @@ public class CustomTabbedPane extends JPanel{
         // Create tab buttons with icons and tooltips
 
         // Map button with icon
-        ImageIcon mapIcon = new ImageIcon("resources/map.jpg");
+        ImageIcon mapIcon = new ImageIcon(Resources.getImage("/imgs/icons/map.jpg"));
         JButton mapButton = new JButton(mapIcon);
         styleTabButton(mapButton, "Map");
 
         // Level Editor button
-        ImageIcon levelEditorIcon = new ImageIcon("resources/levelEditor.jpg");
+        ImageIcon levelEditorIcon = new ImageIcon(Resources.getImage("/imgs/icons/level_editor.jpg"));
         JButton levelEditorButton = new JButton(levelEditorIcon);
         styleTabButton(levelEditorButton, "Level Editor");
 
         // Shop button
-        ImageIcon shopIcon = new ImageIcon("resources/shop.jpg");
+        ImageIcon shopIcon = new ImageIcon(Resources.getImage("/imgs/icons/shop.jpg"));
         JButton shopButton = new JButton(shopIcon);
         styleTabButton(shopButton, "Shop");
 
         // Settings button
-        ImageIcon settingsIcon = new ImageIcon("resources/settings.jpg");
+        ImageIcon settingsIcon = new ImageIcon(Resources.getImage("/imgs/icons/settings.jpg"));
+
         JButton settingsButton = new JButton(settingsIcon);
         styleTabButton(settingsButton, "Settings");
 
@@ -181,4 +157,7 @@ public class CustomTabbedPane extends JPanel{
         }
     }
 
+    public StartMenuPanel getStartMenuPanel() {
+        return startMenuPanel;
+    }
 }

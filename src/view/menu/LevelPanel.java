@@ -3,11 +3,11 @@ package view.menu;
 import controller.GameLoop;
 import model.Model;
 import model.game.LevelData;
+import utils.Resources;
 import view.View;
 import view.button.RoundCloseButton;
 import view.button.RoundPlayButton;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ import java.io.File;
 public class LevelPanel extends JPanel{
 
     // Background image for the panel
-    private Image backgroundImage;
+    private BufferedImage backgroundImage;
 
     // Buttons for closing and starting the level
     private final RoundCloseButton closeButton;
@@ -45,12 +45,8 @@ public class LevelPanel extends JPanel{
         setOpaque(false);
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true)); // Rounded border
 
-        // Load the background image
-        try {
-            backgroundImage = ImageIO.read(new File("resources/backgroundLevelDialog.jpg"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
 
         // Create and configure the close button
         closeButton = new RoundCloseButton();
@@ -113,9 +109,9 @@ public class LevelPanel extends JPanel{
             rowPanel.setOpaque(false);
 
             // Choose correct image based on coin collected or not
-            String imgPath = coinsCollected[i] ? "resources/coin.jpg" : "resources/missingCoin.jpg";
+            String imgPath = coinsCollected[i] ? "/imgs/panels/levels/coin.jpg" : "/imgs/panels/levels/missingCoin.jpg";
             try {
-                originalImages[i] = ImageIO.read(new File(imgPath));
+                originalImages[i] = Resources.getImage(imgPath);
             } catch (Exception e) {
                 e.printStackTrace();
                 originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback
@@ -254,7 +250,10 @@ public class LevelPanel extends JPanel{
         });
     }
 
-    // Custom painting to render the rounded background and border
+// ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
+
+    private int lastWidth = 0;
+    private int lastHeight = 0;
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -269,13 +268,17 @@ public class LevelPanel extends JPanel{
         Shape clip = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
         g2.setClip(clip);
 
-        // Draw background image or fallback to white
-        if (backgroundImage != null) {
-            g2.drawImage(backgroundImage, 0, 0, width, height, this);
+        // Draw background image if it is null or dimensions changed
+        if (backgroundImage == null || width != lastWidth || height != lastHeight) {
+            lastWidth = width;
+            lastHeight = height;
+            // Get the background image
+            backgroundImage = Resources.getBestImage("/imgs/panels/levels/level-dialog.jpg", width, height);
+
         } else {
-            g2.setColor(Color.WHITE);
-            g2.fillRect(0, 0, width, height);
+            g2.drawImage(backgroundImage, 0, 0, width, height, this);
         }
+
 
         // Draw rounded border
         g2.setClip(null); // Remove clipping for border
@@ -288,5 +291,6 @@ public class LevelPanel extends JPanel{
         // Paint child components
         super.paintComponent(g);
     }
+
 
 }

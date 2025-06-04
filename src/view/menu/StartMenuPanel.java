@@ -2,21 +2,19 @@ package view.menu;
 
 import controller.ControllerObj;
 import model.game.LevelData;
+import utils.Resources;
 import view.ViewComp;
 import view.button.LevelButton;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import static config.View.BOARD_HEIGHT;
-import static config.View.BOARD_WIDTH;
+import static config.ViewConfig.BOARD_HEIGHT;
+import static config.ViewConfig.BOARD_WIDTH;
 
 public class StartMenuPanel extends JPanel implements ViewComp {
     // Background image for the panel
@@ -37,8 +35,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             LevelButton button = new LevelButton(i);
 
             // Load level data file
-            File file = new File("resources/map" + i + ".txt");
-            LevelData levelData = new LevelData(file);
+            LevelData levelData = new LevelData(Resources.getFile("/maps/map" + i + ".txt"));
 
             // Set coins collected status for the button (used to update its display)
             button.setCoinsCollected(levelData.getCoinsCollected());
@@ -49,11 +46,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         }
 
         // Load the background image for the start menu panel
-        try {
-            backgroundImage = ImageIO.read(new File("resources/levelMenu.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace(); // Log error if image file not found or cannot be read
-        }
+        backgroundImage = (BufferedImage) Resources.getImage("/imgs/panels/levels/levelMenu.jpg");
 
         // Use absolute positioning to allow precise control over button placement
         setLayout(null);

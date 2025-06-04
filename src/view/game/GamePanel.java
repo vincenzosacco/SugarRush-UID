@@ -9,7 +9,6 @@ import model.game.Constants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
-import view.View;
 import view.ViewComp;
 import view.menu.GameMenuPanel;
 
@@ -20,7 +19,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import static config.View.*;
+import static config.ViewConfig.*;
 
 
 /**
@@ -115,7 +114,7 @@ public class GamePanel extends JPanel implements ViewComp {
                     game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR) {
 
                     Constants.Block block = gameMatrix.get(row).get(col);
-                    Image image = EntitiesView.getImage(block, null); // get the image for the block type
+                    Image image = _BlocksImage.getInstance().getStaticBlockImg(block); // get the image for the block type
                     if (!(image == null))
                         bg.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
                 }
@@ -142,9 +141,8 @@ public class GamePanel extends JPanel implements ViewComp {
             int y = row * TILE_SIZE;
 
             Constants.Block blockType = entity.blockType();
-            Image image = EntitiesView.getImage(blockType,  entity.getDirection());
+            Image image = _BlocksImage.getInstance().getDynamicBlockImg(blockType, entity.getDirection());
 
-            assert image != null;
             g2d.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
         }
     }
@@ -153,7 +151,6 @@ public class GamePanel extends JPanel implements ViewComp {
         this.staticBackground = null; // Force background to redraw on next paintComponent
         this.repaint(); // Requires the panel to redraw itself
     }
-
 
 
     // SETTINGS
@@ -166,10 +163,9 @@ public class GamePanel extends JPanel implements ViewComp {
         GameLoop.getInstance().stop();
 
         // 2. removing the old panel and adding the new one
-        View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+        view.View.getInstance().showPanel(view.View.PanelName.CUSTOM_TABBED_PANE.getName());
 
     }
-
 
     public void toggleSettingsPanel() {
         gameSettings.toggle();

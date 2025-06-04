@@ -1,14 +1,13 @@
 package view.button;
 
-import javax.imageio.ImageIO;
+import utils.Resources;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class LevelButton extends JButton {
     // Background image for this level button
@@ -30,21 +29,6 @@ public class LevelButton extends JButton {
     // Constructor that initializes the button with a specific level number
     public LevelButton(int i) {
         this.num = i;
-
-        // Load background image for this level button
-        try {
-            backgroundImage = ImageIO.read(new File("resources/backgroundLevelButton" + num + ".jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Load images for coins (collected and not collected)
-        try {
-            coinImage = ImageIO.read(new File("resources/coin.jpg"));
-            missingCoinImage = ImageIO.read(new File("resources/missingCoin.jpg"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
         // Remove default padding around the button text
         setMargin(new Insets(0, 0, 0, 0));
@@ -73,6 +57,22 @@ public class LevelButton extends JButton {
     // Custom painting logic for the button
     @Override
     protected void paintComponent(Graphics g) {
+
+        // INIT BUFFERED IMAGES (for better performance/quality ratio )//
+        // maybe this 'if' can be in another method (not constructor because size is not set yet) to avoid
+        // check every time paintComponent is called. At the moment, it is not a big problem
+        if (backgroundImage == null)
+            backgroundImage = Resources.getBestImage("/imgs/panels/levels/level" + num + "-button.jpg",
+                    getWidth(), getHeight());
+
+        int coinSize = (int) (getHeight() * 0.40); // Coin image size
+        if (coinImage == null )
+            coinImage = Resources.getBestImage("/imgs/panels/levels/coin.jpg", coinSize, coinSize);
+        if (missingCoinImage == null )
+            missingCoinImage = Resources.getBestImage("/imgs/panels/levels/missingCoin.jpg", coinSize, coinSize);
+
+
+        // DRAWING LOGIC //
         Graphics2D g2 = (Graphics2D) g.create();
 
         // Enable antialiasing for smoother graphics
@@ -92,7 +92,6 @@ public class LevelButton extends JButton {
         g2.drawOval(1, 1, getWidth() - 3, getHeight() - 3); // Circle border
 
         // Draw coin indicators at the bottom of the button
-        int coinSize = (int) (getHeight() * 0.40); // Coin image size
         int spacing = coinSize / 20;               // Small spacing between coins
         int totalWidth = (3 * coinSize) + (2 * spacing); // Total width of coin row
         int startX = (getWidth() - totalWidth) / 2; // Center alignment
@@ -102,6 +101,7 @@ public class LevelButton extends JButton {
         for (int i = 0; i < 3; i++) {
             int x = startX + i * (coinSize + spacing);
             BufferedImage img = coinsCollected[i] ? coinImage : missingCoinImage;
+
             g2.drawImage(img, x, y, coinSize, coinSize, this);
         }
 
