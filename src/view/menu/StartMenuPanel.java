@@ -2,6 +2,7 @@ package view.menu;
 
 import controller.ControllerObj;
 import model.game.LevelData;
+import utils.Resources;
 import view.ViewComp;
 import view.button.LevelButton;
 
@@ -17,8 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import static config.View.BOARD_HEIGHT;
-import static config.View.BOARD_WIDTH;
+import static config.ViewConfig.BOARD_HEIGHT;
+import static config.ViewConfig.BOARD_WIDTH;
 
 public class StartMenuPanel extends JPanel implements ViewComp {
     // Background image for the panel
@@ -39,7 +40,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             LevelButton button = new LevelButton(i);
 
             // Load level data file
-            InputStream file = getClass().getResourceAsStream("/map" + i + ".txt");
+            InputStream file = getClass().getResourceAsStream("/maps/map" + i + ".txt");
             LevelData levelData = new LevelData(file);
 
             // Set coins collected status for the button (used to update its display)
@@ -54,7 +55,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
 
         try {
             // Gets the resource URL from the classpath.
-            URL imageUrl = getClass().getResource("/levelMenu.jpg");
+            URL imageUrl = getClass().getResource("/imgs/panels/levels/levelMenu.jpg");
 
             if (imageUrl == null) {
                 System.err.println("Error: Image resource not found in classpath: /resources/levelMenu.jpg");
@@ -81,6 +82,8 @@ public class StartMenuPanel extends JPanel implements ViewComp {
 
         // Ensure buttons are positioned correctly after the component is first rendered
         SwingUtilities.invokeLater(this::positionButtons);
+
+        this.setFocusable(true);
     }
 
     // Position the level buttons dynamically based on the current size of the panel

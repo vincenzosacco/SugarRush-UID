@@ -1,6 +1,7 @@
 package controller;
 
 import model.Model;
+import model.game.Game;
 import view.View;
 
 /**
@@ -26,19 +27,11 @@ public class GameLoop implements Runnable {
     // Thread for running the game loop
     private Thread gameThread;
 
-    /**
-     * Private constructor to prevent instantiation from outside the class.
-     */
+    // SINGLETON //
     private GameLoop() {
         // Private constructor for Singleton pattern
     }
 
-    /**
-     * Returns the singleton instance of the GameLoop.
-     * If the instance does not exist, it creates one.
-     *
-     * @return The single instance of GameLoop.
-     */
     public static synchronized GameLoop getInstance() {
         if (instance == null) {
             instance = new GameLoop();

@@ -26,10 +26,10 @@ public class SettingsButton extends JButton {
         // Load the image once in the constructor
         try {
             // Gets the resource URL from the classpath.
-            URL imageUrl = getClass().getResource("/settings.jpg");
+            URL imageUrl = getClass().getResource("/imgs/icons/settings.jpg");
 
             if (imageUrl == null) {
-                System.err.println("Error: Image resource not found in classpath: /resources/settings.jpg");
+                System.err.println("Error: Image resource not found in classpath: /resources/imgs/icons/settings.jpg");
             } else {
                 settingsImage = ImageIO.read(imageUrl);
             }

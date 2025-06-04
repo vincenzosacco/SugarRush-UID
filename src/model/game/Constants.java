@@ -3,15 +3,15 @@ package model.game;
 /**
  * The {@code Constants} interface contains fundamental constants and enumerations
  * that define key aspects of the game's domain, such as directions for movement
- * and block types in the game's map.
+ * and block types in the game's game.
  */
 public interface Constants {
 
     /**
      * <p>
      * The {@code Direction} enum defines the possible movement directions within the game.
-     * It is used to represent directional movement, typically for navigating the game map
-     * or controlling entities such as a creature.
+     * It is used to represent directional movement, typically for navigating the game game
+     * or controlling blocks such as a creature.
      */
     enum Direction{
         /**Represents upward movement.*/
@@ -40,13 +40,13 @@ public interface Constants {
     }
 
     /**
-     * Enum representing different types of blocks that can exist within the game map.
+     * Enum representing different types of blocks that can exist within the game game.
      * Each block type corresponds to a specific element within the game's environment:
      */
     enum Block{
         /** An empty space where the creature can move freely.*/
         SPACE,
-        /**An impassable block representing a boundary or obstacle within the map.*/
+        /**An impassable block representing a boundary or obstacle within the game.*/
         WALL,
         /**The current position of the creature in the game.*/
         CREATURE,

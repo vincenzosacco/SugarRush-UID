@@ -1,5 +1,6 @@
 package model.game;
 
+import controller.GameLoop;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
 import view.View;
@@ -23,14 +24,14 @@ public class Game {
 
     /**
      * <p>
-     * Contains a read-only view of the game's map matrix.
+     * Contains a read-only view of the game's game matrix.
      * This variable is a two-dimensional, unmodifiable structure backed by the internal {@code GameMatrix},
      * where each element represents a {@code Block} type.
      * The {@code Block} represents game-specific elements like walls, empty spaces, the creature, and sugar pieces.
      * </p>
      *
-     * @implNote The list is immutable, ensuring external code cannot modify the game's map. This is essential to maintain
-     * the integrity of the game state during gameplay. Changes to the map are managed internally within the
+     * @implNote The list is immutable, ensuring external code cannot modify the game's game. This is essential to maintain
+     * the integrity of the game state during gameplay. Changes to the game are managed internally within the
      * {@code Game} class logic.
      * @see Constants.Block
      * @see GameMatrix#makeReadOnly()
@@ -75,11 +76,11 @@ public class Game {
 
     /**
      * Retrieves the current state of the game as a two-dimensional, read-only list of blocks.
-     * Each block represents a specific element within the game's map, such as walls, spaces,
+     * Each block represents a specific element within the game's game, such as walls, spaces,
      * the creature, or collectible items. Access is synchronized to ensure thread-safe state retrieval.
      *
      * @return a two-dimensional unmodifiable list where each element is a {@code Constants.Block}
-     * representing the current state of the game map.
+     * representing the current state of the game game.
      * @see Constants.Block
      */
     public List<List<Constants.Block>> getState() {
@@ -95,18 +96,18 @@ public class Game {
      * <p>
      * Updates the current state of the game by performing several critical operations
      * in sequential order. This method represents the core logic for maintaining and
-     * refreshing the game map and entities to reflect the latest game state.
+     * refreshing the game game and blocks to reflect the latest game state.
      * </p>
      * The operations include:
      * <p>
-     * 2. Executing actions for all active game entities. Each entity's specific action is
+     * 2. Executing actions for all active game blocks. Each entity's specific action is
      * performed via its {@code performAction} method.
      * </p>
      * <p>
-     * 3. Resolving any interactions or collisions between entities and the game environment.
+     * 3. Resolving any interactions or collisions between blocks and the game environment.
      * </p>
      * <p>
-     * 4. Updating the game matrix with the new positions and block types of all entities.
+     * 4. Updating the game matrix with the new positions and block types of all blocks.
      * </p>
      * This method is central to the game's functionality and should be invoked regularly
      * to keep the game running smoothly. Modifications to this method should ensure the
@@ -164,7 +165,7 @@ public class Game {
                 return creature;
             }
         }
-        throw new AssertionError("Creature not found in the game entities. This should never happen.");
+        throw new AssertionError("Creature not found in the game blocks. This should never happen.");
     }
 
     /** Sets the direction of the creature. On the next {@link #updateState()} call,
@@ -189,7 +190,7 @@ public class Game {
                 gameMat.setCell(new Cell(row, col), Constants.Block.SPACE);
             }
         }
-        // Clear all entities
+        // Clear all blocks
         entities.clear();
     }
 }

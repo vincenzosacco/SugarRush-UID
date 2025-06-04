@@ -20,7 +20,6 @@ public class Enemy1 extends Enemy {
     }
 
     public Enemy1(int row, int col) {
-
         super(row,col);
         setActionDelay(10);
         this.direction = Direction.LEFT;

@@ -18,7 +18,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import static config.View.*;
+import static config.ViewConfig.*;
 
 
 /**
@@ -90,7 +90,7 @@ public class GamePanel extends JPanel implements ViewComp {
             drawOnStartUp();
         }
         g.drawImage(staticBackground, 0, 0, null);
-        drawOnUpdate(g);
+        drawOnUpdate((Graphics2D)g);
     }
 
     private void drawOnStartUp(){
@@ -117,7 +117,7 @@ public class GamePanel extends JPanel implements ViewComp {
                     game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR) {
 
                     Constants.Block block = gameMatrix.get(row).get(col);
-                    Image image = EntitiesView.getImage(block, null); // get the image for the block type
+                    Image image = _BlocksImage.getInstance().getStaticBlockImg(block); // get the image for the block type
                     if (!(image == null))
                         bg.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
                 }
@@ -128,11 +128,15 @@ public class GamePanel extends JPanel implements ViewComp {
         bg.dispose();
     }
 
-    private void drawOnUpdate(Graphics g) {
+    private void drawOnUpdate(Graphics2D g2d) {
         Game game = Model.getInstance().getGame();
-
         List<Entity> entities = game.getEntities();
 
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+        // DRAW ENTITIES //
         for (Entity entity : entities) {
             int row = entity.getCoord().getRow();
             int col = entity.getCoord().getCol();
@@ -140,10 +144,10 @@ public class GamePanel extends JPanel implements ViewComp {
             int y = row * TILE_SIZE;
 
             Constants.Block blockType = entity.blockType();
-            Image image = EntitiesView.getImage(blockType,  entity.getDirection());
+            Image image = _BlocksImage.getInstance().getDynamicBlockImg(blockType, entity.getDirection());
 
             assert image != null;
-            g.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
+            g2d.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
         }
     }
 
@@ -151,7 +155,6 @@ public class GamePanel extends JPanel implements ViewComp {
         this.staticBackground = null; // Force background to redraw on next paintComponent
         this.repaint(); // Requires the panel to redraw itself
     }
-
 
 
     // SETTINGS

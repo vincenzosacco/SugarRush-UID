@@ -21,8 +21,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 
-import static config.View.BOARD_HEIGHT;
-import static config.View.BOARD_WIDTH;
+import static config.ViewConfig.BOARD_HEIGHT;
+import static config.ViewConfig.BOARD_WIDTH;
 
 /**
  * Panel for game settings
@@ -74,16 +74,16 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         // Load the background image
         try {
             // Gets the resource URL from the classpath.
-            URL imageUrl = getClass().getResource("/backgroundLevelDialog.jpg");
+            URL imageUrl = getClass().getResource("/imgs/panels/levels/level-dialog.jpg");
 
             if (imageUrl == null) {
-                System.err.println("Error: Image resource not found in classpath: /resources/backgroundLevelDialog.jpg");
+                System.err.println("Error: Image resource not found in classpath: /resources/imgs/panels/levels/level-dialog.jpg");
             } else {
                 backgroundImage = ImageIO.read(imageUrl);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Error loading image backgroundLevelDialog.jpg: " + e.getMessage());
+            System.err.println("Error loading image level-dialog.jpg: " + e.getMessage());
         }
 
 
@@ -166,7 +166,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             rowPanel.setOpaque(false);
 
             // Choose correct image based on coin collected or not
-            String imgPath = coinsCollected[i] ? "/coin.jpg" : "/missingCoin.jpg";
+            String imgPath = coinsCollected[i] ? "/imgs/panels/levels/coin.jpg" : "/imgs/panels/levels/missingCoin.jpg";
             try {
                 originalImages[i] = ImageIO.read(getClass().getResource(imgPath));
             } catch (Exception e) {
@@ -331,9 +331,9 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         for (int i = 0; i < 3; i++) {
             String imgPath;
             if(coinsCollected[i]){
-                imgPath = "/coin.jpg";
+                imgPath = "/imgs/panels/levels/coin.jpg";
             }else{
-                imgPath = "/missingCoin.jpg";
+                imgPath = "/imgs/panels/levels/missingCoin.jpg";
             }
 
             try {

@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -22,7 +21,7 @@ public class RestartButton extends JButton {
 
         try {
             // Gets the resource URL from the classpath.
-            URL imageUrl = getClass().getResource("/restart.jpg");
+            URL imageUrl = getClass().getResource("/imgs/icons/restart.jpg");
 
             if (imageUrl == null) {
                 System.err.println("Error: Image resource not found in classpath: /resources/restart.jpg");
