@@ -27,13 +27,13 @@ import static config.Model.ROW_COUNT;
  * </p>
  * @apiNote This class is intended for internal use within the game's infrastructure to load and initialize map data.
  */
-class MapParser {
-    final static String MAP_1 = "/map1.txt";
-    final static String MAP_2 = "/map2.txt";
-    final static String MAP_3 = "/map3.txt";
-    final static String MAP_4 = "/map4.txt";
-    final static String MAP_5 = "/map5.txt";
-    final static String MAP_6 = "/map6.txt";
+public class MapParser {
+    public final static String MAP_1 = "/map1.txt";
+    public final static String MAP_2 = "/map2.txt";
+    public final static String MAP_3 = "/map3.txt";
+    public final static String MAP_4 = "/map4.txt";
+    public final static String MAP_5 = "/map5.txt";
+    public final static String MAP_6 = "/map6.txt";
     /**
      * Read a .txt file a convert each line to a String element of the returned Array.
      * @return a String[] containing lines
@@ -84,7 +84,7 @@ class MapParser {
      * @throws IllegalArgumentException if the map file contains invalid characters or is malformed
      * @apiNote
      */
-    static void loadMap(String map, Game game ){
+    public static void loadMap(String map, Game game ){
         GameMatrix mat = game.gameMat;
 
         mat.clear();

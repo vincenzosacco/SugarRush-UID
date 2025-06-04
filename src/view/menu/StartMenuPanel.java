@@ -14,6 +14,8 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import static config.View.BOARD_HEIGHT;
 import static config.View.BOARD_WIDTH;
@@ -37,7 +39,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             LevelButton button = new LevelButton(i);
 
             // Load level data file
-            File file = new File("resources/map" + i + ".txt");
+            InputStream file = getClass().getResourceAsStream("/map" + i + ".txt");
             LevelData levelData = new LevelData(file);
 
             // Set coins collected status for the button (used to update its display)
@@ -49,10 +51,19 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         }
 
         // Load the background image for the start menu panel
+
         try {
-            backgroundImage = ImageIO.read(new File("resources/levelMenu.jpg"));
+            // Gets the resource URL from the classpath.
+            URL imageUrl = getClass().getResource("/levelMenu.jpg");
+
+            if (imageUrl == null) {
+                System.err.println("Error: Image resource not found in classpath: /resources/levelMenu.jpg");
+            } else {
+                backgroundImage = ImageIO.read(imageUrl);
+            }
         } catch (IOException e) {
-            e.printStackTrace(); // Log error if image file not found or cannot be read
+            e.printStackTrace();
+            System.err.println("Error loading image levelMenu.jpg: " + e.getMessage());
         }
 
         // Use absolute positioning to allow precise control over button placement

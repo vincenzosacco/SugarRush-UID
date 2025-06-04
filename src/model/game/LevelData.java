@@ -11,57 +11,71 @@ public class LevelData {
     // Stores the request or challenge text associated with each coin/star
     private String[] textRequest;
 
-    // Reference to the level file
-    File levelFile;
 
     // Constructor: loads coin and request data from the provided level file
-    public LevelData(File levelFile) {
-        loadCoins(levelFile);         // Load saved coin collection status
-        loadTextRequest(levelFile);   // Load associated challenge texts
-    }
+    public LevelData(InputStream levelFileStream) {
 
-    // Loads the challenge text for each coin/star from the file
-    public void loadTextRequest(File file) {
-        textRequest = new String[3]; // Assume always 3 requests (one per star/coin)
+        this.coinsCollected = new boolean[3]; // Default: tutti false
+        this.textRequest = new String[]{"Error: Text not loaded.", "Error: Text not loaded.", "Error: Text not loaded."};
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Check for a line starting with "textRequest="
-                if (line.startsWith("textRequest=")) {
-                    // Split the comma-separated list of texts
-                    String[] parts = line.substring("textRequest=".length()).split(",");
-                    for (int i = 0; i < parts.length && i < textRequest.length; i++) {
-                        textRequest[i] = parts[i].trim(); // Trim and assign each text
-                    }
-                    break; // Exit loop once found
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace(); // Print any file reading errors
+        if (levelFileStream == null) {
+            return;
         }
-    }
 
-    // Loads the coin collection status (boolean values) from the level file
-    public void loadCoins(File file) {
-        coinsCollected = new boolean[3]; // Assume always 3 coins per level
+        List<String> allLines = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(levelFileStream))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Check for a line starting with "coins="
-                if (line.startsWith("coins=")) {
-                    // Split the comma-separated list of coin flags
-                    String[] parts = line.substring("coins=".length()).split(",");
-                    for (int i = 0; i < parts.length && i < coinsCollected.length; i++) {
-                        coinsCollected[i] = parts[i].trim().equals("1"); // "1" = collected
-                    }
-                    break; // Exit loop once found
-                }
+                allLines.add(line);
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Print any file reading errors
+            e.printStackTrace();
+            System.err.println("Errore durante la lettura di tutte le righe del file del livello.");
+            return;
+        }
+
+        processAllLevelData(allLines);
+
+    }
+
+    private void processAllLevelData(List<String> lines) {
+
+        this.coinsCollected = new boolean[3];
+        this.textRequest = new String[3];
+
+        // Initialize the prompt text with default values to avoid null if not found
+        for (int i = 0; i < 3; i++) {
+            this.textRequest[i] = "";
+        }
+
+        boolean readingMap = false;
+
+        for (String line : lines) {
+            if (line.startsWith("map=")) {
+                readingMap = true;
+                continue;
+            } else if (readingMap) {
+                // If we encounter "coins=" or "textRequest=", we have finished reading the map section
+                if (line.startsWith("coins=") || line.startsWith("textRequest=")) {
+                    readingMap = false;
+                }
+            }
+            //"coins="
+            if (line.startsWith("coins=")) {
+                String[] parts = line.substring("coins=".length()).split(",");
+                for (int i = 0; i < parts.length && i < this.coinsCollected.length; i++) {
+                    this.coinsCollected[i] = parts[i].trim().equals("1");
+                }
+            }
+            // "textRequest="
+            else if (line.startsWith("textRequest=")) {
+                String[] parts = line.substring("textRequest=".length()).split(",");
+                for (int i = 0; i < parts.length && i < this.textRequest.length; i++) {
+                    this.textRequest[i] = parts[i].trim();
+                }
+            }
+
         }
     }
 

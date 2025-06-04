@@ -1,9 +1,11 @@
 package view.menu;
 
+import controller.ControllerObj;
 import controller.GameLoop;
 import model.Model;
 import model.game.LevelData;
 import view.View;
+import view.ViewComp;
 import view.button.RoundCloseButton;
 import view.button.RoundPlayButton;
 
@@ -16,8 +18,11 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-public class LevelPanel extends JPanel{
+public class LevelPanel extends JPanel implements ViewComp {
 
     // Background image for the panel
     private Image backgroundImage;
@@ -34,7 +39,7 @@ public class LevelPanel extends JPanel{
     private final Image[] originalImages = new Image[3];
 
     // Constructor takes the level file and its index
-    public LevelPanel(File levelFile, int levelIndex){
+    public LevelPanel(InputStream levelFile, int levelIndex){
         // Load level data (coin status and descriptive text)
         LevelData levelData = new LevelData(levelFile);
         boolean[] coinsCollected = levelData.getCoinsCollected();
@@ -47,9 +52,19 @@ public class LevelPanel extends JPanel{
 
         // Load the background image
         try {
-            backgroundImage = ImageIO.read(new File("resources/backgroundLevelDialog.jpg"));
-        } catch (Exception e) {
+            // Gets the resource URL from the classpath.
+            URL imageUrl = getClass().getResource("/backgroundLevelDialog.jpg"); // Corrected path
+
+            if (imageUrl == null) {
+                System.err.println("Error: Image resource not found in classpath: /resources/backgroundLevelDialog.jpg");
+
+            } else {
+                backgroundImage = ImageIO.read(imageUrl);
+            }
+        } catch (IOException e) { // Catch IOException specifically for ImageIO.read
             e.printStackTrace();
+            System.err.println("Error loading image backgroundLevelDialog.jpg: " + e.getMessage());
+            // Optionally, set a fallback image or handle the error
         }
 
         // Create and configure the close button
@@ -113,12 +128,20 @@ public class LevelPanel extends JPanel{
             rowPanel.setOpaque(false);
 
             // Choose correct image based on coin collected or not
-            String imgPath = coinsCollected[i] ? "resources/coin.jpg" : "resources/missingCoin.jpg";
+            String imgPath = coinsCollected[i] ? "coin.jpg" : "missingCoin.jpg";
             try {
-                originalImages[i] = ImageIO.read(new File(imgPath));
-            } catch (Exception e) {
+                // Use ClassLoader for robustness
+                URL coinImageUrl = getClass().getResource("/"+imgPath); // Corrected path
+
+                if (coinImageUrl == null) {
+                    System.err.println("Error: Coin image resource not found: " + imgPath);
+                    originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback image
+                } else {
+                    originalImages[i] = ImageIO.read(coinImageUrl);
+                }
+            } catch (IOException e) { // Catch IOException specifically for ImageIO.read
                 e.printStackTrace();
-                originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback
+                originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback image
             }
 
             // Scaled image icon
@@ -287,6 +310,11 @@ public class LevelPanel extends JPanel{
 
         // Paint child components
         super.paintComponent(g);
+    }
+
+    @Override
+    public void bindController(ControllerObj controller) {
+
     }
 
 }

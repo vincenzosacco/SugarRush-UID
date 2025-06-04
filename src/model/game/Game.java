@@ -40,12 +40,22 @@ public class Game {
     // experimental approach
     private final List<Entity> entitiesRO = Collections.unmodifiableList(entities);
 
+    private int currLevel;
+
+    public int getCurrLevel() {
+        return currLevel;
+    }
+
     public Game() {
         // LOAD MAP FROM RESOURCE
         //MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
+        currLevel=1;
+
     }
     //set the current map of the level
     public void setLevel(int index){
+        currLevel=index;
+
         if (index==1){
             MapParser.loadMap(MapParser.MAP_1, this);
         } else if (index==2){
@@ -168,12 +178,14 @@ public class Game {
     public void killCreature() {
         SwingUtilities.invokeLater(() -> {
             View.getInstance().getGamePanel().endGame();
+            //removing the old panel and adding the new one
+            View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
         });
     }
     public void clearGameMatrix() {
         // Clear the game matrix
         for (int row = 0; row < ROW_COUNT; row++) {
-        for (int col = 0; col < COL_COUNT; col++) {
+            for (int col = 0; col < COL_COUNT; col++) {
                 gameMat.setCell(new Cell(row, col), Constants.Block.SPACE);
             }
         }

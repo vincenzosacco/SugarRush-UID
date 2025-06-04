@@ -1,14 +1,10 @@
 package controller.menu;
 
 import controller.ControllerObj;
-import view.View;
-import view.ViewComp;
 import view.button.LevelButton;
 import view.menu.LevelPanel;
 import view.menu.StartMenuPanel;
-
-import javax.swing.*;
-import java.io.File;
+import java.io.InputStream;
 
 public class StartMenuController implements ControllerObj {
     // Reference to the start menu panel
@@ -28,7 +24,7 @@ public class StartMenuController implements ControllerObj {
 
             // Add a listener to open the level window when the button is clicked
             button.addActionListener(e -> {
-                File levelFile = new File("resources/map" + levelIndex + ".txt");
+                InputStream levelFile = getClass().getResourceAsStream("/map" + levelIndex + ".txt");
                 LevelPanel levelPanel = new LevelPanel(levelFile, levelIndex);
                 startMenuPanel.showLevelDialog(levelPanel);
             });

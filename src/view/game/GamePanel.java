@@ -8,7 +8,6 @@ import model.game.Constants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
-import view.View;
 import view.ViewComp;
 import view.menu.GameMenuPanel;
 
@@ -29,12 +28,17 @@ public class GamePanel extends JPanel implements ViewComp {
 
     private BufferedImage staticBackground = null;
 
+    private final GameMenuPanel gameSettingsPanel;
+
     public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
         Color skyblue = new Color(0, 188, 250);
         setBackground(skyblue);
 
-        this.add(gameSettings);
+        gameSettingsPanel = new GameMenuPanel();
+        this.add(gameSettingsPanel);
+        gameSettingsPanel.setVisible(false);
+//        this.add(gameSettings);
 
     }
 
@@ -151,22 +155,23 @@ public class GamePanel extends JPanel implements ViewComp {
 
 
     // SETTINGS
-    private final GameMenuPanel gameSettings = new GameMenuPanel();
     public GameMenuPanel toggleSettingsPanel(){
-        gameSettings.setOpen(!gameSettings.isOpen());
-        gameSettings.setVisible(gameSettings.isOpen()); // if isOpen == false set gameSettingsPanel invisible
+        int currentLevel = Model.getInstance().getGame().getCurrLevel();
+        gameSettingsPanel.setCurrentLevel(currentLevel); // Update the level in the settings panel
+        gameSettingsPanel.updateContent(); // Update texts/coins
+
+        gameSettingsPanel.setOpen(!gameSettingsPanel.isOpen()); // Invert the opening state
+        gameSettingsPanel.setVisible(gameSettingsPanel.isOpen()); // Make visible/invisible
+
         this.revalidate();
-        return gameSettings;
+        this.repaint();
+        return gameSettingsPanel;
     }
 
     public void endGame(){
-        // 1. Game model reset
+        // Game model reset
         Model.getInstance().getGame().clearGameMatrix();
         GameLoop.getInstance().stop();
-
-        // 2. removing the old panel and adding the new one
-        View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
-
     }
 
 
