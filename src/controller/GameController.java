@@ -50,9 +50,15 @@ public class GameController extends KeyAdapter implements ControllerObj {
             }
             case KeyEvent.VK_ESCAPE -> {
                 // PAUSE GAME when the game menu is opened
-                if (gameLoop.isRunning()) gameLoop.stop();
+                if (gameLoop.isRunning()) {
+                    gameLoop.stop();
+                    view.stopGameTimer();
+                }
                 // RESTORE GAME when the game menu is closed
-                else gameLoop.start();
+                else {
+                    view.startGameTimer();
+                    gameLoop.start();
+                }
 
                 view.toggleSettingsPanel();
             }

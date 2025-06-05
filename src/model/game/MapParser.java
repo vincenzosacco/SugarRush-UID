@@ -90,6 +90,7 @@ public class MapParser {
 
         String[] tileMap = readMapResource(map);
 
+
         for (int row = 0; row < ROW_COUNT; row++) {
             // add row to game matrix
             mat.add(new ArrayList<>());

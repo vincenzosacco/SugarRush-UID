@@ -92,8 +92,8 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         playButton.addActionListener(e -> {
             open=false;
             this.setVisible(false);
+            View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
-
         });
         // Create and configure the restart button
         restartButton=new RestartButton();
@@ -103,11 +103,12 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             this.setVisible(false);
 //            Start the level showing the GamePanel
             View.getInstance().getGamePanel().endGame();
+            View.getInstance().getGamePanel().resetGameTimer();
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             Model.getInstance().getGame().setLevel(levelToRestart);
             View.getInstance().showPanel(View.PanelName.GAME.getName());
+            View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
-
         });
 
         // Create and configure the EXIT button
@@ -116,6 +117,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             open=false;
             this.setVisible(false);
             GameLoop.getInstance().stop();
+            View.getInstance().getGamePanel().resetGameTimer();
             Model.getInstance().getGame().clearGameMatrix();
             View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
         });

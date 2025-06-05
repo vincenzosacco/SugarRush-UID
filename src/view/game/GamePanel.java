@@ -26,6 +26,9 @@ import static config.ViewConfig.*;
  */
 public class GamePanel extends JPanel implements ViewComp {
 
+    private Timer gameTimer;
+    private int elapsedSeconds = 0;
+
     private BufferedImage staticBackground = null;
 
     private final GameMenuPanel gameSettingsPanel;
@@ -39,7 +42,30 @@ public class GamePanel extends JPanel implements ViewComp {
         this.add(gameSettingsPanel);
         gameSettingsPanel.setVisible(false);
 //        this.add(gameSettings);
+    }
 
+    public void startGameTimer() {
+        if (gameTimer == null) {
+            gameTimer = new Timer(1000, e -> {
+                elapsedSeconds++;
+                repaint();
+            });
+        }
+        if (!gameTimer.isRunning()) {
+            gameTimer.start();
+        }
+    }
+
+    public void stopGameTimer() {
+        if (gameTimer != null && gameTimer.isRunning()) {
+            gameTimer.stop();
+        }
+    }
+
+    public void resetGameTimer() {
+        stopGameTimer();
+        elapsedSeconds = 0;
+        repaint();
     }
 
     /**
@@ -79,6 +105,7 @@ public class GamePanel extends JPanel implements ViewComp {
             JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
                     "New Game",JOptionPane.INFORMATION_MESSAGE);
             resetPanelForNewLevel();
+            startGameTimer();
         }
     }
 
@@ -91,6 +118,11 @@ public class GamePanel extends JPanel implements ViewComp {
         }
         g.drawImage(staticBackground, 0, 0, null);
         drawOnUpdate((Graphics2D)g);
+
+        // Draw the elapsed time
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Time: " + elapsedSeconds + "s", 10, 30);
     }
 
     private void drawOnStartUp(){
@@ -175,6 +207,7 @@ public class GamePanel extends JPanel implements ViewComp {
         // Game model reset
         Model.getInstance().getGame().clearGameMatrix();
         GameLoop.getInstance().stop();
+        resetGameTimer();
     }
 
 

@@ -23,4 +23,4 @@ xxxxxxxxxxxxxxxxxxx
 
 coins=0,0,0
 
-textRequest=esempio di testo 1,esempio di testo 2,esempio di testo 3
+textRequest=Eat the candy,Win the game in 30 seconds,Get to the special places
