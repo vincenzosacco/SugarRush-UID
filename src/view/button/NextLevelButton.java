@@ -7,30 +7,30 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-public class RestartButton extends JButton {
-    private BufferedImage restartImage;
-    public RestartButton(){
+public class NextLevelButton extends JButton {
+    private BufferedImage nextLevelImage;
+    public NextLevelButton(){
         setContentAreaFilled(false);         // Disables the default background filling.
         setBorderPainted(false);             // Disables the default border drawing.
         setFocusPainted(false);              // Disables the focus highlight.
         setOpaque(false);                    // Makes the background transparent.
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Changes cursor to hand on hover.
-        setToolTipText("Restart");             // Tooltip text shown when hovering over the button.
+        setToolTipText("NextLevel");             // Tooltip text shown when hovering over the button.
         setMargin(new Insets(0, 0, 0, 0));    // Removes all internal margins.
         setText(null);                       // Removes any default text.
 
         try {
             // Gets the resource URL from the classpath.
-            URL imageUrl = getClass().getResource("/imgs/icons/restart.jpg");
+            URL imageUrl = getClass().getResource("/imgs/icons/nextLevel.jpg");
 
             if (imageUrl == null) {
-                System.err.println("Error: Image resource not found in classpath: /imgs/icons/restart.jpg");
+                System.err.println("Error: Image resource not found in classpath: /imgs/icons/nextLevel.jpg");
             } else {
-                restartImage = ImageIO.read(imageUrl);
+                nextLevelImage = ImageIO.read(imageUrl);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Error loading image restart.jpg: " + e.getMessage());
+            System.err.println("Error loading image nextLevel.jpg: " + e.getMessage());
         }
     }
     protected void paintComponent(Graphics g) {
@@ -39,11 +39,11 @@ public class RestartButton extends JButton {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Smooth rendering
 
         // Draw rounded green background
-        g2.setColor(Color.ORANGE);
+        g2.setColor(Color.GREEN);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
 
-        if (restartImage != null) {
+        if (nextLevelImage != null) {
             int buttonWidth = getWidth();
             int buttonHeight = getHeight();
 
@@ -51,7 +51,7 @@ public class RestartButton extends JButton {
             int imageSize = (int) (Math.min(buttonWidth, buttonHeight) * 0.7);
 
             // Scale the image
-            Image scaledImage = restartImage.getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
+            Image scaledImage = nextLevelImage.getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
 
             // Calculate the coordinates to center the image
             int x = (buttonWidth - imageSize) / 2;
@@ -61,8 +61,8 @@ public class RestartButton extends JButton {
             g2.drawImage(scaledImage, x, y, this);
         } else {
             // Fallback if image not loaded
-            g2.setColor(Color.RED);
-            g2.drawString("R", getWidth() / 2 - 5, getHeight() / 2 + 5); // Disegna una 'R' semplice
+            g2.setColor(Color.BLACK);
+            g2.drawString("N", getWidth() / 2 - 5, getHeight() / 2 + 5); // Disegna una 'N' semplice
         }
 
         g2.dispose(); //Free up graphic resources
@@ -75,7 +75,7 @@ public class RestartButton extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Smooth rendering
-        g2.setColor(Color.ORANGE.darker()); // Use a darker color for the border
+        g2.setColor(Color.GREEN.darker()); // Use a darker color for the border
         g2.setStroke(new BasicStroke(3f)); // Set border thickness
 
         // Draw rounded border around the button

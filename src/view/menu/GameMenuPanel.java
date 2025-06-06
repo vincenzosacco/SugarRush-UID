@@ -11,6 +11,7 @@ import view.button.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -231,7 +232,11 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 
         this.setFocusable(true);
         this.setVisible(false);
+
+        // --- KEY BINDINGS ---
+        setupKeyBindings();
     }
+
 
     public boolean isOpen() {
         return open;
@@ -414,6 +419,28 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         repaint();    // Redraw the entire panel
     }
 
+    // Method to set up key bindings
+    private void setupKeyBindings() {
+        // Get the InputMap for when the component is focused or one of its children is focused
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        // Get the ActionMap to associate keys with actions
+        ActionMap actionMap = this.getActionMap();
+
+        // --- Bind ENTER key to Play button ---
+        // Create an InputStroke for the ENTER key
+        KeyStroke enterKeyStroke = KeyStroke.getKeyStroke("ENTER");
+        // Put the KeyStroke and an identifier (e.g., "pressPlay") into the InputMap
+        inputMap.put(enterKeyStroke, "pressPlay");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressPlay", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the playButton
+                playButton.doClick();
+            }
+        });
+
+    }
 
     @Override
     public void bindController(ControllerObj controller) {

@@ -35,32 +35,34 @@ public class GameController extends KeyAdapter implements ControllerObj {
         }
 
         // NOTIFY MODEL
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> {
-                model.setCreatureDirection(UP);
-            }
-            case KeyEvent.VK_DOWN -> {
-                model.setCreatureDirection(DOWN);
-            }
-            case KeyEvent.VK_LEFT -> {
-                model.setCreatureDirection(LEFT);
-            }
-            case KeyEvent.VK_RIGHT -> {
-                model.setCreatureDirection(RIGHT);
-            }
-            case KeyEvent.VK_ESCAPE -> {
-                // PAUSE GAME when the game menu is opened
-                if (gameLoop.isRunning()) {
-                    gameLoop.stop();
-                    view.stopGameTimer();
+        if (GameLoop.getInstance().isRunning() && Model.getInstance().getGame().isStarted()) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP -> {
+                    model.setCreatureDirection(UP);
                 }
-                // RESTORE GAME when the game menu is closed
-                else {
-                    view.startGameTimer();
-                    gameLoop.start();
+                case KeyEvent.VK_DOWN -> {
+                    model.setCreatureDirection(DOWN);
                 }
+                case KeyEvent.VK_LEFT -> {
+                    model.setCreatureDirection(LEFT);
+                }
+                case KeyEvent.VK_RIGHT -> {
+                    model.setCreatureDirection(RIGHT);
+                }
+                case KeyEvent.VK_ESCAPE -> {
+                    // PAUSE GAME when the game menu is opened
+                    if (gameLoop.isRunning()) {
+                        gameLoop.stop();
+                        view.stopGameTimer();
+                    }
+                    // RESTORE GAME when the game menu is closed
+                    else {
+                        view.startGameTimer();
+                        gameLoop.start();
+                    }
 
-                view.toggleSettingsPanel();
+                    view.toggleSettingsPanel();
+                }
             }
         }
     }

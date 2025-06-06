@@ -41,22 +41,22 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
 
     /** Alias for {@code get(row).get(col)} */
     public Block getCell(Cell coord){
-        if (coord.getRow() < 0 || coord.getRow() >= ROW_COUNT ||
-                coord.getCol() < 0 || coord.getCol() >= COL_COUNT) {
-            return Block.SPACE;
-        }
         return get(coord.getRow()).get(coord.getCol());
     }
 
     /** Alias for {@code get(row).set(col, block)} */
     public void setCell(Cell coord, Block block){
-        if (coord.getRow() < 0 || coord.getRow() >= ROW_COUNT ||
-                coord.getCol() < 0 || coord.getCol() >= COL_COUNT) {
-            Model.getInstance().getGame().killCreature();
-            System.err.println("Attempted to set cell out of bounds: " + coord.getRow() + ", " + coord.getCol());
-            return;
-        }
         get(coord.getRow()).set(coord.getCol(), block);
+    }
+    // Constructor to initialize the array with the correct dimensions
+    public GameMatrix() {
+        for (int r = 0; r < ROW_COUNT; r++) {
+            ArrayList<Block> row = new ArrayList<>(COL_COUNT);
+            for (int c = 0; c < COL_COUNT; c++) {
+                row.add(Block.SPACE); // Initialize all cells as SPACE
+            }
+            this.add(row);
+        }
     }
 }
 

@@ -10,6 +10,8 @@ import model.game.Game;
 import model.game.utils.Cell;
 import view.ViewComp;
 import view.menu.GameMenuPanel;
+import view.menu.LosePanel;
+import view.menu.WinPanel;
 
 import javax.swing.*;
 
@@ -28,10 +30,13 @@ public class GamePanel extends JPanel implements ViewComp {
 
     private Timer gameTimer;
     private int elapsedSeconds = 0;
+    private int oldElapsedSeconds;
 
     private BufferedImage staticBackground = null;
 
     private final GameMenuPanel gameSettingsPanel;
+    private final LosePanel losePanel;
+    private final WinPanel winPanel;
 
     public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
@@ -42,6 +47,13 @@ public class GamePanel extends JPanel implements ViewComp {
         this.add(gameSettingsPanel);
         gameSettingsPanel.setVisible(false);
 //        this.add(gameSettings);
+        losePanel=new LosePanel();
+        this.add(losePanel);
+        losePanel.setVisible(false);
+
+        winPanel=new WinPanel();
+        this.add(winPanel);
+        winPanel.setVisible(false);
     }
 
     public void startGameTimer() {
@@ -62,8 +74,13 @@ public class GamePanel extends JPanel implements ViewComp {
         }
     }
 
+    public Timer getGameTimer() {
+        return gameTimer;
+    }
+
     public void resetGameTimer() {
         stopGameTimer();
+        oldElapsedSeconds=elapsedSeconds;
         elapsedSeconds = 0;
         repaint();
     }
@@ -201,6 +218,29 @@ public class GamePanel extends JPanel implements ViewComp {
         this.revalidate();
         this.repaint();
         return gameSettingsPanel;
+    }
+
+    //END LEVEL
+    public LosePanel loseLevel(){
+        int currentLevel = Model.getInstance().getGame().getCurrLevel();
+        losePanel.setCurrentLevel(currentLevel);
+        losePanel.updateLabels(currentLevel);
+        losePanel.setElapsedTime(oldElapsedSeconds); // Time spent
+        losePanel.setVisible(true);
+        this.revalidate();
+        this.repaint();
+        return losePanel;
+    }
+
+    public WinPanel winLevel(){
+        int currentLevel = Model.getInstance().getGame().getCurrLevel();
+        winPanel.setCurrentLevel(currentLevel);
+        winPanel.updateLabels(currentLevel);
+        winPanel.setElapsedTime(oldElapsedSeconds); // Time spent
+        winPanel.setVisible(true);
+        this.revalidate();
+        this.repaint();
+        return winPanel;
     }
 
     public void endGame(){

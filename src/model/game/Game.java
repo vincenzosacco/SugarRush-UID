@@ -1,6 +1,5 @@
 package model.game;
 
-import controller.GameLoop;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
 import view.View;
@@ -20,6 +19,8 @@ public class Game {
     // package visibility needed for MapParser
     final GameMatrix gameMat = new GameMatrix();
     final ArrayList<Entity> entities = new ArrayList<>();
+
+    private final List<Entity> entitiesToRemove = new ArrayList<>();
 
 
     /**
@@ -58,18 +59,17 @@ public class Game {
     public void setLevel(int index){
         currLevel=index;
 
-        if (index==1){
-            MapParser.loadMap(MapParser.MAP_1, this);
-        } else if (index==2){
-            MapParser.loadMap(MapParser.MAP_2, this);
-        } else if (index==3){
-            MapParser.loadMap(MapParser.MAP_3, this);
-        } else if (index==4){
-            MapParser.loadMap(MapParser.MAP_4, this);
-        } else if (index==5){
-            MapParser.loadMap(MapParser.MAP_5, this);
-        }else if (index==6){
-            MapParser.loadMap(MapParser.MAP_6, this);
+        switch (index) {
+            case 1: MapParser.loadMap(MapParser.MAP_1, this); break;
+            case 2: MapParser.loadMap(MapParser.MAP_2, this); break;
+            case 3: MapParser.loadMap(MapParser.MAP_3, this); break;
+            case 4: MapParser.loadMap(MapParser.MAP_4, this); break;
+            case 5: MapParser.loadMap(MapParser.MAP_5, this); break;
+            case 6: MapParser.loadMap(MapParser.MAP_6, this); break;
+            default:
+                System.err.println("Level not supported: " + index + ". Loading MAP_1 as fallback.");
+                MapParser.loadMap(MapParser.MAP_1, this);
+                break;
         }
     }
 
@@ -115,21 +115,55 @@ public class Game {
      * preservation of each step's intended functionality.
      */
     public void updateState() {
-        for (Entity ent : entities) {
+        List<Entity> currentEntities = new ArrayList<>(entities);
+        for (Entity ent : currentEntities) {
+            // If the entity has already been marked for removal, skip it in this update cycle.
+            if (entitiesToRemove.contains(ent)) {
+                continue;
+            }
             if (ent.shouldPerform()) {
                 // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
-                gameMat.setCell(ent.getCoord(), Constants.Block.SPACE); // remove the entity from the old position
+                Cell oldCoord = ent.getCoord();
+                if (oldCoord.getRow() >= 0 && oldCoord.getRow() < ROW_COUNT &&
+                        oldCoord.getCol() >= 0 && oldCoord.getCol() < COL_COUNT) {
+                    gameMat.setCell(oldCoord, Constants.Block.SPACE);
+                } else {
+                    System.err.println("Warning: Entity with previous coordinate invalid. Skipped cleaning old cell:" + oldCoord);
+                }
 
                 // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
+                // LIMIT CHECK FOR toMove
+                if (toMove.getRow() < 0 || toMove.getRow() >= ROW_COUNT ||
+                        toMove.getCol() < 0 || toMove.getCol() >= COL_COUNT) {
+                    if (ent instanceof Creature) {
+                        System.out.println("Creature is attempting to move out of bounds. Creature kill.");
+                        killCreature();
+                    }
+                    continue; // Move to the next entity in the loop
+                }
                 // 2 -MANAGE COLLISIONS //
                 boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
                 // 3 -PERFORM ACTION //
                 if (canPerform) ent.performAction(toMove);
 
                 // APPLY NEW COORDS IN THE GAME MATRIX //
-                gameMat.setCell(ent.getCoord(), ent.blockType());
+                Cell newCoord = ent.getCoord();
+                if (newCoord.getRow() >= 0 && newCoord.getRow() < ROW_COUNT &&
+                        newCoord.getCol() >= 0 && newCoord.getCol() < COL_COUNT) {
+                    gameMat.setCell(newCoord, ent.blockType());
+                } else {
+                    System.err.println("Error: The entity has moved to an invalid coordinate:" + newCoord);
+                    if (ent instanceof Creature) {
+                        killCreature();
+                    }
+                }
             }
+        }
+        // Perform actual removals after iteration
+        if (!entitiesToRemove.isEmpty()) {
+            entities.removeAll(entitiesToRemove);
+            entitiesToRemove.clear();
         }
     }
 
@@ -141,11 +175,19 @@ public class Game {
      * @return true if the cell contains the specified block type, false otherwise
      */
     public boolean isBlock(Cell cell, Constants.Block blockType) {
+        if (cell.getRow() < 0 || cell.getRow() >= ROW_COUNT ||
+                cell.getCol() < 0 || cell.getCol() >= COL_COUNT) {
+            return false;
+        }
         return gameMat.getCell(cell) == blockType;
     }
 
     /**@return the block at the specified cell in the game matrix*/
     public Constants.Block blockAt(Cell cell) {
+        if (cell.getRow() < 0 || cell.getRow() >= ROW_COUNT ||
+                cell.getCol() < 0 || cell.getCol() >= COL_COUNT) {
+            return Constants.Block.SPACE;
+        }
         return gameMat.getCell(cell);
     }
 
@@ -174,24 +216,35 @@ public class Game {
      * @param direction the direction to set for the creature
      */
     public void setCreatureDirection(Constants.Direction direction) {
-        getCreature().setDirection(direction);
+        Creature creature = getCreature();
+        if (creature != null) {
+            creature.setDirection(direction);
+        }
     }
 
     public void killCreature() {
+        Creature creature = getCreature();
+        if (creature != null && !entitiesToRemove.contains(creature)) {
+            entitiesToRemove.add(creature); // Mark for removal
+        }
         SwingUtilities.invokeLater(() -> {
             View.getInstance().getGamePanel().endGame();
-            //removing the old panel and adding the new one
-            View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+            View.getInstance().getGamePanel().loseLevel();
         });
     }
     public void clearGameMatrix() {
+
         // Clear the game matrix
-        for (int row = 0; row < ROW_COUNT; row++) {
-            for (int col = 0; col < COL_COUNT; col++) {
-                gameMat.setCell(new Cell(row, col), Constants.Block.SPACE);
+        gameMat.clear();
+        for (int r = 0; r < ROW_COUNT; r++) {
+            ArrayList<Constants.Block> row = new ArrayList<>(COL_COUNT);
+            for (int c = 0; c < COL_COUNT; c++) {
+                row.add(Constants.Block.SPACE);
             }
+            gameMat.add(row);
         }
-        // Clear all blocks
+        // Clear all entities
         entities.clear();
+        entitiesToRemove.clear(); // Also clears the list of entities to remove
     }
 }
