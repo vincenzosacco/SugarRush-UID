@@ -8,33 +8,33 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-public class SettingsButton extends JButton {
+public class PauseButton extends JButton {
 
-    private BufferedImage settingsImage; // Field to hold the settings icon image
+    private BufferedImage pauseImage; // Field to hold the pause icon image
 
 
-    public SettingsButton() {
+    public PauseButton() {
         setContentAreaFilled(false);         // Disables the default background filling.
         setBorderPainted(false);             // Disables the default border drawing.
         setFocusPainted(false);              // Disables the focus highlight.
         setOpaque(false);                    // Makes the background transparent.
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Changes cursor to hand on hover.
-        setToolTipText("Settings");             // Tooltip text shown when hovering over the button.
+        setToolTipText("Pause");             // Tooltip text shown when hovering over the button.
         setMargin(new Insets(0, 0, 0, 0));    // Removes all internal margins.
         setText(null); // Ensure no default text is drawn
         // Load the image once in the constructor
         try {
             // Gets the resource URL from the classpath.
-            URL imageUrl = getClass().getResource("/imgs/icons/settings.jpg");
+            URL imageUrl = getClass().getResource("/imgs/icons/pause.jpg");
 
             if (imageUrl == null) {
-                System.err.println("Error: Image resource not found in classpath: /resources/imgs/icons/settings.jpg");
+                System.err.println("Error: Image resource not found in classpath: /resources/imgs/icons/pause.jpg");
             } else {
-                settingsImage = ImageIO.read(imageUrl);
+                pauseImage = ImageIO.read(imageUrl);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Error loading image settings.jpg: " + e.getMessage());
+            System.err.println("Error loading image pause.jpg: " + e.getMessage());
         }
 
 
@@ -50,7 +50,7 @@ public class SettingsButton extends JButton {
         float strokeWidth = 2f;
 
         // Fill the button with a solid White circular background
-        g2.setColor(Color.GRAY.brighter());
+        g2.setColor(Color.WHITE);
         g2.fillOval(0, 0, width, height);
 
         // Draw a black inner border with centered stroke
@@ -63,17 +63,17 @@ public class SettingsButton extends JButton {
         g2.setClip(null);
 
         // Draw a darker gray outer border for extra definition
-        g2.setColor(Color.GRAY.darker());
+        g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(3f));
         g2.drawOval(1, 1, width - 3, height - 3);
 
-        // Draw the settings image at the center
-        if (settingsImage != null) {
+        // Draw the pause image at the center
+        if (pauseImage != null) {
             // Determine the size for the image (e.g., 60% of the button's diameter)
             int imageDiameter = (int) (Math.min(width, height) * 0.6);
 
             // Scale the image
-            Image scaledImage = settingsImage.getScaledInstance(imageDiameter, imageDiameter, Image.SCALE_SMOOTH);
+            Image scaledImage = pauseImage.getScaledInstance(imageDiameter, imageDiameter, Image.SCALE_SMOOTH);
 
             // Calculate position to center the image
             int x = (width - imageDiameter) / 2;
@@ -81,10 +81,10 @@ public class SettingsButton extends JButton {
 
             g2.drawImage(scaledImage, x, y, this);
         } else {
-            // Fallback: draw an "S" or placeholder if image fails to load
-            g2.setColor(Color.GRAY);
+            // Fallback: draw an "P" or placeholder if image fails to load
+            g2.setColor(Color.BLACK);
             g2.setFont(new Font("Arial", Font.BOLD, Math.min(width, height) / 4));
-            String fallbackText = "S";
+            String fallbackText = "P";
             FontMetrics fm = g2.getFontMetrics();
             int textX = (width - fm.stringWidth(fallbackText)) / 2;
             int textY = (height - fm.getAscent()) / 2 + fm.getAscent();

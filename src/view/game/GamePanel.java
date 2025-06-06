@@ -9,6 +9,7 @@ import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
 import view.ViewComp;
+import view.button.PauseButton;
 import view.menu.GameMenuPanel;
 import view.menu.LosePanel;
 import view.menu.WinPanel;
@@ -38,21 +39,47 @@ public class GamePanel extends JPanel implements ViewComp {
     private final LosePanel losePanel;
     private final WinPanel winPanel;
 
+    GameLoop gameLoop=GameLoop.getInstance();
+
+    PauseButton pauseButton=new PauseButton();
+
+    public PauseButton getPauseButton() {
+        return pauseButton;
+    }
+
     public GamePanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
         Color skyblue = new Color(0, 188, 250);
         setBackground(skyblue);
+
+        pauseButton.setPreferredSize(new Dimension(30,30));
+        add(pauseButton,BorderLayout.PAGE_START);
+        pauseButton.addActionListener(e -> {
+            // PAUSE GAME when the game menu is opened
+            if (gameLoop.isRunning()) {
+                gameLoop.stop();
+                stopGameTimer();
+            }
+            // RESTORE GAME when the game menu is closed
+            else {
+                startGameTimer();
+                gameLoop.start();
+            }
+
+            toggleSettingsPanel();
+        });
+
 
         gameSettingsPanel = new GameMenuPanel();
         this.add(gameSettingsPanel);
         gameSettingsPanel.setVisible(false);
 //        this.add(gameSettings);
         losePanel=new LosePanel();
-        this.add(losePanel);
+        this.add(losePanel,BorderLayout.CENTER);
         losePanel.setVisible(false);
 
         winPanel=new WinPanel();
-        this.add(winPanel);
+        this.add(winPanel,BorderLayout.CENTER);
         winPanel.setVisible(false);
     }
 
@@ -215,6 +242,9 @@ public class GamePanel extends JPanel implements ViewComp {
         gameSettingsPanel.setOpen(!gameSettingsPanel.isOpen()); // Invert the opening state
         gameSettingsPanel.setVisible(gameSettingsPanel.isOpen()); // Make visible/invisible
 
+        if(gameSettingsPanel.isOpen()){
+            pauseButton.setVisible(false);
+        }
         this.revalidate();
         this.repaint();
         return gameSettingsPanel;

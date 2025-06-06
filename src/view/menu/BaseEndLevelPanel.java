@@ -43,7 +43,6 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
     public BaseEndLevelPanel() {
         setPreferredSize(new Dimension(BOARD_WIDTH / 2, BOARD_HEIGHT / 2));
         setOpaque(false);
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
         setLayout(new BorderLayout());
 
         loadBackgroundImage();
@@ -116,6 +115,7 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         // --- TOP PANEL ---
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // 10 pixels of space at the top
         // Left placeholder for settings button
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         leftPanel.setOpaque(false);
@@ -125,9 +125,15 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         // Centered layer label
         JLabel levelLabel = new JLabel("Level " + currentLevel, SwingConstants.CENTER); // Initial text of the level, can be updated
         levelLabel.setForeground(Color.BLACK);
+        // Layer label resizing
+        if (levelLabel != null) {
+            int levelFontSize = Math.min(getWidth() / 8, getHeight() / 8);
+            levelFontSize = Math.max(25, levelFontSize);
+            levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
+        }
         topPanel.add(levelLabel, BorderLayout.CENTER);
 
-        // PRight placeholder (empty panel)
+        // Pright placeholder (empty panel)
         JPanel rightPanel = new JPanel();
         rightPanel.setOpaque(false);
         topPanel.add(rightPanel, BorderLayout.EAST);
@@ -156,8 +162,8 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
 
         // Layer label resizing
         if (levelLabel != null) {
-            int levelFontSize = Math.min(panelWidth / 15, panelHeight / 15);
-            levelFontSize = Math.max(12, levelFontSize);
+            int levelFontSize = Math.min(getWidth() / 8, getHeight() / 8);
+            levelFontSize = Math.max(25, levelFontSize);
             levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
         }
 
@@ -174,8 +180,8 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         int height = getHeight();
         int arc = 30;
 
-        Shape clip = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
-        g2.setClip(clip);
+        RoundRectangle2D roundedRect = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
+        g2.setClip(roundedRect);
 
         if (backgroundImage != null) {
             g2.drawImage(backgroundImage, 0, 0, width, height, this);
@@ -185,9 +191,9 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         }
 
         g2.setClip(null);
-        g2.setStroke(new BasicStroke(10f));
+        g2.setStroke(new BasicStroke(2f));
         g2.setColor(Color.BLACK);
-        g2.draw(clip);
+        g2.draw(roundedRect);
 
         g2.dispose();
         super.paintComponent(g);

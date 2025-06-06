@@ -58,7 +58,6 @@ public class GameMenuPanel extends JPanel implements ViewComp {
     public GameMenuPanel(){
         setPreferredSize(new Dimension(BOARD_WIDTH/2, BOARD_HEIGHT/2));
         setOpaque(false);
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
 
         String mapResourcePath = "/map" + currentLevel + ".txt";
         InputStream levelFile=getClass().getResourceAsStream(mapResourcePath);
@@ -95,6 +94,8 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             this.setVisible(false);
             View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
+            View.getInstance().getGamePanel().getPauseButton().setVisible(true);
+            View.getInstance().getGamePanel().requestFocusInWindow();
         });
         // Create and configure the restart button
         restartButton=new RestartButton();
@@ -109,6 +110,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             Model.getInstance().getGame().setLevel(levelToRestart);
             View.getInstance().showPanel(View.PanelName.GAME.getName());
             View.getInstance().getGamePanel().startGameTimer();
+            View.getInstance().getGamePanel().getPauseButton().setVisible(true);
             GameLoop.getInstance().start();
         });
 
@@ -136,6 +138,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         // --------------------- TOP PANEL ---------------------
 
         JPanel topPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // 10 pixels of space at the top
         topPanel.setOpaque(false);
 
         // Left placeholder (empty panel)
@@ -258,8 +261,11 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         int arc = 30;
 
         // Rounded rectangle clipping for a smooth shape
-        Shape clip = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
-        g2.setClip(clip);
+        RoundRectangle2D panelShape = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
+        // Save the original clip of the graphic context
+        Shape originalClip = g2.getClip();
+
+        g2.setClip(panelShape);
 
         // Draw background image or fallback to white
         if (backgroundImage != null) {
@@ -270,10 +276,21 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         }
 
         // Draw rounded border
-        g2.setClip(null); // Remove clipping for border
-        g2.setStroke(new BasicStroke(10f));
+        //Restore the original clip BEFORE drawing the border and child components
+        //to prevent the edge and child components from being cut by the rounded clip
+        g2.setClip(originalClip);
+
+        float borderWidth = 2.0f;
+        g2.setStroke(new BasicStroke(borderWidth));
         g2.setColor(Color.BLACK);
-        g2.draw(clip);
+
+        // Draw the border slightly indented to keep it within the bounds of the panel.
+        RoundRectangle2D borderOutline = new RoundRectangle2D.Float(
+                borderWidth / 2, borderWidth / 2,
+                width - borderWidth, height - borderWidth,
+                arc, arc
+        );
+        g2.draw(borderOutline);
 
         g2.dispose();
 

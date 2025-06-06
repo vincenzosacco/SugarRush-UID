@@ -49,7 +49,6 @@ public class LevelPanel extends JPanel implements ViewComp{
         // Use BorderLayout and transparency
         setLayout(new BorderLayout());
         setOpaque(false);
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true)); // Rounded border
 
         // Load the background image
         try {
@@ -91,6 +90,7 @@ public class LevelPanel extends JPanel implements ViewComp{
             Model.getInstance().getGame().setLevel(levelIndex);
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             View.getInstance().showPanel(View.PanelName.GAME.getName());
+            View.getInstance().getGamePanel().getPauseButton().setVisible(true);
             GameLoop.getInstance().start();
         });
 
@@ -98,15 +98,22 @@ public class LevelPanel extends JPanel implements ViewComp{
 
         JPanel topPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
         topPanel.setOpaque(false);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // Left placeholder (empty panel)
         JPanel leftPanel = new JPanel();
         leftPanel.setOpaque(false);
         topPanel.add(leftPanel);
 
+
         // Centered level label
         JLabel levelLabel = new JLabel("Level " + levelIndex, SwingConstants.CENTER);
         levelLabel.setForeground(Color.BLACK);
+
+        int levelFontSize = Math.min(getWidth() / 15, getHeight() / 15);
+        levelFontSize = Math.max(15, levelFontSize);
+        levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
+
         topPanel.add(levelLabel);
 
         // Right panel with close button
@@ -193,8 +200,8 @@ public class LevelPanel extends JPanel implements ViewComp{
                 int panelHeight = getHeight();
 
                 // Resize level label font
-                int dimensionFontSize = Math.min(panelWidth / 15, panelHeight / 15);
-                int levelFontSize = Math.max(12, dimensionFontSize);
+                int levelFontSize = Math.min(getWidth() / 12, getHeight() / 12);
+                levelFontSize = Math.max(25, levelFontSize);
                 levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
                 levelLabel.revalidate();
                 levelLabel.repaint();
@@ -293,8 +300,11 @@ public class LevelPanel extends JPanel implements ViewComp{
         int arc = 30;
 
         // Rounded rectangle clipping for a smooth shape
-        Shape clip = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
-        g2.setClip(clip);
+        RoundRectangle2D panelShape = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
+        // Save the original clip of the graphic context
+        Shape originalClip = g2.getClip();
+
+        g2.setClip(panelShape);
 
         // Draw background image if it is null or dimensions changed
         if (backgroundImage == null || width != lastWidth || height != lastHeight) {
@@ -308,10 +318,21 @@ public class LevelPanel extends JPanel implements ViewComp{
         }
 
         // Draw rounded border
-        g2.setClip(null); // Remove clipping for border
-        g2.setStroke(new BasicStroke(10f));
+        //Restore the original clip BEFORE drawing the border and child components
+        //to prevent the edge and child components from being cut by the rounded clip
+        g2.setClip(originalClip);
+
+        float borderWidth = 2.0f;
+        g2.setStroke(new BasicStroke(borderWidth));
         g2.setColor(Color.BLACK);
-        g2.draw(clip);
+
+        // Draw the border slightly indented to keep it within the bounds of the panel.
+        RoundRectangle2D borderOutline = new RoundRectangle2D.Float(
+                borderWidth / 2, borderWidth / 2,
+                width - borderWidth, height - borderWidth,
+                arc, arc
+        );
+        g2.draw(borderOutline);
 
         g2.dispose();
 
