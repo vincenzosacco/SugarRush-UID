@@ -51,7 +51,6 @@ public class GameLoop implements Runnable {
             gameThread = new Thread(this);
             gameThread.start();
             Model.getInstance().getGame().start(); // Start the game model (if not already started)
-
         } else if (running) {
 
             // Here the game loop is already active with a live thread, do nothing.

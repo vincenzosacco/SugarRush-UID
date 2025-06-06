@@ -50,6 +50,7 @@ public class Game {
     public Game() {
         // LOAD MAP FROM RESOURCE
         //MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
+        //default
         currLevel=1;
 
     }

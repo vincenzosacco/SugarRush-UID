@@ -1,12 +1,17 @@
 package model.game;
 
 
+import model.Model;
 import model.game.utils.Cell;
 import model.game.Constants.Block;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static config.Model.COL_COUNT;
+import static config.Model.ROW_COUNT;
+
 /**
  * Represents the game game matrix used to define the layout and structure of the game's environment.
  * It is an alias for a two-dimensional {@code ArrayList<ArrayList<Game.Block>>}, where each inner list
@@ -36,11 +41,21 @@ class GameMatrix extends ArrayList<ArrayList<Block>> {
 
     /** Alias for {@code get(row).get(col)} */
     public Block getCell(Cell coord){
+        if (coord.getRow() < 0 || coord.getRow() >= ROW_COUNT ||
+                coord.getCol() < 0 || coord.getCol() >= COL_COUNT) {
+            return Block.SPACE;
+        }
         return get(coord.getRow()).get(coord.getCol());
     }
 
     /** Alias for {@code get(row).set(col, block)} */
     public void setCell(Cell coord, Block block){
+        if (coord.getRow() < 0 || coord.getRow() >= ROW_COUNT ||
+                coord.getCol() < 0 || coord.getCol() >= COL_COUNT) {
+            Model.getInstance().getGame().killCreature();
+            System.err.println("Attempted to set cell out of bounds: " + coord.getRow() + ", " + coord.getCol());
+            return;
+        }
         get(coord.getRow()).set(coord.getCol(), block);
     }
 }
