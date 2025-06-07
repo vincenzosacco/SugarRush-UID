@@ -8,6 +8,7 @@ import model.game.Constants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
+import view.View;
 import view.ViewComp;
 import view.button.PauseButton;
 import view.menu.GameMenuPanel;
@@ -19,6 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import static config.ViewConfig.*;
@@ -206,7 +208,7 @@ public class GamePanel extends JPanel implements ViewComp {
 
     private void drawOnUpdate(Graphics2D g2d) {
         Game game = Model.getInstance().getGame();
-        List<Entity> entities = game.getEntities();
+        List<Entity> entities = new ArrayList<>(game.getEntities());
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -252,6 +254,7 @@ public class GamePanel extends JPanel implements ViewComp {
 
     //END LEVEL
     public LosePanel loseLevel(){
+        View.getInstance().getGamePanel().getPauseButton().setVisible(false);
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         losePanel.setCurrentLevel(currentLevel);
         losePanel.updateLabels(currentLevel);
@@ -263,6 +266,7 @@ public class GamePanel extends JPanel implements ViewComp {
     }
 
     public WinPanel winLevel(){
+        View.getInstance().getGamePanel().getPauseButton().setVisible(false);
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         winPanel.setCurrentLevel(currentLevel);
         winPanel.updateLabels(currentLevel);

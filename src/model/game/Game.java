@@ -247,4 +247,10 @@ public class Game {
         entities.clear();
         entitiesToRemove.clear(); // Also clears the list of entities to remove
     }
+    public void win(){
+        SwingUtilities.invokeLater(() -> {
+            View.getInstance().getGamePanel().endGame();
+            View.getInstance().getGamePanel().winLevel();
+        });
+    }
 }

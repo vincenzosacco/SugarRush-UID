@@ -55,7 +55,7 @@ public class Creature extends Entity {
         boolean canMove = true;
 
         switch (block) {
-            case SUGAR -> addSugar();
+            case SUGAR ->  Model.getInstance().getGame().win();
             case SPACE -> {/*do nothing*/}
             case WALL -> {
                 this.direction = Direction.NONE;
