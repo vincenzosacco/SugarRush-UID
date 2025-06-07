@@ -2,7 +2,7 @@ package view.menu;
 
 import utils.Resources;
 import view.editor.LevelEditorPanel;
-import view.settings.AppSettings;
+import view.settings.GameSettings;
 import view.shop.ShopPanel;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class CustomTabbedPane extends JPanel{
     private final StartMenuPanel startMenuPanel;
     private final LevelEditorPanel levelEditorPanel;
     private final ShopPanel shopPanel;
-    private final AppSettings appSettings;
+    private final GameSettings gameSettings;
 
     // Arrays to store tab buttons and their underline indicators
     JButton[] buttons = new JButton[4];
@@ -28,7 +28,7 @@ public class CustomTabbedPane extends JPanel{
     public CustomTabbedPane(){
         this.startMenuPanel=new StartMenuPanel();
         this.levelEditorPanel= new LevelEditorPanel();
-        this.appSettings = new AppSettings();
+        this.gameSettings = new GameSettings();
         this.shopPanel= new ShopPanel();
 
         this.cardLayout = new CardLayout(); // This is the CardLayout instance for CustomTabbedPane
@@ -76,7 +76,7 @@ public class CustomTabbedPane extends JPanel{
         contentPanel.add(startMenuPanel, "Start");
         contentPanel.add(levelEditorPanel, "Editor");
         contentPanel.add(shopPanel, "Shop");
-        contentPanel.add(appSettings, "Settings");
+        contentPanel.add(gameSettings, "Settings");
 
         // Show the initial tab (Map)
         updateTabSelection(0);

@@ -1,12 +1,9 @@
 package view;
 
-
-import view.editor.LevelEditorPanel;
 import view.game.GamePanel;
 import view.menu.CustomTabbedPane;
 import view.menu.StartMenuPanel;
-import view.settings.AppSettings;
-import view.shop.ShopPanel;
+import view.settings.GameSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +25,7 @@ public class View {
 
     // VIEW //
     /**
-     * An enumeration representing the different panels or views that can be displayed in the application.
+     * An enumeration representing the different panels or views that can be displayed in the gamelication.
      * Each constant is associated with a unique string name to facilitate the identification
      * and management.
      */
@@ -53,7 +50,7 @@ public class View {
 
     private final CustomTabbedPane customTabbedPane;
 
-    private final AppSettings appSettings;
+    private final GameSettings gameSettings;
 
     private View(){
         Window.setTitle("Sugar Rush");
@@ -67,14 +64,14 @@ public class View {
 
         startMenuPanel = new StartMenuPanel();
         customTabbedPane = new CustomTabbedPane();
-        appSettings=new AppSettings();
+        gameSettings=new GameSettings();
 
         // COMPONENTS
         Container.setLayout(cardLayout);
         Container.add(gamePanel, PanelName.GAME.getName());
         Container.add(startMenuPanel, PanelName.START_MENU.getName());
         Container.add(customTabbedPane,PanelName.CUSTOM_TABBED_PANE.getName());
-        Container.add(appSettings,PanelName.SETTINGS.getName());
+        Container.add(gameSettings,PanelName.SETTINGS.getName());
 
 
         Window.pack();

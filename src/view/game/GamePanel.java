@@ -285,14 +285,14 @@ public class GamePanel extends JPanel implements ViewComp {
         assert gameMatrix != null && !gameMatrix.isEmpty();
 
         for (int row = 0; row < gameMatrix.size(); row++) {
-                int y = row * TILE_SIZE; // iterating row in model matrix corresponds to moving on y-axis(from top to bottom) on graphics coordinates.
+            int y = row * TILE_SIZE; // iterating row in model matrix corresponds to moving on y-axis(from top to bottom) on graphics coordinates.
             for (int col = 0; col < gameMatrix.get(row).size(); col++) {
                 int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
 
                 // DRAW ONLY STATIC BLOCKS //
                 if (game.blockAt(new Cell(row, col)) == Constants.Block.WALL ||
-                    game.blockAt(new Cell(row, col)) == Constants.Block.THORNS ||
-                    game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR) {
+                        game.blockAt(new Cell(row, col)) == Constants.Block.THORNS ||
+                        game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR) {
 
                     Constants.Block block = gameMatrix.get(row).get(col);
                     Image image = _BlocksImage.getInstance().getStaticBlockImg(block); // get the image for the block type
