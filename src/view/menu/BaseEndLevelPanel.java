@@ -80,7 +80,6 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
     private void createButtons() {
         restartButton = new RestartButton();
         restartButton.addActionListener(e -> {
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             int levelToRestart = Model.getInstance().getGame().getCurrLevel();
             this.setVisible(false);
 //            Start the level showing the GamePanel

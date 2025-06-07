@@ -90,17 +90,16 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         // Create and configure the play button
         playButton = new RoundPlayButton();
         playButton.addActionListener(e -> {
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             open=false;
             this.setVisible(false);
             View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
+            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             View.getInstance().getGamePanel().requestFocusInWindow();
         });
         // Create and configure the restart button
         restartButton=new RestartButton();
         restartButton.addActionListener(e -> {
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             int levelToRestart = Model.getInstance().getGame().getCurrLevel();
             open=false;
             this.setVisible(false);
@@ -111,6 +110,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             Model.getInstance().getGame().setLevel(levelToRestart);
             View.getInstance().showPanel(View.PanelName.GAME.getName());
             View.getInstance().getGamePanel().startGameTimer();
+            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             GameLoop.getInstance().start();
         });
 
