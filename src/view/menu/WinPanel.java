@@ -53,7 +53,7 @@ public class WinPanel extends BaseEndLevelPanel {
 
         nextLevelButton = new NextLevelButton();
         nextLevelButton.addActionListener(e -> {
-            View.getInstance().getGamePanel().getPauseButton().setVisible(true);
+            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             this.setVisible(false);
             GameLoop.getInstance().stop();
             int nextLevel = Model.getInstance().getGame().getCurrLevel() + 1;

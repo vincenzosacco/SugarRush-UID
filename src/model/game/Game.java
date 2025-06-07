@@ -210,7 +210,6 @@ public class Game {
         }
         throw new AssertionError("Creature not found in the game blocks. This should never happen.");
     }
-
     /** Sets the direction of the creature. On the next {@link #updateState()} call,
      * the creature will move in the specified direction.
      * @param direction the direction to set for the creature

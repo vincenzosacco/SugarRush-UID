@@ -79,6 +79,7 @@ public class LevelPanel extends JPanel implements ViewComp{
         // Create and configure the play button
         playButton = new RoundPlayButton();
         playButton.addActionListener(e -> {
+            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
 
             // 1. Close the LevelPanel dialog after starting the game
             Window window = SwingUtilities.getWindowAncestor(LevelPanel.this);
@@ -90,7 +91,6 @@ public class LevelPanel extends JPanel implements ViewComp{
             Model.getInstance().getGame().setLevel(levelIndex);
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             View.getInstance().showPanel(View.PanelName.GAME.getName());
-            View.getInstance().getGamePanel().getPauseButton().setVisible(true);
             GameLoop.getInstance().start();
         });
 

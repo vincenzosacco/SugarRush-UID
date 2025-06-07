@@ -19,6 +19,8 @@ import javax.swing.*;
 
 import java.awt.*;
 
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,21 +43,70 @@ public class GamePanel extends JPanel implements ViewComp {
     private final LosePanel losePanel;
     private final WinPanel winPanel;
 
-    GameLoop gameLoop=GameLoop.getInstance();
 
-    PauseButton pauseButton=new PauseButton();
+    private PauseButton pauseButton;
+
+    private JLayeredPane layeredPane;
+
+    private JPanel gameContentDrawingPanel;
+
+    private GameLoop gameLoop=GameLoop.getInstance();
 
     public PauseButton getPauseButton() {
         return pauseButton;
     }
 
+    public JPanel getGameContentDrawingPanel() {
+        return gameContentDrawingPanel;
+    }
+
     public GamePanel() {
+        setLayout(new GridLayout(1,1));
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
         Color skyblue = new Color(0, 188, 250);
         setBackground(skyblue);
 
-        pauseButton.setPreferredSize(new Dimension(30,30));
-        add(pauseButton,BorderLayout.PAGE_START);
+        layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        this.add(layeredPane);
+
+        gameContentDrawingPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Draw the background of this panel
+                super.paintComponent(g);
+
+                // Draw the static background of the game (blocks, thorns, sugar)
+                if (staticBackground == null) {
+                    drawOnStartUp();
+                }
+                if (staticBackground != null) {
+                    g.drawImage(staticBackground, 0, 0, getWidth(), getHeight(), null);
+                }
+                drawOnUpdate((Graphics2D) g); // Draw dynamic entities
+
+                // Draw the elapsed time
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Arial", Font.BOLD, 20));
+                FontMetrics fm = g.getFontMetrics();
+                int textWidth = fm.stringWidth("Time: " + elapsedSeconds + "s");
+                // Place the time at the top left
+                g.drawString("Time: " + elapsedSeconds + "s", 10, 25);
+            }
+        };
+
+        gameContentDrawingPanel.setOpaque(true); //Opaque to cover the background underneath
+        gameContentDrawingPanel.setBackground(skyblue);
+        layeredPane.add(gameContentDrawingPanel, JLayeredPane.DEFAULT_LAYER); // Added to the lowest level
+
+        pauseButton=new PauseButton();
+        pauseButton.setEnabled(true);
+        int minSizePanel=Math.min(BOARD_WIDTH,BOARD_HEIGHT);
+        int buttonSize=Math.max(30,minSizePanel/15);
+        pauseButton.setPreferredSize(new Dimension(buttonSize, buttonSize));
+        pauseButton.setMinimumSize(new Dimension(buttonSize, buttonSize));
+        pauseButton.setMaximumSize(new Dimension(buttonSize, buttonSize));
+
         pauseButton.addActionListener(e -> {
             // PAUSE GAME when the game menu is opened
             if (gameLoop.isRunning()) {
@@ -71,18 +122,78 @@ public class GamePanel extends JPanel implements ViewComp {
             toggleSettingsPanel();
         });
 
+        // Container panel for the pause button and aligned to the RIGHT
+        JPanel buttonContainerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10)); //with padding
+        buttonContainerPanel.setOpaque(false);
+        buttonContainerPanel.add(pauseButton);
+        layeredPane.add(buttonContainerPanel, JLayeredPane.PALETTE_LAYER); // Added to a higher level of the game
 
+
+        //Menu panels (overlays)
         gameSettingsPanel = new GameMenuPanel();
-        this.add(gameSettingsPanel);
-        gameSettingsPanel.setVisible(false);
-//        this.add(gameSettings);
-        losePanel=new LosePanel();
-        this.add(losePanel,BorderLayout.CENTER);
-        losePanel.setVisible(false);
+        losePanel = new LosePanel();
+        winPanel = new WinPanel();
 
-        winPanel=new WinPanel();
-        this.add(winPanel,BorderLayout.CENTER);
+        // Add menu panels to the MODAL_LAYER layer (the top one, for overlay)
+        layeredPane.add(gameSettingsPanel, JLayeredPane.MODAL_LAYER);
+        layeredPane.add(losePanel, JLayeredPane.MODAL_LAYER);
+        layeredPane.add(winPanel, JLayeredPane.MODAL_LAYER);
+
+        gameSettingsPanel.setVisible(false);
+        losePanel.setVisible(false);
         winPanel.setVisible(false);
+
+        //Add a ComponentListener to the main GamePanel to handle resizing
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // When the GamePanel is resized, it also resizes the layeredPane
+                layeredPane.setBounds(0, 0, getWidth(), getHeight());
+
+                // Resize and position the game drawing panel
+                gameContentDrawingPanel.setBounds(0, 0, getWidth(), getHeight());
+
+                // Resize and reposition the panel containing the pause button
+                int currentButtonSize = Math.min(getWidth(), getHeight());
+                currentButtonSize = Math.max(30, currentButtonSize/15);
+                pauseButton.setPreferredSize(new Dimension(currentButtonSize, currentButtonSize));
+                pauseButton.setMinimumSize(new Dimension(currentButtonSize, currentButtonSize));
+                pauseButton.setMaximumSize(new Dimension(currentButtonSize, currentButtonSize));
+                // The height of the button container should fit the size of the button plus the padding
+                buttonContainerPanel.setBounds(0, 0, getWidth(), currentButtonSize + 20);
+                buttonContainerPanel.revalidate();
+
+                // Update the position of the menu panels (centered)
+                applyPanelBounds(gameSettingsPanel);
+                applyPanelBounds(losePanel);
+                applyPanelBounds(winPanel);
+
+                layeredPane.revalidate();
+                layeredPane.repaint();
+            }
+        });
+    }
+
+    // Method to calculate and apply centered bounds to menu panels
+    private void applyPanelBounds(JPanel panel) {
+        if (panel == null) return;
+
+        int parentWidth = getWidth();
+        int parentHeight = getHeight();
+
+        int panelWidth = parentWidth / 2;
+        int panelHeight = parentHeight / 2;
+
+        // Set a minimum
+        panelWidth = Math.max(panelWidth, 300);
+        panelHeight = Math.max(panelHeight, 200);
+
+        // Coordinates to center the panel
+        int panelX = (parentWidth - panelWidth) / 2;
+        int panelY = (parentHeight - panelHeight) / 2;
+
+        panel.setBounds(panelX, panelY, panelWidth, panelHeight);
+        panel.revalidate();
     }
 
     public void startGameTimer() {
@@ -158,17 +269,6 @@ public class GamePanel extends JPanel implements ViewComp {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (staticBackground == null) {
-            // If static background is not initialized, draw it
-            drawOnStartUp();
-        }
-        g.drawImage(staticBackground, 0, 0, null);
-        drawOnUpdate((Graphics2D)g);
-
-        // Draw the elapsed time
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Time: " + elapsedSeconds + "s", 10, 30);
     }
 
     private void drawOnStartUp(){
@@ -243,10 +343,13 @@ public class GamePanel extends JPanel implements ViewComp {
 
         gameSettingsPanel.setOpen(!gameSettingsPanel.isOpen()); // Invert the opening state
         gameSettingsPanel.setVisible(gameSettingsPanel.isOpen()); // Make visible/invisible
-
         if(gameSettingsPanel.isOpen()){
-            pauseButton.setVisible(false);
+            pauseButton.setEnabled(false);
         }
+        else{
+            pauseButton.setEnabled(true);
+        }
+
         this.revalidate();
         this.repaint();
         return gameSettingsPanel;
@@ -254,24 +357,28 @@ public class GamePanel extends JPanel implements ViewComp {
 
     //END LEVEL
     public LosePanel loseLevel(){
-        View.getInstance().getGamePanel().getPauseButton().setVisible(false);
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         losePanel.setCurrentLevel(currentLevel);
         losePanel.updateLabels(currentLevel);
         losePanel.setElapsedTime(oldElapsedSeconds); // Time spent
         losePanel.setVisible(true);
+        applyPanelBounds(losePanel);
+        losePanel.requestFocusInWindow();
+        pauseButton.setEnabled(false);
         this.revalidate();
         this.repaint();
         return losePanel;
     }
 
     public WinPanel winLevel(){
-        View.getInstance().getGamePanel().getPauseButton().setVisible(false);
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         winPanel.setCurrentLevel(currentLevel);
         winPanel.updateLabels(currentLevel);
         winPanel.setElapsedTime(oldElapsedSeconds); // Time spent
         winPanel.setVisible(true);
+        applyPanelBounds(winPanel);
+        winPanel.requestFocusInWindow();
+        pauseButton.setEnabled(false);
         this.revalidate();
         this.repaint();
         return winPanel;
