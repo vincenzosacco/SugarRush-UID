@@ -91,6 +91,11 @@ public class LevelPanel extends JPanel implements ViewComp{
             Model.getInstance().getGame().setLevel(levelIndex);
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             View.getInstance().showPanel(View.PanelName.GAME.getName());
+            this.requestFocusInWindow(); // needed to get user input
+            assert this.getParent() != null ;
+            JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
+                    "New Game",JOptionPane.INFORMATION_MESSAGE);
+            View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
         });
 

@@ -105,6 +105,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             this.setVisible(false);
 //            Start the level showing the GamePanel
             View.getInstance().getGamePanel().endGame();
+            Model.getInstance().getGame().clearGameMatrix();
             View.getInstance().getGamePanel().resetGameTimer();
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             Model.getInstance().getGame().setLevel(levelToRestart);
@@ -129,7 +130,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         settingsButton=new SettingsButton();
         settingsButton.addActionListener(e ->{
             open=false;
-            this.setVisible(false);
+            //this.setVisible(false);
             View.getInstance().showPanel(View.PanelName.SETTINGS.getName());
         });
 

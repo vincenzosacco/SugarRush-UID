@@ -56,6 +56,7 @@ public class WinPanel extends BaseEndLevelPanel {
             View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             this.setVisible(false);
             GameLoop.getInstance().stop();
+            Model.getInstance().getGame().clearGameMatrix();
             int nextLevel = Model.getInstance().getGame().getCurrLevel() + 1;
             // Handling the case where there are no more levels
             if (nextLevel <= 6) { // Assuming a maximum of 6 levels
@@ -64,6 +65,10 @@ public class WinPanel extends BaseEndLevelPanel {
                 View.getInstance().getGamePanel().resetPanelForNewLevel();
                 Model.getInstance().getGame().setLevel(nextLevel);
                 View.getInstance().showPanel(View.PanelName.GAME.getName());
+                this.requestFocusInWindow(); // needed to get user input
+                assert this.getParent() != null ;
+                JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
+                    "New Game",JOptionPane.INFORMATION_MESSAGE);
                 View.getInstance().getGamePanel().startGameTimer();
                 GameLoop.getInstance().start();
             } else {

@@ -84,11 +84,14 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
             this.setVisible(false);
 //            Start the level showing the GamePanel
             View.getInstance().getGamePanel().endGame();
+            Model.getInstance().getGame().clearGameMatrix();
+
             View.getInstance().getGamePanel().resetGameTimer();
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             Model.getInstance().getGame().setLevel(levelToRestart);
             View.getInstance().showPanel(View.PanelName.GAME.getName());
             View.getInstance().getGamePanel().startGameTimer();
+            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             GameLoop.getInstance().start();
         });
 
@@ -104,15 +107,15 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
 
         settingsButton=new SettingsButton();
         settingsButton.addActionListener(e ->{
-            this.setVisible(false);
-            GameLoop.getInstance().stop();
-            View.getInstance().getGamePanel().resetGameTimer();
-            Model.getInstance().getGame().clearGameMatrix();
+            //this.setVisible(false);
+//            GameLoop.getInstance().stop();
+//            View.getInstance().getGamePanel().resetGameTimer();
+//            Model.getInstance().getGame().clearGameMatrix();
             /***
              * aggiungere il fatto che se clicco su questo bottone mi mostra il tabbedPane
              * nella schermata dei settings
              */
-            View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+            View.getInstance().showPanel(View.PanelName.SETTINGS.getName());
         });
 
     }

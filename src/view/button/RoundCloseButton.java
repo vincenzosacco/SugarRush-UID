@@ -6,6 +6,8 @@ import java.awt.geom.Ellipse2D;
 
 public class RoundCloseButton extends JButton {
 
+    private final int dimButton=30;
+
     public RoundCloseButton() {
         setContentAreaFilled(false);         // Disables the default background filling.
         setBorderPainted(false);             // Disables the default border drawing.
@@ -15,6 +17,7 @@ public class RoundCloseButton extends JButton {
         setToolTipText("Close");             // Tooltip text shown when hovering over the button.
         setMargin(new Insets(0, 0, 0, 0));    // Removes all internal margins.
         setText(null);                       // Removes any default text.
+        setPreferredSize(new Dimension(dimButton,dimButton));
     }
 
     @Override

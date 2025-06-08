@@ -64,7 +64,7 @@ public class View {
 
         startMenuPanel = new StartMenuPanel();
         customTabbedPane = new CustomTabbedPane();
-        gameSettings=new GameSettings();
+        gameSettings =new GameSettings();
 
         // COMPONENTS
         Container.setLayout(cardLayout);

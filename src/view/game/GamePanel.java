@@ -253,18 +253,6 @@ public class GamePanel extends JPanel implements ViewComp {
      *     - show 'start new game' messageDialog.
      * </p>
      */
-    @Override
-    public void setVisible(boolean aFlag) {
-        super.setVisible(aFlag);
-        if (aFlag) {
-            this.requestFocusInWindow(); // needed to get user input
-            assert this.getParent() != null ;
-            JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
-                    "New Game",JOptionPane.INFORMATION_MESSAGE);
-            resetPanelForNewLevel();
-            startGameTimer();
-        }
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -385,8 +373,6 @@ public class GamePanel extends JPanel implements ViewComp {
     }
 
     public void endGame(){
-        // Game model reset
-        Model.getInstance().getGame().clearGameMatrix();
         GameLoop.getInstance().stop();
         resetGameTimer();
     }
