@@ -7,6 +7,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -15,6 +16,7 @@ import java.net.URL;
 
 import model.settings.SettingsManager;
 import view.button.InternalSettingsButton;
+import view.menu.LevelPanel;
 
 public class BaseSettingsPanel extends JPanel implements PropertyChangeListener {
 
@@ -42,10 +44,10 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         //setPreferredSize(new Dimension(600, 400)); // Default size for the settings panel
         setOpaque(false);
 
+        gameControlsButton = new InternalSettingsButton("Game controls");
+
         // Load background image and icons once
         loadImages();
-
-        gameControlsButton = new InternalSettingsButton("Game controls");
 
         // Configure the layout of the components (initially with default dimensions)
         setupLayout();
@@ -258,11 +260,46 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         add(buttonPanel, gbc);
     }
 
+    public void showLevelDialog(GameControlsPanel gameControlsPanel) {
+        // Retrieve the top-level window (e.g., JFrame) that contains this panel
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+
+        // Get the dimensions of the parent window to calculate proportional dialog size
+        Dimension parentSize = parentWindow.getSize();
+        int newWidth = parentSize.width / 2;
+        int newHeight = parentSize.height / 2;
+
+        // Set the preferred size of the level panel to be displayed in the dialog
+        gameControlsPanel.setPreferredSize(new Dimension(newWidth, newHeight));
+
+        // Create a modal dialog (blocks interaction with other windows while open)
+        JDialog dialog = new JDialog(parentWindow);
+        dialog.setUndecorated(true);  // Remove window borders and title bar
+        dialog.setModal(true);        // Make dialog modal
+        dialog.setResizable(false);   // Disable resizing by the user
+
+        // Add the level panel to the dialog and adjust dialog size
+        dialog.getContentPane().add(gameControlsPanel);
+        dialog.pack(); // Automatically size dialog to fit its contents
+
+        // Attempt to apply rounded corners to the dialog (if the platform supports it)
+        try {
+            dialog.setShape(new RoundRectangle2D.Double(0, 0, dialog.getWidth(), dialog.getHeight(), 30, 30));
+        } catch (UnsupportedOperationException ex) {
+            System.out.println("Rounded corners not supported on this platform");
+        }
+
+        // Center the dialog relative to the parent window
+        dialog.setLocationRelativeTo(parentWindow);
+
+        // Display the dialog
+        dialog.setVisible(true);
+    }
+
     private void addListeners() {
         gameControlsButton.addActionListener(e -> {
-//            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-//            GameControlsDialog dialog = new GameControlsDialog(parentFrame, this.getPreferredSize());
-//            dialog.setVisible(true);
+            GameControlsPanel gameControlsPanel =new GameControlsPanel(this.getPreferredSize());
+            showLevelDialog(gameControlsPanel);
         });
 
         musicVolumeSlider.addChangeListener(new ChangeListener() {
