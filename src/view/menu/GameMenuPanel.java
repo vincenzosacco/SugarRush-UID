@@ -5,6 +5,7 @@ import controller.GameLoop;
 import model.Model;
 import model.game.LevelData;
 import model.game.MapParser;
+import utils.audio.GameAudioController;
 import view.View;
 import view.ViewComp;
 import view.button.*;
@@ -95,6 +96,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
             View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
+            GameAudioController.getInstance().playGameMusic();
             View.getInstance().getGamePanel().requestFocusInWindow();
         });
         // Create and configure the restart button

@@ -5,6 +5,7 @@ import model.game.Constants;
 import model.game.Entity;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
+import utils.audio.GameAudioController;
 
 
 /**
@@ -55,14 +56,25 @@ public class Creature extends Entity {
         boolean canMove = true;
 
         switch (block) {
-            case SUGAR ->  Model.getInstance().getGame().win();
+            case SUGAR ->  {
+                Model.getInstance().getGame().win();
+                GameAudioController.getInstance().playSfx("bite");
+            }
             case SPACE -> {/*do nothing*/}
             case WALL -> {
+                GameAudioController.getInstance().playSfx("wall");
                 this.direction = Direction.NONE;
                 return false;
             }
             // DIE if collides with an enemy or thorns //
-            case ENEMY1, THORNS -> Model.getInstance().getGame().killCreature();
+            case ENEMY1 -> {
+                GameAudioController.getInstance().playSfx("killBee");
+                Model.getInstance().getGame().killCreature();
+            }
+            case THORNS -> {
+                GameAudioController.getInstance().playSfx("thorns");
+                Model.getInstance().getGame().killCreature();
+            }
 
             case CREATURE -> throw new AssertionError("Creature cannot collide with creature, there is a bug somewhere");
 

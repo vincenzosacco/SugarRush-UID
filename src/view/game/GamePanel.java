@@ -8,7 +8,7 @@ import model.game.Constants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
-import view.View;
+import utils.audio.GameAudioController;
 import view.ViewComp;
 import view.button.PauseButton;
 import view.menu.GameMenuPanel;
@@ -333,9 +333,11 @@ public class GamePanel extends JPanel implements ViewComp {
         gameSettingsPanel.setVisible(gameSettingsPanel.isOpen()); // Make visible/invisible
         if(gameSettingsPanel.isOpen()){
             pauseButton.setEnabled(false);
+            GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music when menu is open
         }
         else{
             pauseButton.setEnabled(true);
+            GameAudioController.getInstance().playGameMusic(); // Resume game music when menu is closed
         }
 
         this.revalidate();
@@ -353,6 +355,8 @@ public class GamePanel extends JPanel implements ViewComp {
         applyPanelBounds(losePanel);
         losePanel.requestFocusInWindow();
         pauseButton.setEnabled(false);
+        GameAudioController.getInstance().playSfx("death"); // Play Death SFX
+        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
         this.revalidate();
         this.repaint();
         return losePanel;
@@ -367,6 +371,8 @@ public class GamePanel extends JPanel implements ViewComp {
         applyPanelBounds(winPanel);
         winPanel.requestFocusInWindow();
         pauseButton.setEnabled(false);
+        GameAudioController.getInstance().playSfx("win"); // Play Victory SFX
+        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
         this.revalidate();
         this.repaint();
         return winPanel;
@@ -375,6 +381,7 @@ public class GamePanel extends JPanel implements ViewComp {
     public void endGame(){
         GameLoop.getInstance().stop();
         resetGameTimer();
+        GameAudioController.getInstance().stopBackgroundMusic();
     }
 
 

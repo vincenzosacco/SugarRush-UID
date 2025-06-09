@@ -2,6 +2,7 @@ package view.settings;
 
 import controller.ControllerObj;
 import model.settings.SettingsManager;
+import utils.audio.GameAudioController;
 import view.View;
 import view.ViewComp;
 import view.button.RoundCloseButton;
@@ -81,16 +82,8 @@ public class GameSettings extends BaseSettingsPanel implements ViewComp {
                 System.out.println("Close button clicked.");
 
                 SettingsManager.getInstance().revertToSavedSettings();
+                GameAudioController.getInstance().stopBackgroundMusic();
                 setVisible(false);
-
-//                if (getParent() instanceof JLayeredPane) {
-//                    JLayeredPane layeredPane = (JLayeredPane) getParent();
-//                    layeredPane.remove(GameSettings.this);
-//                    layeredPane.revalidate();
-//                    layeredPane.repaint();
-//                } else{
-//                    setVisible(false); // Hide the panel
-//                }
             }
         });
     }

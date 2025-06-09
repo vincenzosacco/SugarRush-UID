@@ -1,5 +1,6 @@
 package view;
 
+import utils.audio.GameAudioController;
 import view.game.GamePanel;
 import view.menu.CustomTabbedPane;
 import view.menu.StartMenuPanel;
@@ -77,6 +78,8 @@ public class View {
         Window.pack();
 
         Window.setLocationRelativeTo(null); // center on screen
+
+        GameAudioController.getInstance().playMenuMusic();
     }
 
     // VIEW ACTIONS //
@@ -106,6 +109,14 @@ public class View {
                 ((JComponent) comp).requestFocusInWindow();
                 break; // Only request focus for the first visible component
             }
+        }
+
+        if (panelName.equals(PanelName.GAME.getName())) {
+            GameAudioController.getInstance().stopBackgroundMusic();
+            GameAudioController.getInstance().playGameMusic();
+        }else{
+            GameAudioController.getInstance().stopBackgroundMusic();
+            GameAudioController.getInstance().playMenuMusic();
         }
     }
 

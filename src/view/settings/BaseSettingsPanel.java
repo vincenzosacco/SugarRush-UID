@@ -76,7 +76,7 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
 
         // Initialize the UI with the current values from the SettingsManager
         SwingUtilities.invokeLater(() -> {
-            updateUIFromSettings(); // Chiamata per inizializzare i valori degli slider e delle icone
+            updateUIFromSettings(); // Call to initialize slider and icon values
             applyScalingBasedOnCurrentDimensions();
         });
     }
@@ -197,7 +197,7 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         gbc.gridx = 1;
         add(musicSoundButton, gbc);
 
-        musicVolumeSlider = new JSlider(0, 100, 50); // Min, Max, initial value
+        musicVolumeSlider = new JSlider(0, 100, 25); // Min, Max, initial value
         musicVolumeSlider.setOpaque(false);
         musicVolumeSlider.setMajorTickSpacing(25); // Increased tick spacing
         musicVolumeSlider.setPaintTicks(true); // Draw ticks
@@ -226,7 +226,7 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         gbc.gridx = 1;
         add(sfxSoundButton, gbc);
 
-        sfxVolumeSlider = new JSlider(0, 100, 70); // Min, Max, initial value
+        sfxVolumeSlider = new JSlider(0, 100, 50); // Min, Max, initial value
         sfxVolumeSlider.setOpaque(false);
         sfxVolumeSlider.setMajorTickSpacing(25);
         sfxVolumeSlider.setPaintTicks(true);
@@ -324,12 +324,6 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
             // Revert current settings in SettingsManager to the last saved state
             SettingsManager.getInstance().revertToSavedSettings();
 
-//            GamePanel gamePanel = View.getInstance().getGamePanel();
-//            if (gamePanel != null && gamePanel.isVisible()) {
-//                gamePanel.hideAppSettingsOverlay();
-//            } else {
-//                View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
-//            }
         });
 
         // Listener per il bottone "Save"
@@ -338,12 +332,6 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
             // Save the current settings as the new permanent settings
             SettingsManager.getInstance().saveCurrentSettings();
 
-//            GamePanel gamePanel = View.getInstance().getGamePanel();
-//            if (gamePanel != null && gamePanel.isVisible()) {
-//                gamePanel.hideAppSettingsOverlay();
-//            } else {
-//                View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
-//            }
         });
     }
 

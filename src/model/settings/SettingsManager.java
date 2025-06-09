@@ -21,8 +21,8 @@ public class SettingsManager {
     private SettingsManager() {
         support= new PropertyChangeSupport(this);
         // Default values for volumes
-        this.savedMusicVolume = 50;
-        this.savedSfxVolume = 70;
+        this.savedMusicVolume = 25;
+        this.savedSfxVolume = 50;
 
         // Initialize current settings with saved values
         this.currentMusicVolume = this.savedMusicVolume;
