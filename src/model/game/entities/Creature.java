@@ -6,6 +6,7 @@ import model.game.Entity;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
 import utils.audio.GameAudioController;
+import view.View;
 
 
 /**
@@ -56,6 +57,12 @@ public class Creature extends Entity {
         boolean canMove = true;
 
         switch (block) {
+            case SUGAR ->  Model.getInstance().getGame().win();
+            case CANDY -> {
+                Cell targetCoord = computeAction();
+                Model.getInstance().getGame().setBlockAt(targetCoord, Constants.Block.SPACE);
+                View.getInstance().getGamePanel().repaint();
+            }
             case SUGAR ->  {
                 Model.getInstance().getGame().win();
                 GameAudioController.getInstance().playSfx("bite");

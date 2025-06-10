@@ -9,7 +9,7 @@ x      xxxx  x    x
 x      x     x    t
 x                 t
 x          xxxxxxxx
-xx                x
+xx               Sx
 x                 x
 x                 x
 t                 x
@@ -23,4 +23,4 @@ xxxxxxxxxxxxxxxxxxx
 
 coins=0,0,0
 
-textRequest=Eat the candy,Win the game in 30 seconds,Get to the special places
+textRequest=Eat the candy,Win the game in 30 seconds,Eat the special candy

@@ -106,6 +106,7 @@ public class MapParser {
                         game.entities.add(new Creature(row, col));
                     }
                     case 's'-> mat.get(row).add(Block.SUGAR);
+                    case 'S' -> mat.get(row).add(Block.CANDY);
                     case 'e' -> {
                         mat.get(row).add(Block.ENEMY1);
                         game.entities.add(new Enemy1(row,col));

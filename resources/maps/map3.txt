@@ -1,20 +1,20 @@
 map=
 xxxxxxxxxxxxxxxxxxx
-xc           x    x
+xc       x   x    x
 x           e    xx
-xx           x xxxx
+xx      x    x xxxx
 xxxxxxxxxxxxtx    x
 x            x    x
 x      xxxx  x    x
 x      x     x    t
 x                 t
 x          xxxxxxxx
-xx                x
-x                 x
+xxe               x
+x                Sx
 x                 x
 t                 x
 xxxxxxxxxxxxxxxx  x
-x                 x
+x         e       x
 x                 x
 x    x            x
 xxx  x            x
@@ -23,4 +23,4 @@ xxxxxxxxxxxxxxxxxxx
 
 coins=0,0,0
 
-textRequest=Eat the candy,Win the game in 30 seconds,Get to the special places
+textRequest=Eat the candy,Win the game in 30 seconds,Eat the special candy

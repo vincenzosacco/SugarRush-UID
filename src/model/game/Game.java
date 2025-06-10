@@ -252,4 +252,8 @@ public class Game {
             View.getInstance().getGamePanel().winLevel();
         });
     }
+
+    public void setBlockAt(Cell coord, Constants.Block block) {
+        gameMat.setCell(coord, block);
+    }
 }
