@@ -5,6 +5,7 @@ import model.game.Constants;
 import model.game.Entity;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
+import view.View;
 
 
 /**
@@ -57,7 +58,9 @@ public class Creature extends Entity {
         switch (block) {
             case SUGAR ->  Model.getInstance().getGame().win();
             case CANDY -> {
-                Model.getInstance().getGame().setBlockAt(getCoord(), Constants.Block.SPACE);
+                Cell targetCoord = computeAction();
+                Model.getInstance().getGame().setBlockAt(targetCoord, Constants.Block.SPACE);
+                View.getInstance().getGamePanel().repaint();
             }
             case SPACE -> {/*do nothing*/}
             case WALL -> {

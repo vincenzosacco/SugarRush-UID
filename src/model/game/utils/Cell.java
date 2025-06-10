@@ -99,7 +99,11 @@ public class Cell {
         this.col = col;
     }
 
-
+    // In src/model/game/utils/Cell.java
+    @Override
+    public String toString() {
+        return "Cell[row=" + this.row + ", col=" + this.col + "]";
+    }
 
 
 
