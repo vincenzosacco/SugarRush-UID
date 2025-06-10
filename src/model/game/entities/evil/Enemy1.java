@@ -4,6 +4,7 @@ import model.Model;
 import model.game.Constants;
 import model.game.utils.Cell;
 import model.game.Constants.Direction;
+import utils.audio.GameAudioController;
 
 /**
  * The Enemy1 has the following behavior:
@@ -56,6 +57,7 @@ public class Enemy1 extends Enemy {
         }
         else if (block == Constants.Block.CREATURE){
             Model.getInstance().getGame().killCreature();
+            GameAudioController.getInstance().playSfx("killBee");
             return true;
         }
         // ELSE CHANGE TO OPPOSITE DIRECTION //
