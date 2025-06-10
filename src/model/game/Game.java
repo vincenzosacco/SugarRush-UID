@@ -20,6 +20,7 @@ public class Game {
     final GameMatrix gameMat = new GameMatrix();
     final ArrayList<Entity> entities = new ArrayList<>();
 
+    //list of the entities to remove
     private final List<Entity> entitiesToRemove = new ArrayList<>();
 
 
