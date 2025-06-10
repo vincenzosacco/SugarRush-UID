@@ -56,6 +56,9 @@ public class Creature extends Entity {
 
         switch (block) {
             case SUGAR ->  Model.getInstance().getGame().win();
+            case CANDY -> {
+                Model.getInstance().getGame().setBlockAt(getCoord(), Constants.Block.SPACE);
+            }
             case SPACE -> {/*do nothing*/}
             case WALL -> {
                 this.direction = Direction.NONE;

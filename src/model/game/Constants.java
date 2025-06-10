@@ -53,7 +53,8 @@ public interface Constants {
         /**A collectible item in the game that can be consumed by the creature.*/
         SUGAR,
         ENEMY1,
+        CANDY,
         /** A block that if you touch it you die.*/
-        THORNS
+        THORNS;;
     }
 }

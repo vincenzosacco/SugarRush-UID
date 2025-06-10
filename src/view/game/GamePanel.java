@@ -280,7 +280,9 @@ public class GamePanel extends JPanel implements ViewComp {
                 // DRAW ONLY STATIC BLOCKS //
                 if (game.blockAt(new Cell(row, col)) == Constants.Block.WALL ||
                         game.blockAt(new Cell(row, col)) == Constants.Block.THORNS ||
-                        game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR) {
+                        game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR ||
+                        game.blockAt(new Cell(row, col)) == Constants.Block.CANDY) // static blocks
+                {
 
                     Constants.Block block = gameMatrix.get(row).get(col);
                     Image image = _BlocksImage.getInstance().getStaticBlockImg(block); // get the image for the block type

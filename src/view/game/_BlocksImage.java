@@ -17,7 +17,8 @@ class _BlocksImage {
             Constants.Block.WALL,
             Constants.Block.THORNS,
             Constants.Block.SUGAR,
-            Constants.Block.SPACE
+            Constants.Block.SPACE,
+            Constants.Block.CANDY
     );
     private final HashMap<Constants.Block, List<BufferedImage>> blockImages = new HashMap<>();
 
