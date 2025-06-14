@@ -1,3 +1,6 @@
+#Local scripts
+build+run-saccolinux.sh
+
 # Compiled class file
 out/
 
