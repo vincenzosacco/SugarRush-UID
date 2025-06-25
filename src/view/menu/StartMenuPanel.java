@@ -37,8 +37,12 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         levelButton = new LevelButton[numLevel];
 
         ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png"));
-        coinCounterLabel = new JLabel(" " + totalCoins, coinIcon, JLabel.RIGHT);
+// Resize the icon to fit better
+        Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        coinIcon = new ImageIcon(image);
+        coinCounterLabel = new JLabel(" " + totalCoins, coinIcon, JLabel.LEFT);
         coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
         add(coinCounterLabel);
 
         // Create each level button and load its corresponding level data
@@ -92,7 +96,10 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         this.setFocusable(true);
     }
 
-
+    public void updateTotalCoins(int coins) {
+        this.totalCoins += coins; // Set the total instead of adding
+        coinCounterLabel.setText(" " + totalCoins);
+    }
 
     // Position the level buttons dynamically based on the current size of the panel
     private void positionButtons() {
@@ -100,7 +107,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         int h = getHeight();  // Current height of the panel
         int labelWidth = 120;
         int labelHeight = 40;
-        coinCounterLabel.setBounds(w - labelWidth - 20, 20, labelWidth, labelHeight);
+        coinCounterLabel.setBounds(20, 20, labelWidth, labelHeight);
 
         int posX = 0, posY = 0;
 
@@ -143,10 +150,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         }
     }
 
-    public void updateTotalCoins(int coins) {
-        this.totalCoins += coins;
-        coinCounterLabel.setText(" " + coins);
-    }
+
 
     // Opens a dialog window containing the selected level's panel
     public void showLevelDialog(LevelPanel levelPanel) {
