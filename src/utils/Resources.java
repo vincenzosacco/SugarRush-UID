@@ -37,6 +37,7 @@ public class Resources {
             throw new RuntimeException("Resource not found: " + relPath);
         }
         return inputStream;
+        // InputStream will be closed by the caller
     }
 
     /**

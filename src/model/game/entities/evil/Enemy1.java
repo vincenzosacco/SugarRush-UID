@@ -48,7 +48,7 @@ public class Enemy1 extends Enemy {
 
 
     @Override
-    public boolean manageCollision(Constants.Block block) {
+    public boolean manageCollision(Constants.Block block, Cell cell) {
 //        if (this.direction == Direction.NONE) return false;
 
         // CAN MOVE ONLY IF THE BLOCK IS SPACE or CREATURE//

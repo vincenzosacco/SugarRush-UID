@@ -13,7 +13,7 @@ import view.View;
  * Model for Creature entity
  */
 public class Creature extends Entity {
-    private int sugarCount = 0;
+    private int candyCount = 0;
 
     public Creature(int row, int col) {
         super(row, col);
@@ -51,7 +51,7 @@ public class Creature extends Entity {
     }
 
     @Override
-    public boolean manageCollision(Constants.Block block) {
+    public boolean manageCollision(Constants.Block block, Cell cell ) {
         // Direction.NONE case is handled in shouldPerform
 
         boolean canMove = true;
@@ -62,9 +62,8 @@ public class Creature extends Entity {
                 GameAudioController.getInstance().playSfx("bite");
             }
             case CANDY -> {
-                Cell targetCoord = computeAction();
-                Model.getInstance().getGame().setBlockAt(targetCoord, Constants.Block.SPACE);
-                View.getInstance().getGamePanel().repaint();
+                addCandy();
+                Model.getInstance().getGame().setBlockAt(cell, Constants.Block.SPACE);
             }
             case SPACE -> {/*do nothing*/}
             case WALL -> {
@@ -99,12 +98,12 @@ public class Creature extends Entity {
     }
 
 
-    private void addSugar() {
-        sugarCount++;
+    private void addCandy() {
+        candyCount++;
     }
 
     // GETTERS & SETTERS //
-    public int getSugarCount() {
-        return sugarCount;
+    public int getCandyCount() {
+        return candyCount;
     }
 }

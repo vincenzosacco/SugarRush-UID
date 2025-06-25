@@ -2,7 +2,6 @@ package view.menu;
 
 import controller.ControllerObj;
 import model.game.LevelData;
-import utils.Resources;
 import view.ViewComp;
 import view.button.LevelButton;
 
@@ -13,7 +12,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -31,9 +29,17 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     // Total number of levels available in the game
     private final int numLevel = 6;
 
+    private JLabel coinCounterLabel;
+    private int totalCoins = 0;
+
     public StartMenuPanel() {
         // Initialize the array of level buttons
         levelButton = new LevelButton[numLevel];
+
+        ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png"));
+        coinCounterLabel = new JLabel(" " + totalCoins, coinIcon, JLabel.RIGHT);
+        coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        add(coinCounterLabel);
 
         // Create each level button and load its corresponding level data
         for (int i = 1; i <= numLevel; i++) {
@@ -86,10 +92,15 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         this.setFocusable(true);
     }
 
+
+
     // Position the level buttons dynamically based on the current size of the panel
     private void positionButtons() {
         int w = getWidth();   // Current width of the panel
         int h = getHeight();  // Current height of the panel
+        int labelWidth = 120;
+        int labelHeight = 40;
+        coinCounterLabel.setBounds(w - labelWidth - 20, 20, labelWidth, labelHeight);
 
         int posX = 0, posY = 0;
 
@@ -130,6 +141,11 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             // Set the bounds of the button: x, y position and width & height size
             levelButton[i].setBounds(posX, posY, (int) DimButton, (int) DimButton);
         }
+    }
+
+    public void updateTotalCoins(int coins) {
+        this.totalCoins += coins;
+        coinCounterLabel.setText(" " + coins);
     }
 
     // Opens a dialog window containing the selected level's panel

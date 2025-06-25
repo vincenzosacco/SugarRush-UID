@@ -1,7 +1,7 @@
 map=
 xxxxxxxxxxxxxxxxxxx
 xc       x   x    x
-x           e    xx
+x                xx
 xx      x    x xxxx
 xxxxxxxxxxxxtx    x
 x            x    x
