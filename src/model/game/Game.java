@@ -144,7 +144,7 @@ public class Game {
                     continue; // Move to the next entity in the loop
                 }
                 // 2 -MANAGE COLLISIONS //
-                boolean canPerform = ent.manageCollision(gameMat.getCell(toMove));
+                boolean canPerform = ent.manageCollision(gameMat.getCell(toMove), toMove );
                 // 3 -PERFORM ACTION //
                 if (canPerform) ent.performAction(toMove);
 
@@ -224,14 +224,19 @@ public class Game {
 
     public void killCreature() {
         Creature creature = getCreature();
-        if (creature != null && !entitiesToRemove.contains(creature)) {
-            entitiesToRemove.add(creature); // Mark for removal
-        }
+        removeEntity(creature);
         SwingUtilities.invokeLater(() -> {
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().loseLevel();
         });
     }
+
+    public void removeEntity(Entity entity) {
+        if (entity != null && !entitiesToRemove.contains(entity)) {
+            entitiesToRemove.add(entity); // Mark for removal
+        }
+    }
+
     public void clearGameMatrix() {
 
         // Clear the game matrix

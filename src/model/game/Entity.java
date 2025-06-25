@@ -80,7 +80,7 @@ public abstract class Entity{
      * @param block the block with which the entity is colliding
      * @return true if the entity can perform its action after the collision, false otherwise
      */
-    protected abstract boolean manageCollision(Constants.Block block);
+    protected abstract boolean manageCollision(Constants.Block block, Cell cell);
 
     /**
      * Executes the action or behavior specific to the entity

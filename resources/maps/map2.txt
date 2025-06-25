@@ -7,9 +7,9 @@ x                 x
 x                 x
 x                 x
 xxxxxxx  xxxxxx xxx
-x        xx       x
+x        xx       t
 x        x       xx
-x        x        x
+x        x       Sx
 x   xxxxxxx xxxxxxx
 x    x            x
 x    x            x
@@ -18,7 +18,7 @@ xxxxxxx xx        x
 x        x        x
 xc      xx        x
 xxxxxxxxxxx xxxxxxx
-xs                x
+xs                t
 xxxxxxxxxxxxxxxxxxx
 
 coins=0,0,0
