@@ -17,7 +17,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -93,7 +92,6 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         playButton.addActionListener(e -> {
             open=false;
             this.setVisible(false);
-            View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
             View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             GameAudioController.getInstance().playGameMusic();
@@ -108,11 +106,9 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 //            Start the level showing the GamePanel
             View.getInstance().getGamePanel().endGame();
             Model.getInstance().getGame().clearGameMatrix();
-            View.getInstance().getGamePanel().resetGameTimer();
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             Model.getInstance().getGame().setLevel(levelToRestart);
             View.getInstance().showPanel(View.PanelName.GAME.getName());
-            View.getInstance().getGamePanel().startGameTimer();
             View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             GameLoop.getInstance().start();
         });
@@ -122,8 +118,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         exitButton.addActionListener(e ->{
             open=false;
             this.setVisible(false);
-            GameLoop.getInstance().stop();
-            View.getInstance().getGamePanel().resetGameTimer();
+            GameLoop.getInstance().shutdown();
             Model.getInstance().getGame().clearGameMatrix();
             View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
         });

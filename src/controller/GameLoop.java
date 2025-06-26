@@ -1,8 +1,9 @@
 package controller;
 
 import model.Model;
-import model.game.Game;
 import view.View;
+
+import javax.swing.*;
 
 /**
  * Represents the main game loop responsible for controlling the update and rendering
@@ -39,6 +40,10 @@ public class GameLoop implements Runnable {
         return instance;
     }
 
+    private Timer gameTimer;
+    private int elapsedSeconds = 0;
+    private int oldElapsedSeconds;
+
     /**
      * Starts the game loop if it's not already running.
      * Creates and starts a new thread for the game loop.
@@ -51,6 +56,7 @@ public class GameLoop implements Runnable {
             gameThread = new Thread(this);
             gameThread.start();
             Model.getInstance().getGame().start(); // Start the game model (if not already started)
+            startGameTimer(); // Start the game timer to track elapsed time
         } else if (running) {
 
             // Here the game loop is already active with a live thread, do nothing.
@@ -61,10 +67,30 @@ public class GameLoop implements Runnable {
         }
     }
 
+
+    /**
+     * Pauses the game loop.
+     */
+    public void pause() {
+        if (!running) {
+            return; // If the game loop is not running, do nothing
+        }
+
+        pauseGameTimer(); // Pause the game timer if it was running
+        running = false; // Set the execution status to false to terminate the loop in run()
+
+        // Interrupt the thread to wake it from any sleep or block
+        if (gameThread != null) {
+            gameThread.interrupt();
+        }
+    }
+
     /**
      * Stops the game loop and waits for the game thread to finish.
      */
-    public void stop() {
+    public void shutdown() {
+        resetGameTimer(); // Reset the game timer to zero
+
         if (!running) {
             return;
         }
@@ -87,9 +113,10 @@ public class GameLoop implements Runnable {
             Thread.currentThread().interrupt(); // Restore the interrupt state
         } finally {
             gameThread = null; // IMPORTANT: Reset the thread reference after it finishes
-            View.getInstance().getGamePanel().stopGameTimer();
         }
     }
+
+
 
     /**
      * Main game loop implementation.
@@ -149,6 +176,7 @@ public class GameLoop implements Runnable {
      * This method is called as often as possible while maintaining the target FPS.
      */
     private void renderView() {
+        View.getInstance().getGamePanel().setElapsedSeconds(elapsedSeconds);
         View.getInstance().notifyView();
     }
 
@@ -159,4 +187,31 @@ public class GameLoop implements Runnable {
     public boolean isRunning() {
         return running;
     }
+
+    private void startGameTimer() {
+        if (gameTimer == null) {
+            gameTimer = new Timer(1000, e -> {
+                elapsedSeconds++;
+                renderView();
+            });
+        }
+        if (!gameTimer.isRunning()) {
+            gameTimer.restart();
+            gameTimer.start();
+        }
+    }
+
+    private void pauseGameTimer() {
+        if (gameTimer != null && gameTimer.isRunning()) {
+            gameTimer.stop();
+        }
+    }
+
+    private void resetGameTimer() {
+        elapsedSeconds = 0; // Reset elapsed seconds to zero
+        oldElapsedSeconds = 0; // Reset old elapsed seconds to zero
+        View.getInstance().getGamePanel().setElapsedSeconds(elapsedSeconds); // Update the view
+
+    }
+
 }

@@ -33,9 +33,7 @@ import static config.ViewConfig.*;
  */
 public class GamePanel extends JPanel implements ViewComp {
 
-    private Timer gameTimer;
-    private int elapsedSeconds = 0;
-    private int oldElapsedSeconds;
+
 
     private BufferedImage staticBackground = null;
 
@@ -70,6 +68,19 @@ public class GamePanel extends JPanel implements ViewComp {
         layeredPane.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
         this.add(layeredPane);
 
+        // Timer label
+        JLabel timerLabel = new JLabel("Time: ");
+        timerLabel.setForeground(Color.BLACK);
+        Font timerFont = new Font("Arial", Font.BOLD, 20);
+        timerLabel.setFont(timerFont);
+        timerLabel.setBounds(10, 5, 100, 30); // Positioning the timer label
+        layeredPane.add(timerLabel); // Add the timer label to the panel
+        timerCountLabel.setBounds(80, 5, 100, 30); // Positioning the timer count label
+        timerCountLabel.setFont(timerFont);
+        timerCountLabel.setForeground(Color.BLACK);
+        layeredPane.add(timerCountLabel);
+
+
         gameContentDrawingPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -88,10 +99,7 @@ public class GamePanel extends JPanel implements ViewComp {
                 // Draw the elapsed time
                 g.setColor(Color.BLACK);
                 g.setFont(new Font("Arial", Font.BOLD, 20));
-                FontMetrics fm = g.getFontMetrics();
-                int textWidth = fm.stringWidth("Time: " + elapsedSeconds + "s");
-                // Place the time at the top left
-                g.drawString("Time: " + elapsedSeconds + "s", 10, 25);
+
             }
         };
 
@@ -110,12 +118,10 @@ public class GamePanel extends JPanel implements ViewComp {
         pauseButton.addActionListener(e -> {
             // PAUSE GAME when the game menu is opened
             if (gameLoop.isRunning()) {
-                gameLoop.stop();
-                stopGameTimer();
+                gameLoop.pause();
             }
             // RESTORE GAME when the game menu is closed
             else {
-                startGameTimer();
                 gameLoop.start();
             }
 
@@ -138,6 +144,8 @@ public class GamePanel extends JPanel implements ViewComp {
         layeredPane.add(gameSettingsPanel, JLayeredPane.MODAL_LAYER);
         layeredPane.add(losePanel, JLayeredPane.MODAL_LAYER);
         layeredPane.add(winPanel, JLayeredPane.MODAL_LAYER);
+
+
 
         gameSettingsPanel.setVisible(false);
         losePanel.setVisible(false);
@@ -196,33 +204,9 @@ public class GamePanel extends JPanel implements ViewComp {
         panel.revalidate();
     }
 
-    public void startGameTimer() {
-        if (gameTimer == null) {
-            gameTimer = new Timer(1000, e -> {
-                elapsedSeconds++;
-                repaint();
-            });
-        }
-        if (!gameTimer.isRunning()) {
-            gameTimer.start();
-        }
-    }
-
-    public void stopGameTimer() {
-        if (gameTimer != null && gameTimer.isRunning()) {
-            gameTimer.stop();
-        }
-    }
-
-    public Timer getGameTimer() {
-        return gameTimer;
-    }
-
-    public void resetGameTimer() {
-        stopGameTimer();
-        oldElapsedSeconds=elapsedSeconds;
-        elapsedSeconds = 0;
-        repaint();
+    private final JLabel timerCountLabel = new JLabel("0");
+    public void setElapsedSeconds(int seconds) {
+        timerCountLabel.setText(String.valueOf(seconds));
     }
 
     /**
@@ -266,6 +250,8 @@ public class GamePanel extends JPanel implements ViewComp {
         bg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         bg.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         bg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+
 
         // DRAW in BUFFERED IMAGE //
         Game game = Model.getInstance().getGame();
@@ -352,7 +338,6 @@ public class GamePanel extends JPanel implements ViewComp {
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         losePanel.setCurrentLevel(currentLevel);
         losePanel.updateLabels(currentLevel);
-        losePanel.setElapsedTime(oldElapsedSeconds); // Time spent
         losePanel.setVisible(true);
         applyPanelBounds(losePanel);
         losePanel.requestFocusInWindow();
@@ -368,7 +353,6 @@ public class GamePanel extends JPanel implements ViewComp {
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         winPanel.setCurrentLevel(currentLevel);
         winPanel.updateLabels(currentLevel);
-        winPanel.setElapsedTime(oldElapsedSeconds); // Time spent
         winPanel.setVisible(true);
         applyPanelBounds(winPanel);
         winPanel.requestFocusInWindow();
@@ -381,8 +365,7 @@ public class GamePanel extends JPanel implements ViewComp {
     }
 
     public void endGame(){
-        GameLoop.getInstance().stop();
-        resetGameTimer();
+        GameLoop.getInstance().shutdown();
         GameAudioController.getInstance().stopBackgroundMusic();
     }
 

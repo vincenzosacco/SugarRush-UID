@@ -58,12 +58,14 @@ public class Creature extends Entity {
 
         switch (block) {
             case SUGAR ->  {
+                Model.getInstance().getGame().addstar();
                 Model.getInstance().getGame().win();
                 GameAudioController.getInstance().playSfx("bite");
             }
             case CANDY -> {
                 addCandy();
                 Model.getInstance().getGame().setBlockAt(cell, Constants.Block.SPACE);
+                Model.getInstance().getGame().addstar();
             }
             case SPACE -> {/*do nothing*/}
             case WALL -> {
@@ -88,6 +90,7 @@ public class Creature extends Entity {
 
         return canMove;
     }
+
 
     @Override
     public void performAction(Cell newCoord) {

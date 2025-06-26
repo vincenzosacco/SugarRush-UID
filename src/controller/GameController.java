@@ -49,20 +49,18 @@ public class GameController extends KeyAdapter implements ControllerObj {
                 case KeyEvent.VK_RIGHT -> {
                     model.setCreatureDirection(RIGHT);
                 }
-                case KeyEvent.VK_ESCAPE -> {
-                    // PAUSE GAME when the game menu is opened
-                    if (gameLoop.isRunning()) {
-                        gameLoop.stop();
-                        view.stopGameTimer();
-                    }
-                    // RESTORE GAME when the game menu is closed
-                    else {
-                        view.startGameTimer();
-                        gameLoop.start();
-                    }
-
-                    view.toggleSettingsPanel();
-                }
+//                case KeyEvent.VK_ESCAPE -> {
+//                    // PAUSE GAME when the game menu is opened
+//                    if (gameLoop.isRunning()) {
+//                        gameLoop.shutdown();
+//                    }
+//                    // RESTORE GAME when the game menu is closed
+//                    else {
+//                        gameLoop.start();
+//                    }
+//
+//                    view.toggleSettingsPanel();
+//                }
             }
         }
     }

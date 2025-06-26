@@ -86,11 +86,9 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
             View.getInstance().getGamePanel().endGame();
             Model.getInstance().getGame().clearGameMatrix();
 
-            View.getInstance().getGamePanel().resetGameTimer();
             View.getInstance().getGamePanel().resetPanelForNewLevel();
             Model.getInstance().getGame().setLevel(levelToRestart);
             View.getInstance().showPanel(View.PanelName.GAME.getName());
-            View.getInstance().getGamePanel().startGameTimer();
             View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
             GameLoop.getInstance().start();
         });
@@ -99,8 +97,7 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         exitButton = new ExitButton();
         exitButton.addActionListener(e -> {
             this.setVisible(false);
-            GameLoop.getInstance().stop();
-            View.getInstance().getGamePanel().resetGameTimer();
+            GameLoop.getInstance().shutdown();
             Model.getInstance().getGame().clearGameMatrix();
             View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
         });

@@ -23,6 +23,8 @@ public class Game {
     //list of the entities to remove
     private final List<Entity> entitiesToRemove = new ArrayList<>();
 
+    // count star
+    private int starCount = 0;
 
     /**
      * <p>
@@ -72,6 +74,17 @@ public class Game {
                 MapParser.loadMap(MapParser.MAP_1, this);
                 break;
         }
+    }
+
+    /**
+     * This method updates the star count
+     */
+    public void addstar(){
+        starCount++;
+    }
+
+    public int getStarCount(){
+        return starCount;
     }
 
     // MODEL //
@@ -254,6 +267,7 @@ public class Game {
     }
     public void win(){
         SwingUtilities.invokeLater(() -> {
+            // get time from timer
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().winLevel();
         });

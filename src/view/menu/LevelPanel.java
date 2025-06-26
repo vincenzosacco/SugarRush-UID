@@ -95,7 +95,6 @@ public class LevelPanel extends JPanel implements ViewComp{
             assert this.getParent() != null ;
             JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
                     "New Game",JOptionPane.INFORMATION_MESSAGE);
-            View.getInstance().getGamePanel().startGameTimer();
             GameLoop.getInstance().start();
         });
 

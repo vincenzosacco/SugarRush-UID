@@ -2,6 +2,7 @@ package view.menu;
 
 import controller.ControllerObj;
 import model.game.LevelData;
+import model.profile.ProfileManager;
 import view.ViewComp;
 import view.button.LevelButton;
 
@@ -30,7 +31,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     private final int numLevel = 6;
 
     private JLabel coinCounterLabel;
-    private int totalCoins = 0;
 
     public StartMenuPanel() {
         // Initialize the array of level buttons
@@ -40,7 +40,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
 // Resize the icon to fit better
         Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
-        coinCounterLabel = new JLabel(" " + totalCoins, coinIcon, JLabel.LEFT);
+        coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
         coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
         coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
         add(coinCounterLabel);
@@ -96,10 +96,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         this.setFocusable(true);
     }
 
-    public void updateTotalCoins(int coins) {
-        this.totalCoins += coins; // Set the total instead of adding
-        coinCounterLabel.setText(" " + totalCoins);
-    }
 
     // Position the level buttons dynamically based on the current size of the panel
     private void positionButtons() {
@@ -197,6 +193,9 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             // Draw the background image stretched to fill the entire panel
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
+        // coinCounter con lable
+        int coins = ProfileManager.loadLastProfile().getCoins();
+        coinCounterLabel.setText(String.valueOf(coins));
     }
 
     // Provides external access to the array of level buttons
