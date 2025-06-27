@@ -20,8 +20,8 @@ public class WinPanel extends BaseEndLevelPanel {
 
     private JLabel starsLabel;   // Label to display the number of stars
     private JLabel coinLabel;   // Label to display the number of coins
-    private ImageIcon starIcon;     // Icon for stars
-    private ImageIcon coinIcon;     // Icon for coins
+    private ImageIcon starIcon = new ImageIcon(getClass().getResource( "/imgs/icons/star.jpg"));;     // Icon for stars
+    private ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png" ));;     // Icon for coins
 
     public WinPanel() {
         super(); // Call the base class constructor
@@ -64,6 +64,17 @@ public class WinPanel extends BaseEndLevelPanel {
         timerLabel.setForeground(Color.BLACK);
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 24));
 
+        // Load icons for stars and coins
+        starsLabel = new JLabel();
+        coinLabel = new JLabel();
+        Image img = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+
+        int coins = stars * 10;         //10 coins per star
+        coinLabel.setText(""+coins);
+        coinLabel.revalidate();
+        coinLabel.setIcon(new ImageIcon(img));
+        coinLabel.repaint();
+
         nextLevelButton = new NextLevelButton();
         nextLevelButton.addActionListener(e -> {
             View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
@@ -89,12 +100,8 @@ public class WinPanel extends BaseEndLevelPanel {
                 View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
             }
 
-            starIcon = new ImageIcon(getClass().getResource("/imgs/icons/star.png"));
-            coinIcon = new ImageIcon(getClass().getResource( "/imgs/icons/coin.png"));
-
-            starsLabel = new JLabel();
-            coinLabel = new JLabel();
         });
+
     }
 
     @Override
@@ -108,9 +115,12 @@ public class WinPanel extends BaseEndLevelPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         centerPanel.add(winMessageLabel, gbc);
 
-        gbc.gridy = 1; // Move to next line
+        gbc.gridy = 1;      // Move to next line
         gbc.insets = new Insets(0, 0, 0, 0);
         centerPanel.add(timerLabel, gbc);
+
+        gbc.gridy = 2;      // Next row after timerLabel
+        centerPanel.add(coinLabel, gbc);
 
         return centerPanel;
     }

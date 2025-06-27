@@ -67,7 +67,7 @@ public class LevelButton extends JButton {
 
         int coinSize = (int) (getHeight() * 0.40); // Coin image size
         if (coinImage == null )
-            coinImage = Resources.getBestImage("/imgs/panels/levels/star.jpg", coinSize, coinSize);
+            coinImage = Resources.getBestImage("/imgs/icons/star.jpg", coinSize, coinSize);
         if (missingCoinImage == null )
             missingCoinImage = Resources.getBestImage("/imgs/panels/levels/missingStar.jpg", coinSize, coinSize);
 

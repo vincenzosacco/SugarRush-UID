@@ -170,7 +170,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             rowPanel.setOpaque(false);
 
             // Choose correct image based on coin collected or not
-            String imgPath = coinsCollected[i] ? "/imgs/panels/levels/star.jpg" : "/imgs/panels/levels/missingStar.jpg";
+            String imgPath = coinsCollected[i] ? "/imgs/icons/star.jpg" : "/imgs/panels/levels/missingStar.jpg";
             try {
                 originalImages[i] = ImageIO.read(getClass().getResource(imgPath));
             } catch (Exception e) {
@@ -353,7 +353,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         for (int i = 0; i < 3; i++) {
             String imgPath;
             if(coinsCollected[i]){
-                imgPath = "/imgs/panels/levels/star.jpg";
+                imgPath = "/imgs/icons/star.jpg";
             }else{
                 imgPath = "/imgs/panels/levels/missingStar.jpg";
             }

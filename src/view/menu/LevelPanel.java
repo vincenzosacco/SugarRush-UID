@@ -139,7 +139,7 @@ public class LevelPanel extends JPanel implements ViewComp{
             rowPanel.setOpaque(false);
 
             // Choose correct image based on coin collected or not
-            String imgPath = coinsCollected[i] ? "/imgs/panels/levels/star.jpg" : "/imgs/panels/levels/missingStar.jpg";
+            String imgPath = coinsCollected[i] ? "/imgs/icons/star.jpg" : "/imgs/panels/levels/missingStar.jpg";
             try {
                 // Use ClassLoader for robustness
                 URL coinImageUrl = getClass().getResource(imgPath); // Corrected path
