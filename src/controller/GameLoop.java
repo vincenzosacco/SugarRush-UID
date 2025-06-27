@@ -42,7 +42,7 @@ public class GameLoop implements Runnable {
 
     private Timer gameTimer;
     private int elapsedSeconds = 0;
-    private int oldElapsedSeconds;
+    private int oldElapsedSeconds = 0;
 
     /**
      * Starts the game loop if it's not already running.
@@ -201,17 +201,20 @@ public class GameLoop implements Runnable {
         }
     }
 
-    private void pauseGameTimer() {
+    public void pauseGameTimer() {
         if (gameTimer != null && gameTimer.isRunning()) {
             gameTimer.stop();
         }
     }
 
     private void resetGameTimer() {
+        oldElapsedSeconds = elapsedSeconds;
         elapsedSeconds = 0; // Reset elapsed seconds to zero
-        oldElapsedSeconds = 0; // Reset old elapsed seconds to zero
         View.getInstance().getGamePanel().setElapsedSeconds(elapsedSeconds); // Update the view
+    }
 
+    public int getElapsedSeconds() {
+        return oldElapsedSeconds;
     }
 
 }

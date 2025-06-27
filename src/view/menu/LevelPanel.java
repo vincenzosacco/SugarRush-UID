@@ -18,7 +18,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -140,7 +139,7 @@ public class LevelPanel extends JPanel implements ViewComp{
             rowPanel.setOpaque(false);
 
             // Choose correct image based on coin collected or not
-            String imgPath = coinsCollected[i] ? "/imgs/panels/levels/coin.jpg" : "/imgs/panels/levels/missingCoin.jpg";
+            String imgPath = coinsCollected[i] ? "/imgs/panels/levels/star.jpg" : "/imgs/panels/levels/missingStar.jpg";
             try {
                 // Use ClassLoader for robustness
                 URL coinImageUrl = getClass().getResource(imgPath); // Corrected path

@@ -1,5 +1,6 @@
 package model.game;
 
+import controller.GameLoop;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
 import view.View;
@@ -267,7 +268,14 @@ public class Game {
     }
     public void win(){
         SwingUtilities.invokeLater(() -> {
+
             // get time from timer
+            int elapsedSeconds = GameLoop.getInstance().getElapsedSeconds();
+            if (elapsedSeconds < 30) {
+                addstar();
+            }
+
+            GameLoop.getInstance().pauseGameTimer();
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().winLevel();
         });

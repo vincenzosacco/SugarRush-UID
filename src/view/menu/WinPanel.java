@@ -15,15 +15,25 @@ public class WinPanel extends BaseEndLevelPanel {
     private JLabel winMessageLabel;
     private JLabel timerLabel;
     private NextLevelButton nextLevelButton; // Specific button for victory
+    private int stars;    // Number of stars earned in the level
+    private int elapsedTime = 0;
+
+    private JLabel starsLabel;   // Label to display the number of stars
+    private JLabel coinLabel;   // Label to display the number of coins
+    private ImageIcon starIcon;     // Icon for stars
+    private ImageIcon coinIcon;     // Icon for coins
 
     public WinPanel() {
         super(); // Call the base class constructor
+
         //Initialize WinPanel specific components
         createWinSpecificComponents();
         // Add the specific center panel created by setupCenterPanel()
         add(setupCenterPanel(), BorderLayout.CENTER);
         // Adding the "Next Level" button to the bottom panel of the base class
         super.bottomPanel.add(nextLevelButton);
+
+        stars = Model.getInstance().getGame().getStarCount();
 
         //For initial resizing
         this.addComponentListener(new ComponentAdapter() {
@@ -33,6 +43,9 @@ public class WinPanel extends BaseEndLevelPanel {
             }
             @Override
             public void componentShown(ComponentEvent e) {
+                // Set the elapsed time when the panel is shown
+                elapsedTime = GameLoop.getInstance().getElapsedSeconds();
+                setElapsedTime(elapsedTime);
                 //We make sure it has focus.
                 requestFocusInWindow();
             }
@@ -47,7 +60,7 @@ public class WinPanel extends BaseEndLevelPanel {
         winMessageLabel.setForeground(Color.GREEN);
         winMessageLabel.setFont(new Font("Arial", Font.BOLD, 48)); //Initial dimenison
 
-        timerLabel=new JLabel("Time: --s",SwingConstants.CENTER);
+        timerLabel=new JLabel("Time: " + elapsedTime +"s",SwingConstants.CENTER);
         timerLabel.setForeground(Color.BLACK);
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 24));
 
@@ -75,6 +88,12 @@ public class WinPanel extends BaseEndLevelPanel {
                 Model.getInstance().getGame().clearGameMatrix();
                 View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
             }
+
+            starIcon = new ImageIcon(getClass().getResource("/imgs/icons/star.png"));
+            coinIcon = new ImageIcon(getClass().getResource( "/imgs/icons/coin.png"));
+
+            starsLabel = new JLabel();
+            coinLabel = new JLabel();
         });
     }
 
