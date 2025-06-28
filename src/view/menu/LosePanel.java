@@ -1,5 +1,6 @@
 package view.menu;
 
+import controller.GameLoop;
 import view.View;
 
 import javax.swing.*;
@@ -11,6 +12,8 @@ public class LosePanel extends BaseEndLevelPanel {
 
     private JLabel loseMessageLabel;
     private JLabel timerLabel;
+
+    private int elapsedTime = 0;
 
     public LosePanel() {
         super(); // Call the base class constructor
@@ -25,6 +28,9 @@ public class LosePanel extends BaseEndLevelPanel {
             }
             @Override
             public void componentShown(ComponentEvent e) {
+                // Set the elapsed time when the panel is shown
+                elapsedTime = GameLoop.getInstance().getElapsedSeconds();
+                setElapsedTime(elapsedTime);
                //We make sure it has focus.
                 requestFocusInWindow();
             }
@@ -39,7 +45,7 @@ public class LosePanel extends BaseEndLevelPanel {
         loseMessageLabel.setForeground(Color.RED);
         loseMessageLabel.setFont(new Font("Arial", Font.BOLD, 48)); // Initial dimension
 
-        timerLabel=new JLabel("Time: --s",SwingConstants.CENTER);
+        timerLabel=new JLabel("Time: " + elapsedTime +"s",SwingConstants.CENTER);
         timerLabel.setForeground(Color.BLACK);
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 24));
     }

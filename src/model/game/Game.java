@@ -240,6 +240,7 @@ public class Game {
         Creature creature = getCreature();
         removeEntity(creature);
         SwingUtilities.invokeLater(() -> {
+            GameLoop.getInstance().pauseGameTimer();
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().loseLevel();
         });

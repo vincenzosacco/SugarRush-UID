@@ -325,7 +325,6 @@ public class GamePanel extends JPanel implements ViewComp {
         }
         else{
             pauseButton.setEnabled(true);
-            GameAudioController.getInstance().playGameMusic(); // Resume game music when menu is closed
         }
 
         this.revalidate();
