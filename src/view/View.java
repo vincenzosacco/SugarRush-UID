@@ -113,7 +113,6 @@ public class View {
 
         if (panelName.equals(PanelName.GAME.getName())) {
             GameAudioController.getInstance().stopBackgroundMusic();
-            GameAudioController.getInstance().playGameMusic();
         }else{
             GameAudioController.getInstance().stopBackgroundMusic();
             GameAudioController.getInstance().playMenuMusic();

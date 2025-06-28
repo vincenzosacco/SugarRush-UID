@@ -1,6 +1,7 @@
 package controller;
 
 import model.Model;
+import utils.audio.GameAudioController;
 import view.View;
 
 import javax.swing.*;
@@ -56,6 +57,7 @@ public class GameLoop implements Runnable {
             gameThread = new Thread(this);
             gameThread.start();
             Model.getInstance().getGame().start(); // Start the game model (if not already started)
+            GameAudioController.getInstance().playGameMusic();
             startGameTimer(); // Start the game timer to track elapsed time
         } else if (running) {
 

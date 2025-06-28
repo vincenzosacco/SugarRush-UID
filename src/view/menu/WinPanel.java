@@ -181,6 +181,12 @@ public class WinPanel extends BaseEndLevelPanel {
         winMessageLabel.revalidate();
         winMessageLabel.repaint();
 
+        // Specific scaling for the timer label
+        int fontSizeTimer = Math.min(panelWidth / 15, panelHeight / 15);
+        timerLabel.setFont(new Font("Arial", Font.PLAIN, Math.max(16, fontSizeTimer)));
+        timerLabel.revalidate();
+        timerLabel.repaint();
+
         // Resizing for Next Level button
         int buttonSize = Math.min(panelWidth, panelHeight) / 10;
         buttonSize = Math.max(buttonSize, 30);

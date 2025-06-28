@@ -94,7 +94,6 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             this.setVisible(false);
             GameLoop.getInstance().start();
             View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
-            GameAudioController.getInstance().playGameMusic();
             View.getInstance().getGamePanel().requestFocusInWindow();
         });
         // Create and configure the restart button
