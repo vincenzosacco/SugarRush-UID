@@ -90,6 +90,8 @@ public class GameLoop implements Runnable {
      */
     public void shutdown() {
         resetGameTimer(); // Reset the game timer to zero
+        // reset stars
+        Model.getInstance().getGame().resetStarCount(); // Reset the star count in the game model
 
         if (!running) {
             return;

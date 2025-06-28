@@ -173,6 +173,4 @@ public class Resources {
         images.put(path, img);
         System.out.println("Loaded: " + path);
     }
-
-
 }

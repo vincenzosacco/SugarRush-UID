@@ -4,7 +4,7 @@ import java.io.Serializable;
 public class Profile implements Serializable {
     private static final long serialVersionUID = 1L;
     String name;
-    int coins;
+    private static int coins;
 
     public Profile(){
         this.name = "Player";
@@ -17,11 +17,11 @@ public class Profile implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    public int getCoins() {
+    public static int getCoins() {
         return coins;
     }
-    public void setCoins(int coins) {
-        this.coins = coins;
+    public static void setCoins(int c) {
+        coins = c;
     }
 
 

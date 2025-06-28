@@ -96,7 +96,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         this.setFocusable(true);
     }
 
-
     // Position the level buttons dynamically based on the current size of the panel
     private void positionButtons() {
         int w = getWidth();   // Current width of the panel

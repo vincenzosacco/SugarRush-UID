@@ -26,6 +26,7 @@ public class Game {
 
     // count star
     private int starCount = 0;
+    private int achievedStarCount = 0;
 
     /**
      * <p>
@@ -84,8 +85,13 @@ public class Game {
         starCount++;
     }
 
+    public void resetStarCount(){
+        achievedStarCount = starCount;
+        starCount = 0;
+    }
+
     public int getStarCount(){
-        return starCount;
+        return achievedStarCount;
     }
 
     // MODEL //

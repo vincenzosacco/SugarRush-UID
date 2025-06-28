@@ -1,5 +1,6 @@
 package view.menu;
 
+import model.profile.Profile;
 import view.View;
 import view.button.NextLevelButton;
 import controller.GameLoop;
@@ -18,7 +19,7 @@ public class WinPanel extends BaseEndLevelPanel {
     private int stars;    // Number of stars earned in the level
     private int elapsedTime = 0;
 
-    private JLabel starsLabel;   // Label to display the number of stars
+    private JPanel starsPanel; //  JPanel to display the number of stars
     private JLabel coinLabel;   // Label to display the number of coins
     private ImageIcon starIcon = new ImageIcon(getClass().getResource( "/imgs/icons/star.jpg"));;     // Icon for stars
     private ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png" ));;     // Icon for coins
@@ -33,8 +34,6 @@ public class WinPanel extends BaseEndLevelPanel {
         // Adding the "Next Level" button to the bottom panel of the base class
         super.bottomPanel.add(nextLevelButton);
 
-        stars = Model.getInstance().getGame().getStarCount();
-
         //For initial resizing
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -43,10 +42,20 @@ public class WinPanel extends BaseEndLevelPanel {
             }
             @Override
             public void componentShown(ComponentEvent e) {
+
+                stars = Model.getInstance().getGame().getStarCount();
+                setCoins(stars); // Set the number of stars earned in the level
+
+                setStars(stars); // Set the number of stars earned in the level
+
                 // Set the elapsed time when the panel is shown
                 elapsedTime = GameLoop.getInstance().getElapsedSeconds();
                 setElapsedTime(elapsedTime);
                 //We make sure it has focus.
+
+                //save the coins achieved into the profile
+                Profile.setCoins(Profile.getCoins() + stars * 10); // 10 coins per star
+
                 requestFocusInWindow();
             }
         });
@@ -60,20 +69,17 @@ public class WinPanel extends BaseEndLevelPanel {
         winMessageLabel.setForeground(Color.GREEN);
         winMessageLabel.setFont(new Font("Arial", Font.BOLD, 48)); //Initial dimenison
 
-        timerLabel=new JLabel("Time: " + elapsedTime +"s",SwingConstants.CENTER);
+        timerLabel = new JLabel("Time: " + elapsedTime +"s",SwingConstants.CENTER);
         timerLabel.setForeground(Color.BLACK);
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 24));
 
         // Load icons for stars and coins
-        starsLabel = new JLabel();
+        starsPanel = new JPanel();
+        starsPanel.setOpaque(false);
         coinLabel = new JLabel();
-        Image img = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 
-        int coins = stars * 10;         //10 coins per star
-        coinLabel.setText(""+coins);
-        coinLabel.revalidate();
-        coinLabel.setIcon(new ImageIcon(img));
-        coinLabel.repaint();
+        // Set a larger font for the label
+        coinLabel.setFont(new Font("Arial", Font.BOLD, 25));
 
         nextLevelButton = new NextLevelButton();
         nextLevelButton.addActionListener(e -> {
@@ -122,6 +128,9 @@ public class WinPanel extends BaseEndLevelPanel {
         gbc.gridy = 2;      // Next row after timerLabel
         centerPanel.add(coinLabel, gbc);
 
+        gbc.gridy = 3;      // Next row after coinLabel
+        centerPanel.add(starsPanel, gbc);
+
         return centerPanel;
     }
 
@@ -130,6 +139,34 @@ public class WinPanel extends BaseEndLevelPanel {
         timerLabel.setText("Time: " + seconds + "s");
         timerLabel.revalidate();
         timerLabel.repaint();
+    }
+
+    // Update the number of Coins
+    public void setCoins(int stars) {
+        this.stars = stars;
+        int coins = stars * 10;         //10 coins per star
+
+        // Scale the icon to a larger size
+        Image img = coinIcon.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
+        coinLabel.setIcon(new ImageIcon(img));
+        coinLabel.setText(""+ coins); // Set the number of coins earned
+        coinLabel.revalidate();
+        coinLabel.setIcon(new ImageIcon(img));
+        coinLabel.repaint();
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
+        starsPanel.removeAll();
+        int iconSize = 55;
+        Image scaledImg = starIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
+        ImageIcon scaledStarIcon = new ImageIcon(scaledImg);
+        for (int i = 0; i < stars; i++) {
+            JLabel star = new JLabel(scaledStarIcon);
+            starsPanel.add(star);
+        }
+        starsPanel.revalidate();
+        starsPanel.repaint();
     }
 
     @Override
