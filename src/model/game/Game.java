@@ -3,6 +3,7 @@ package model.game;
 import controller.GameLoop;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
+import model.profile.ProfileManager;
 import view.View;
 
 import javax.swing.*;
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static config.Model.COL_COUNT;
-import static config.Model.ROW_COUNT;
+import static config.ModelConfig.COL_COUNT;
+import static config.ModelConfig.ROW_COUNT;
 
 public class Game {
     /**
@@ -282,6 +283,11 @@ public class Game {
             if (elapsedSeconds < 30) {
                 addstar();
             }
+
+            // update profile
+            ProfileManager.loadLastProfile().setCoins(
+                    (ProfileManager.loadLastProfile().getCoins() + getStarCount()) * 10); // 10 coins per star
+
 
             GameLoop.getInstance().pauseGameTimer();
             View.getInstance().getGamePanel().endGame();

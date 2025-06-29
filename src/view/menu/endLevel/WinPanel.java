@@ -1,7 +1,6 @@
 package view.menu.endLevel;
 
 import controller.menu.endLevel.WinController;
-import model.profile.Profile;
 import view.button.NextLevelButton;
 import controller.GameLoop;
 import model.Model;
@@ -43,7 +42,6 @@ public class WinPanel extends BaseEndLevelPanel {
             }
             @Override
             public void componentShown(ComponentEvent e) {
-
                 stars = Model.getInstance().getGame().getStarCount();
                 setCoins(stars); // Set the number of stars earned in the level
 
@@ -53,9 +51,6 @@ public class WinPanel extends BaseEndLevelPanel {
                 elapsedTime = GameLoop.getInstance().getElapsedSeconds();
                 setElapsedTime(elapsedTime);
                 //We make sure it has focus.
-
-                //save the coins achieved into the profile
-                Profile.setCoins(Profile.getCoins() + stars * 10); // 10 coins per star
 
                 requestFocusInWindow();
             }

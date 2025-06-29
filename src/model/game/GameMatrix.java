@@ -1,7 +1,6 @@
 package model.game;
 
 
-import model.Model;
 import model.game.utils.Cell;
 import model.game.Constants.Block;
 
@@ -9,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static config.Model.COL_COUNT;
-import static config.Model.ROW_COUNT;
+import static config.ModelConfig.COL_COUNT;
+import static config.ModelConfig.ROW_COUNT;
 
 /**
  * Represents the game game matrix used to define the layout and structure of the game's environment.

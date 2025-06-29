@@ -1,5 +1,6 @@
 package view.menu;
 
+import config.ModelConfig;
 import controller.ControllerObj;
 import model.game.LevelData;
 import model.profile.ProfileManager;
@@ -29,7 +30,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     private final LevelButton[] levelButton;
 
     // Total number of levels available in the game
-    private final int numLevel = 6;
+    private final int numLevel = ModelConfig.NUM_LEVELS;
 
     private JLabel coinCounterLabel;
 
@@ -55,7 +56,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             LevelData levelData = new LevelData(file);
 
             // Set coins collected status for the button (used to update its display)
-            button.setCoinsCollected(levelData.getCoinsCollected());
+            button.setCoinsCollected(ProfileManager.loadLastProfile().getLevelStarsCount(i));
 
             // Store button in the array and add to the panel
             levelButton[i - 1] = button;
@@ -205,10 +206,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         return levelButton;
     }
 
-    // Returns the total number of levels
-    public int getNumLevels() {
-        return numLevel;
-    }
 
     // Returns the specific level button at index i
     public LevelButton getLevelButton(int i) {
