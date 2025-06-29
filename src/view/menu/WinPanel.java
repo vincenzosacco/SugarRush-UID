@@ -43,7 +43,6 @@ public class WinPanel extends BaseEndLevelPanel {
             }
             @Override
             public void componentShown(ComponentEvent e) {
-
                 stars = Model.getInstance().getGame().getStarCount();
                 setCoins(stars); // Set the number of stars earned in the level
 
@@ -53,10 +52,6 @@ public class WinPanel extends BaseEndLevelPanel {
                 elapsedTime = GameLoop.getInstance().getElapsedSeconds();
                 setElapsedTime(elapsedTime);
                 //We make sure it has focus.
-
-                //save the coins achieved into the profile
-                ProfileManager.loadLastProfile().setCoins(
-                        ProfileManager.loadLastProfile().getCoins() + stars * 10); // 10 coins per star
 
                 requestFocusInWindow();
             }

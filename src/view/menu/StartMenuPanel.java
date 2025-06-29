@@ -55,7 +55,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             LevelData levelData = new LevelData(file);
 
             // Set coins collected status for the button (used to update its display)
-            button.setCoinsCollected(levelData.getCoinsCollected());
+            button.setCoinsCollected(ProfileManager.loadLastProfile().getLevelStarsCount(i));
 
             // Store button in the array and add to the panel
             levelButton[i - 1] = button;

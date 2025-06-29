@@ -45,7 +45,7 @@ public class Profile implements Serializable {
     }
 
 
-    public void setStarsCount(int level, List<Boolean> stars) {
+    public void setLevelStarsCount(int level, List<Boolean> stars) {
         // CHECKS
         if (level< 1 || level > ModelConfig.NUM_LEVELS ){
             throw new IllegalArgumentException("Invalid level number: " + level);
@@ -60,4 +60,13 @@ public class Profile implements Serializable {
     }
 
 
+    public Boolean[] getLevelStarsCount(int levelNum) {
+        // CHECKS
+        if (levelNum < 1 || levelNum > ModelConfig.NUM_LEVELS) {
+            throw new IllegalArgumentException("Invalid level number: " + levelNum);
+        }
+
+        List<Boolean> stars = levelStarsCount.get(levelNum);
+        return stars.toArray(new Boolean[0]); // Convert List to boolean[]
+    }
 }

@@ -17,11 +17,11 @@ public class LevelButton extends JButton {
     private BufferedImage coinImage;
     private BufferedImage missingCoinImage;
 
-    // Level number represented by this button
+    /** Level number represented by this button*/
     private int num;
 
-    // Array indicating whether the 3 coins in the level have been collected
-    private boolean[] coinsCollected = new boolean[3];
+    /**Array indicating whether the 3 coins in the level have been collected*/
+    private Boolean[] coinsCollected = new Boolean[3];
 
     // Default constructor (not used here, but provided)
     public LevelButton() {}
@@ -123,8 +123,8 @@ public class LevelButton extends JButton {
     }
 
     // Setter method to update which coins have been collected
-    public void setCoinsCollected(boolean[] coins) {
-        this.coinsCollected = coins;
+    public void setCoinsCollected(Boolean[] coins) {
+        this.coinsCollected = coins.clone();
         repaint(); // Refresh button appearance
     }
 }
