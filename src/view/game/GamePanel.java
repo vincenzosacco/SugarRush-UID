@@ -205,7 +205,7 @@ public class GamePanel extends JPanel implements ViewComp {
     }
 
     private final JLabel timerCountLabel = new JLabel("0");
-    public void setElapsedSeconds(int seconds) {
+    public void setElapsedSeconds(long seconds) {
         timerCountLabel.setText(String.valueOf(seconds));
     }
 
