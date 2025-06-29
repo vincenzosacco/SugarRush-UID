@@ -211,7 +211,7 @@ public class GameLoop implements Runnable {
         }
     }
 
-    private void resetGameTimer() {
+    public void resetGameTimer() {
         oldElapsedSeconds = elapsedSeconds;
         elapsedSeconds = 0; // Reset elapsed seconds to zero
         View.getInstance().getGamePanel().setElapsedSeconds(elapsedSeconds); // Update the view

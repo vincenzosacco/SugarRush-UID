@@ -277,6 +277,7 @@ public class Game {
         SwingUtilities.invokeLater(() -> {
 
             // get time from timer
+            GameLoop.getInstance().resetGameTimer();
             int elapsedSeconds = GameLoop.getInstance().getElapsedSeconds();
             if (elapsedSeconds < 30) {
                 addstar();
