@@ -194,4 +194,5 @@ public class WinPanel extends BaseEndLevelPanel {
         nextLevelButton.revalidate();
         nextLevelButton.repaint();
     }
+
 }
