@@ -92,6 +92,7 @@ public class GameLoop implements Runnable {
      */
     public void shutdown() {
         resetGameTimer(); // Reset the game timer to zero
+
         // reset stars
         Model.getInstance().getGame().resetStarCount(); // Reset the star count in the game model
 
@@ -212,6 +213,7 @@ public class GameLoop implements Runnable {
     }
 
     public void resetGameTimer() {
+        this.pauseGameTimer();
         oldElapsedSeconds = elapsedSeconds;
         elapsedSeconds = 0; // Reset elapsed seconds to zero
         View.getInstance().getGamePanel().setElapsedSeconds(elapsedSeconds); // Update the view
