@@ -110,9 +110,6 @@ public class ShopPanel extends JPanel implements ViewComp {
             linePanel.add(priceLabel); // center
             linePanel.add(Box.createHorizontalStrut(100)); // space between center and right
         }
-        actionButton.setBackground(Color.GREEN);
-        actionButton.setOpaque(true);
-        actionButton.setContentAreaFilled(true);
 
         actionButton.setPreferredSize(new Dimension(120, 50)); // width, height
         actionButton.setMaximumSize(new Dimension(120, 50));
