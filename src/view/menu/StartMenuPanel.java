@@ -1,5 +1,6 @@
 package view.menu;
 
+import config.ModelConfig;
 import controller.ControllerObj;
 import model.game.LevelData;
 import model.profile.ProfileManager;
@@ -28,7 +29,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     private final LevelButton[] levelButton;
 
     // Total number of levels available in the game
-    private final int numLevel = 6;
+    private final int numLevel = ModelConfig.NUM_LEVELS;
 
     private JLabel coinCounterLabel;
 
@@ -202,10 +203,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         return levelButton;
     }
 
-    // Returns the total number of levels
-    public int getNumLevels() {
-        return numLevel;
-    }
 
     // Returns the specific level button at index i
     public LevelButton getLevelButton(int i) {

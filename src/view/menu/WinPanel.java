@@ -1,6 +1,7 @@
 package view.menu;
 
 import model.profile.Profile;
+import model.profile.ProfileManager;
 import view.View;
 import view.button.NextLevelButton;
 import controller.GameLoop;
@@ -54,7 +55,8 @@ public class WinPanel extends BaseEndLevelPanel {
                 //We make sure it has focus.
 
                 //save the coins achieved into the profile
-                Profile.setCoins(Profile.getCoins() + stars * 10); // 10 coins per star
+                ProfileManager.loadLastProfile().setCoins(
+                        ProfileManager.loadLastProfile().getCoins() + stars * 10); // 10 coins per star
 
                 requestFocusInWindow();
             }

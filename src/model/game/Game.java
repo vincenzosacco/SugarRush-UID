@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static config.Model.COL_COUNT;
-import static config.Model.ROW_COUNT;
+import static config.ModelConfig.COL_COUNT;
+import static config.ModelConfig.ROW_COUNT;
 
 public class Game {
     /**
