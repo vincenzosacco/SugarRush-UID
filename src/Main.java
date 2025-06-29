@@ -11,7 +11,6 @@ public class Main {
 
     public static void main(String[] args) {
         // Register shutdown hook
-
         Profile lastProfile = ProfileManager.loadLastProfile();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

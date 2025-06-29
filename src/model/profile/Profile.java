@@ -8,7 +8,7 @@ import java.util.List;
 public class Profile implements Serializable {
     private static final long serialVersionUID = 1L;
     String name;
-    private static int coins;
+    private int coins;
 
     /**
      * <p>Map of start collected for each level.</p>
@@ -18,7 +18,7 @@ public class Profile implements Serializable {
      *
      *<p>Default values are [False,False,False]</p>
      */
-    private final HashMap<Integer, List<Boolean>> levelStarsCount;
+    private final HashMap<Integer, Boolean[]> levelStarsCount;
 
 
     public Profile(){
@@ -27,7 +27,7 @@ public class Profile implements Serializable {
 
         levelStarsCount = new HashMap<>();
         for (int i = 1; i <= ModelConfig.NUM_LEVELS; i++) {
-            levelStarsCount.put(i, List.of(false, false, false)); // Initialize with no stars collected
+            levelStarsCount.put(i, new Boolean[]{false, false, false}); // Initialize with no stars collected
         }
     }
 
@@ -45,13 +45,13 @@ public class Profile implements Serializable {
     }
 
 
-    public void setLevelStarsCount(int level, List<Boolean> stars) {
+    public void setLevelStarsCount(int level, Boolean[] stars) {
         // CHECKS
         if (level< 1 || level > ModelConfig.NUM_LEVELS ){
             throw new IllegalArgumentException("Invalid level number: " + level);
         }
 
-        if (stars == null || stars.size() != 3) {
+        if (stars == null || stars.length != 3) {
             throw new IllegalArgumentException("Stars list must contain exactly 3 boolean values.");
         }
 
@@ -60,13 +60,17 @@ public class Profile implements Serializable {
     }
 
 
+    /**
+     * Returns the stars collected for a specific level.
+     * @param levelNum the level number (1 to ModelConfig.NUM_LEVELS)
+     * @return a Boolean (clone) array of size 3, where each element represents whether a star was collected (true) or not (false).
+     */
     public Boolean[] getLevelStarsCount(int levelNum) {
         // CHECKS
         if (levelNum < 1 || levelNum > ModelConfig.NUM_LEVELS) {
             throw new IllegalArgumentException("Invalid level number: " + levelNum);
         }
 
-        List<Boolean> stars = levelStarsCount.get(levelNum);
-        return stars.toArray(new Boolean[0]); // Convert List to boolean[]
+        return levelStarsCount.get(levelNum).clone(); // Return a clone to prevent external modification
     }
 }
