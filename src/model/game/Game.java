@@ -22,9 +22,6 @@ public class Game {
     final GameMatrix gameMat = new GameMatrix();
     final ArrayList<Entity> entities = new ArrayList<>();
 
-    //list of the entities to remove
-    private final List<Entity> entitiesToRemove = new ArrayList<>();
-
     // count star
     private int starCount = 0;
     private int achievedStarCount = 0;
@@ -139,53 +136,25 @@ public class Game {
     public void updateState() {
         List<Entity> currentEntities = new ArrayList<>(entities);
         for (Entity ent : currentEntities) {
-            // If the entity has already been marked for removal, skip it in this update cycle.
-            if (entitiesToRemove.contains(ent)) {
-                continue;
-            }
             if (ent.shouldPerform()) {
                 // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
                 Cell oldCoord = ent.getCoord();
-                if (oldCoord.getRow() >= 0 && oldCoord.getRow() < ROW_COUNT &&
-                        oldCoord.getCol() >= 0 && oldCoord.getCol() < COL_COUNT) {
-                    gameMat.setCell(oldCoord, Constants.Block.SPACE);
-                } else {
-                    System.err.println("Warning: Entity with previous coordinate invalid. Skipped cleaning old cell:" + oldCoord);
-                }
+                gameMat.setCell(oldCoord, Constants.Block.SPACE);
+
 
                 // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
-                // LIMIT CHECK FOR toMove
-                if (toMove.getRow() < 0 || toMove.getRow() >= ROW_COUNT ||
-                        toMove.getCol() < 0 || toMove.getCol() >= COL_COUNT) {
-                    if (ent instanceof Creature) {
-                        System.out.println("Creature is attempting to move out of bounds. Creature kill.");
-                        killCreature();
-                    }
-                    continue; // Move to the next entity in the loop
-                }
-                // 2 -MANAGE COLLISIONS //
+
+                // 2- MANAGE COLLISIONS //
                 boolean canPerform = ent.manageCollision(gameMat.getCell(toMove), toMove );
-                // 3 -PERFORM ACTION //
-                if (canPerform) ent.performAction(toMove);
+
+                // 3- PERFORM ACTION //
+                if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates
 
                 // APPLY NEW COORDS IN THE GAME MATRIX //
                 Cell newCoord = ent.getCoord();
-                if (newCoord.getRow() >= 0 && newCoord.getRow() < ROW_COUNT &&
-                        newCoord.getCol() >= 0 && newCoord.getCol() < COL_COUNT) {
-                    gameMat.setCell(newCoord, ent.blockType());
-                } else {
-                    System.err.println("Error: The entity has moved to an invalid coordinate:" + newCoord);
-                    if (ent instanceof Creature) {
-                        killCreature();
-                    }
-                }
+                gameMat.setCell(newCoord, ent.blockType());
             }
-        }
-        // Perform actual removals after iteration
-        if (!entitiesToRemove.isEmpty()) {
-            entities.removeAll(entitiesToRemove);
-            entitiesToRemove.clear();
         }
     }
 
@@ -244,8 +213,6 @@ public class Game {
     }
 
     public void killCreature() {
-        Creature creature = getCreature();
-        removeEntity(creature);
         SwingUtilities.invokeLater(() -> {
             GameLoop.getInstance().pauseGameTimer();
             View.getInstance().getGamePanel().endGame();
@@ -253,14 +220,8 @@ public class Game {
         });
     }
 
-    public void removeEntity(Entity entity) {
-        if (entity != null && !entitiesToRemove.contains(entity)) {
-            entitiesToRemove.add(entity); // Mark for removal
-        }
-    }
 
     public void clearGameMatrix() {
-
         // Clear the game matrix
         gameMat.clear();
         for (int r = 0; r < ROW_COUNT; r++) {
@@ -272,7 +233,6 @@ public class Game {
         }
         // Clear all entities
         entities.clear();
-        entitiesToRemove.clear(); // Also clears the list of entities to remove
     }
     public void win(){
         SwingUtilities.invokeLater(() -> {

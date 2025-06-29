@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
-        // Register shutdown hook
+        // Register shutdown hook to save the last profile on exit
         Profile lastProfile = ProfileManager.loadLastProfile();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -28,8 +28,6 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 }

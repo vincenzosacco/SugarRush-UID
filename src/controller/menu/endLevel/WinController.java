@@ -25,7 +25,7 @@ public class WinController implements ActionListener {
         // Handling the case where there are no more levels
         if (nextLevel <= 6) { // Assuming a maximum of 6 levels
             View.getInstance().getGamePanel().endGame();
-            View.getInstance().getGamePanel().resetPanelForNewLevel();
+            View.getInstance().getGamePanel().repaintBackground();
             Model.getInstance().getGame().setLevel(nextLevel);
             View.getInstance().showPanel(View.PanelName.GAME.getName());
             panel.requestFocusInWindow(); // needed to get user input

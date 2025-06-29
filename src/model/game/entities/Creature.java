@@ -58,14 +58,19 @@ public class Creature extends Entity {
 
         switch (block) {
             case SUGAR ->  {
+                GameAudioController.getInstance().playSfx("bite");
+                View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
+
                 Model.getInstance().getGame().addstar();
                 Model.getInstance().getGame().win();
-                GameAudioController.getInstance().playSfx("bite");
             }
             case CANDY -> {
+                GameAudioController.getInstance().playSfx("bite");
+                View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
+
                 addCandy();
-                Model.getInstance().getGame().setBlockAt(cell, Constants.Block.SPACE);
                 Model.getInstance().getGame().addstar();
+
             }
             case SPACE -> {/*do nothing*/}
             case WALL -> {

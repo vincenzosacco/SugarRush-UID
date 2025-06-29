@@ -35,7 +35,7 @@ public class LevelController implements ControllerObj {
 
         // 2. Start the level showing the GamePanel
         Model.getInstance().getGame().setLevel(levelIndex);
-        View.getInstance().getGamePanel().resetPanelForNewLevel();
+        View.getInstance().getGamePanel().repaintBackground();
         View.getInstance().showPanel(View.PanelName.GAME.getName());
         panel.requestFocusInWindow(); // needed to get user input
         Objects.requireNonNull(panel.getParent(), "The panel does not have a defined parent");

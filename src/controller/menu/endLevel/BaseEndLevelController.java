@@ -20,7 +20,7 @@ public class BaseEndLevelController implements ControllerObj {
         View.getInstance().getGamePanel().endGame();
         Model.getInstance().getGame().clearGameMatrix();
 
-        View.getInstance().getGamePanel().resetPanelForNewLevel();
+        View.getInstance().getGamePanel().repaintBackground();
         Model.getInstance().getGame().setLevel(levelToRestart);
         View.getInstance().showPanel(View.PanelName.GAME.getName());
         View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
