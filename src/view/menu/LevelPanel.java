@@ -1,11 +1,9 @@
 package view.menu;
 
 import controller.ControllerObj;
-import controller.GameLoop;
-import model.Model;
+import controller.menu.LevelController;
 import model.game.LevelData;
 import utils.Resources;
-import view.View;
 import view.ViewComp;
 import view.button.RoundCloseButton;
 import view.button.RoundPlayButton;
@@ -66,35 +64,18 @@ public class LevelPanel extends JPanel implements ViewComp{
             // Optionally, set a fallback image or handle the error
         }
 
+        LevelController controller=new LevelController(this);
+
         // Create and configure the close button
         closeButton = new RoundCloseButton();
         closeButton.addActionListener(e -> {
-            Window window = SwingUtilities.getWindowAncestor(LevelPanel.this);
-            if (window != null) {
-                window.dispose(); // Close the dialog
-            }
+            controller.onClose();
         });
 
         // Create and configure the play button
         playButton = new RoundPlayButton();
         playButton.addActionListener(e -> {
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
-
-            // 1. Close the LevelPanel dialog after starting the game
-            Window window = SwingUtilities.getWindowAncestor(LevelPanel.this);
-            if (window != null) {
-                window.dispose(); // Close the current dialog
-            }
-
-            // 2. Start the level showing the GamePanel
-            Model.getInstance().getGame().setLevel(levelIndex);
-            View.getInstance().getGamePanel().resetPanelForNewLevel();
-            View.getInstance().showPanel(View.PanelName.GAME.getName());
-            this.requestFocusInWindow(); // needed to get user input
-            assert this.getParent() != null ;
-            JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
-                    "New Game",JOptionPane.INFORMATION_MESSAGE);
-            GameLoop.getInstance().start();
+            controller.onPlay(levelIndex);
         });
 
         // --------------------- TOP PANEL ---------------------
@@ -195,7 +176,18 @@ public class LevelPanel extends JPanel implements ViewComp{
         setupKeyBindings();
 
         // --------------------- RESIZE LISTENER ---------------------
+        //Dynamically resize when the panel changes size
+        resizeComponents(levelLabel);
 
+        // Force an initial resize event to apply layout immediately
+        SwingUtilities.invokeLater(() -> {
+            getComponentListeners()[0].componentResized(
+                    new ComponentEvent(LevelPanel.this, ComponentEvent.COMPONENT_RESIZED)
+            );
+        });
+    }
+
+    private void resizeComponents(JLabel levelLabel){
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -242,13 +234,6 @@ public class LevelPanel extends JPanel implements ViewComp{
                 revalidate();
                 repaint();
             }
-        });
-
-        // Force an initial resize event to apply layout immediately
-        SwingUtilities.invokeLater(() -> {
-            getComponentListeners()[0].componentResized(
-                    new ComponentEvent(LevelPanel.this, ComponentEvent.COMPONENT_RESIZED)
-            );
         });
     }
 
@@ -306,7 +291,6 @@ public class LevelPanel extends JPanel implements ViewComp{
         RoundRectangle2D panelShape = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
         // Save the original clip of the graphic context
         Shape originalClip = g2.getClip();
-
         g2.setClip(panelShape);
 
         // Draw background image if it is null or dimensions changed

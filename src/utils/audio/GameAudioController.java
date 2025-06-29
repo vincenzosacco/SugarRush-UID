@@ -82,8 +82,6 @@ public class GameAudioController implements PropertyChangeListener {
         audioManager.playSfx(path, volume);
     }
 
-    // Add more methods here to play SFX (e.g. collectCoinSfx(), enemyHitSfx())
-
     // Implement PropertyChangeListener to react to volume changes
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -93,9 +91,9 @@ public class GameAudioController implements PropertyChangeListener {
         }
     }
 
-    // Method to clean up audio resources when application closes
-    public void cleanup() {
-        audioManager.cleanup();
-        SettingsManager.getInstance().removePropertyChangeListener(this);
-    }
+//    // Method to clean up audio resources when application closes
+//    public void cleanup() {
+//        audioManager.cleanup();
+//        SettingsManager.getInstance().removePropertyChangeListener(this);
+//    }
 }

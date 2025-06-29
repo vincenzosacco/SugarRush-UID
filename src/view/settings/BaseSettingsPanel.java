@@ -16,7 +16,6 @@ import java.net.URL;
 
 import model.settings.SettingsManager;
 import view.button.InternalSettingsButton;
-import view.menu.LevelPanel;
 
 public class BaseSettingsPanel extends JPanel implements PropertyChangeListener {
 
@@ -355,6 +354,8 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
             iconButton.setIcon(soundIcon);
         }
     }
+
+// ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
 
     @Override
     protected void paintComponent(Graphics g) {
