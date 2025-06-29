@@ -8,12 +8,12 @@ public class AudioManager {
 
     private Clip backgroundMusicClip;
     private Clip sfxClip;
-    private String currentBackgroundMusicPath; // To keep track of the current music
+    private String currentBackgroundMusicPath; // To keep track of the currently playing music
 
     public AudioManager() {
-        // Initialization
     }
 
+    // Loads an audio clip from the given path inside the resources
     public Clip loadAudioClip(String path) {
         try {
             URL audioUrl = getClass().getResource(path);
@@ -34,12 +34,13 @@ public class AudioManager {
         }
     }
 
+    // Plays a given Clip. If loop is true, the clip loops continuously.
     public void playClip(Clip clip, boolean loop) {
         if (clip != null) {
             if (clip.isRunning()) {
                 clip.stop();
             }
-            clip.setFramePosition(0);
+            clip.setFramePosition(0); // Rewind
             if (loop) {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             } else {
@@ -48,46 +49,46 @@ public class AudioManager {
         }
     }
 
+    // Stops a clip if it is currently playing
     public void stopClip(Clip clip) {
         if (clip != null && clip.isRunning()) {
             clip.stop();
         }
     }
 
+    // Sets the volume of a clip (0 to 100). Uses decibel scaling for realistic audio control.
     public void setVolume(Clip clip, float volume) {
         if (clip != null && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             float minGain = gainControl.getMinimum();
             float maxGain = gainControl.getMaximum();
-            // Convert volume from 0-100 to decibels for gain control
-            float actualVolume = volume;
-            if (actualVolume <= 0.0f) {
-                gainControl.setValue(gainControl.getMinimum()); // Mute
+            if (volume <= 0.0f) {
+                gainControl.setValue(minGain); // Mute
             } else {
-                // Logarithmic scale from 0.01 to 1.0 to avoid log(0)
-                float dB = (float) (Math.log10(actualVolume / 100.0f) * 20.0);
-                if (dB < minGain) dB = minGain; // Clamp to minimum control
-                if (dB > maxGain) dB = maxGain; // Clamp at maximum control
-                gainControl.setValue(dB);
+                // Convert volume to decibels
+                float dB = (float) (Math.log10(volume / 100.0f) * 20.0);
+                gainControl.setValue(Math.max(minGain, Math.min(maxGain, dB)));
             }
         }
     }
 
+    // Plays background music from the specified path with the given volume.
     public void playBackgroundMusic(String path, float volume, boolean forceRestart) {
         if (backgroundMusicClip == null || !path.equals(currentBackgroundMusicPath) || forceRestart) {
-            stopBackgroundMusic(); // Stop previous music if different or if forced restart
+            stopBackgroundMusic(); // Stop existing music
             backgroundMusicClip = loadAudioClip(path);
             currentBackgroundMusicPath = path;
         }
 
         if (backgroundMusicClip != null) {
             setVolume(backgroundMusicClip, volume);
-            if (!backgroundMusicClip.isRunning()) { // Start only if not already playing
-                playClip(backgroundMusicClip, true);
+            if (!backgroundMusicClip.isRunning()) {
+                playClip(backgroundMusicClip, true); // Loop background music
             }
         }
     }
 
+    // Stops and releases the current background music
     public void stopBackgroundMusic() {
         if (backgroundMusicClip != null) {
             stopClip(backgroundMusicClip);
@@ -97,17 +98,18 @@ public class AudioManager {
         }
     }
 
+    // Adjusts the volume of the background music while it's playing
     public void setBackgroundMusicVolume(float volume) {
         setVolume(backgroundMusicClip, volume);
     }
 
+    // Plays a sound effect (non-looping), and closes the clip after it's done playing
     public void playSfx(String path, float volume) {
-        // For SFX, it's best to create a new clip each time if they are short and may overlap,
         Clip tempSfxClip = loadAudioClip(path);
         if (tempSfxClip != null) {
             setVolume(tempSfxClip, volume);
             playClip(tempSfxClip, false);
-            // Listener to close the clip once it has finished playing
+            // Automatically release resources when the sound finishes
             tempSfxClip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
                     event.getLine().close();
@@ -116,11 +118,13 @@ public class AudioManager {
         }
     }
 
+    // Returns true if the background music at the given path is currently playing
     public boolean isPlaying(String path) {
         return backgroundMusicClip != null && backgroundMusicClip.isRunning() && path.equals(currentBackgroundMusicPath);
     }
 
-    public void cleanup() {
-        stopBackgroundMusic();
-    }
+//    // Stops and cleans up all audio resources
+//    public void cleanup() {
+//        stopBackgroundMusic();
+//    }
 }

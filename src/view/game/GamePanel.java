@@ -4,16 +4,12 @@ import controller.GameController;
 import controller.ControllerObj;
 import controller.GameLoop;
 import model.Model;
-import model.game.Constants;
-import model.game.Entity;
-import model.game.Game;
-import model.game.utils.Cell;
 import utils.audio.GameAudioController;
 import view.ViewComp;
 import view.button.PauseButton;
 import view.menu.GameMenuPanel;
-import view.menu.LosePanel;
-import view.menu.WinPanel;
+import view.menu.endLevel.LosePanel;
+import view.menu.endLevel.WinPanel;
 
 import javax.swing.*;
 
@@ -21,34 +17,25 @@ import java.awt.*;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 import static config.ViewConfig.*;
 
-
 /**
- * Main game panel
+ * Main game panel (Contains graphics, UI, menus, pause/win logic)
  */
 public class GamePanel extends JPanel implements ViewComp {
-
-
-
-    private BufferedImage staticBackground = null;
 
     private final GameMenuPanel gameSettingsPanel;
     private final LosePanel losePanel;
     private final WinPanel winPanel;
 
+    private final PauseButton pauseButton;
 
-    private PauseButton pauseButton;
+    private final JLayeredPane layeredPane;
 
-    private JLayeredPane layeredPane;
+    private final GameContent gameContentDrawingPanel=new GameContent();
 
-    private JPanel gameContentDrawingPanel;
-
-    private GameLoop gameLoop=GameLoop.getInstance();
+    private final GameLoop gameLoop=GameLoop.getInstance();
 
     public PauseButton getPauseButton() {
         return pauseButton;
@@ -79,29 +66,6 @@ public class GamePanel extends JPanel implements ViewComp {
         timerCountLabel.setFont(timerFont);
         timerCountLabel.setForeground(Color.BLACK);
         layeredPane.add(timerCountLabel);
-
-
-        gameContentDrawingPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                // Draw the background of this panel
-                super.paintComponent(g);
-
-                // Draw the static background of the game (blocks, thorns, sugar)
-                if (staticBackground == null) {
-                    drawOnStartUp();
-                }
-                if (staticBackground != null) {
-                    g.drawImage(staticBackground, 0, 0, getWidth(), getHeight(), null);
-                }
-                drawOnUpdate((Graphics2D) g); // Draw dynamic entities
-
-                // Draw the elapsed time
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Arial", Font.BOLD, 20));
-
-            }
-        };
 
         gameContentDrawingPanel.setOpaque(true); //Opaque to cover the background underneath
         gameContentDrawingPanel.setBackground(skyblue);
@@ -134,7 +98,6 @@ public class GamePanel extends JPanel implements ViewComp {
         buttonContainerPanel.add(pauseButton);
         layeredPane.add(buttonContainerPanel, JLayeredPane.PALETTE_LAYER); // Added to a higher level of the game
 
-
         //Menu panels (overlays)
         gameSettingsPanel = new GameMenuPanel();
         losePanel = new LosePanel();
@@ -144,8 +107,6 @@ public class GamePanel extends JPanel implements ViewComp {
         layeredPane.add(gameSettingsPanel, JLayeredPane.MODAL_LAYER);
         layeredPane.add(losePanel, JLayeredPane.MODAL_LAYER);
         layeredPane.add(winPanel, JLayeredPane.MODAL_LAYER);
-
-
 
         gameSettingsPanel.setVisible(false);
         losePanel.setVisible(false);
@@ -238,78 +199,10 @@ public class GamePanel extends JPanel implements ViewComp {
      * </p>
      */
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-
-    private void drawOnStartUp(){
-        staticBackground = new BufferedImage(BOARD_WIDTH, BOARD_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D bg = (Graphics2D) staticBackground.getGraphics();
-        // best quality rendering hints
-        bg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        bg.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        bg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-
-
-        // DRAW in BUFFERED IMAGE //
-        Game game = Model.getInstance().getGame();
-        List<List<Constants.Block>> gameMatrix = game.getState();
-        assert gameMatrix != null && !gameMatrix.isEmpty();
-
-        for (int row = 0; row < gameMatrix.size(); row++) {
-            int y = row * TILE_SIZE; // iterating row in model matrix corresponds to moving on y-axis(from top to bottom) on graphics coordinates.
-            for (int col = 0; col < gameMatrix.get(row).size(); col++) {
-                int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
-
-                // DRAW ONLY STATIC BLOCKS //
-                if (game.blockAt(new Cell(row, col)) == Constants.Block.WALL ||
-                        game.blockAt(new Cell(row, col)) == Constants.Block.THORNS ||
-                        game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR ||
-                        game.blockAt(new Cell(row, col)) == Constants.Block.CANDY) // static blocks
-                {
-
-                    Constants.Block block = gameMatrix.get(row).get(col);
-                    Image image = _BlocksImage.getInstance().getStaticBlockImg(block); // get the image for the block type
-                    if (!(image == null))
-                        bg.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
-                }
-            }
-        }
-
-        // Draw the static background
-        bg.dispose();
-    }
-
-    private void drawOnUpdate(Graphics2D g2d) {
-        Game game = Model.getInstance().getGame();
-        List<Entity> entities = new ArrayList<>(game.getEntities());
-
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-
-        // DRAW ENTITIES //
-        for (Entity entity : entities) {
-            int row = entity.getCoord().getRow();
-            int col = entity.getCoord().getCol();
-            int x = col * TILE_SIZE;
-            int y = row * TILE_SIZE;
-
-            Constants.Block blockType = entity.blockType();
-            Image image = _BlocksImage.getInstance().getDynamicBlockImg(blockType, entity.getDirection());
-
-            assert image != null;
-            g2d.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
-        }
-    }
-
     public void resetPanelForNewLevel() {
-        this.staticBackground = null; // Force background to redraw on next paintComponent
+        gameContentDrawingPanel.staticBackground = null; // Force background to redraw on next paintComponent
         this.repaint(); // Requires the panel to redraw itself
     }
-
 
     // SETTINGS
     public GameMenuPanel toggleSettingsPanel(){
@@ -347,7 +240,7 @@ public class GamePanel extends JPanel implements ViewComp {
         this.repaint();
         return losePanel;
     }
-
+    //WIN LEVEL
     public WinPanel winLevel(){
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         winPanel.setCurrentLevel(currentLevel);
@@ -362,11 +255,9 @@ public class GamePanel extends JPanel implements ViewComp {
         this.repaint();
         return winPanel;
     }
-
+    //END GAME
     public void endGame(){
         GameLoop.getInstance().shutdown();
         GameAudioController.getInstance().stopBackgroundMusic();
     }
-
-
 }

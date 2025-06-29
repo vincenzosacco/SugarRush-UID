@@ -1,12 +1,9 @@
 package view.menu;
 
 import controller.ControllerObj;
-import controller.GameLoop;
-import model.Model;
+import controller.menu.GameMenuController;
 import model.game.LevelData;
 import model.game.MapParser;
-import utils.audio.GameAudioController;
-import view.View;
 import view.ViewComp;
 import view.button.*;
 import javax.imageio.ImageIO;
@@ -49,7 +46,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 
     private int currentLevel;
 
-    private boolean open = false;
+    public boolean open = false;
 
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
@@ -86,50 +83,30 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             System.err.println("Error loading image level-dialog.jpg: " + e.getMessage());
         }
 
+        GameMenuController controller=new GameMenuController(this);
 
         // Create and configure the play button
         playButton = new RoundPlayButton();
         playButton.addActionListener(e -> {
-            open=false;
-            this.setVisible(false);
-            GameLoop.getInstance().start();
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
-            View.getInstance().getGamePanel().requestFocusInWindow();
+            controller.onPlay();
         });
         // Create and configure the restart button
         restartButton=new RestartButton();
         restartButton.addActionListener(e -> {
-            int levelToRestart = Model.getInstance().getGame().getCurrLevel();
-            open=false;
-            this.setVisible(false);
-//            Start the level showing the GamePanel
-            View.getInstance().getGamePanel().endGame();
-            Model.getInstance().getGame().clearGameMatrix();
-            View.getInstance().getGamePanel().resetPanelForNewLevel();
-            Model.getInstance().getGame().setLevel(levelToRestart);
-            View.getInstance().showPanel(View.PanelName.GAME.getName());
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
-            GameLoop.getInstance().start();
+            controller.onRestart();
         });
 
         // Create and configure the EXIT button
         exitButton=new ExitButton();
         exitButton.addActionListener(e ->{
-            open=false;
-            this.setVisible(false);
-            GameLoop.getInstance().shutdown();
-            Model.getInstance().getGame().clearGameMatrix();
-            View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+            controller.onExit();
         });
 
         // Create and configure the settings button
         settingsButton=new SettingsButton();
         settingsButton.addActionListener(e ->{
-            open=false;
-            //this.setVisible(false);
-            View.getInstance().showPanel(View.PanelName.SETTINGS.getName());
+            controller.onSettings();
         });
-
 
 
         // --------------------- TOP PANEL ---------------------
@@ -154,8 +131,8 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         rightPanel.setOpaque(false);
         topPanel.add(rightPanel);
 
-
         add(topPanel, BorderLayout.PAGE_START);
+
 
         // --------------------- CENTER PANEL ---------------------
 
@@ -171,7 +148,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             // Choose correct image based on coin collected or not
             String imgPath = coinsCollected[i] ? "/imgs/icons/star.jpg" : "/imgs/panels/levels/missingStar.jpg";
             try {
-                originalImages[i] = ImageIO.read(getClass().getResource(imgPath));
+                originalImages[i] = ImageIO.read(Objects.requireNonNull(getClass().getResource(imgPath)));
             } catch (Exception e) {
                 e.printStackTrace();
                 originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback
@@ -203,6 +180,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         }
 
         add(centerPanel, BorderLayout.CENTER);
+
 
         // --------------------- BOTTOM PANEL ---------------------
 
@@ -244,55 +222,6 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 
     public void setOpen(boolean open) {
         this.open = open;
-    }
-
-    // Custom painting to render the rounded background and border
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        int width = getWidth();
-        int height = getHeight();
-        int arc = 30;
-
-        // Rounded rectangle clipping for a smooth shape
-        RoundRectangle2D panelShape = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
-        // Save the original clip of the graphic context
-        Shape originalClip = g2.getClip();
-
-        g2.setClip(panelShape);
-
-        // Draw background image or fallback to white
-        if (backgroundImage != null) {
-            g2.drawImage(backgroundImage, 0, 0, width, height, this);
-        } else {
-            g2.setColor(Color.WHITE);
-            g2.fillRect(0, 0, width, height);
-        }
-
-        // Draw rounded border
-        //Restore the original clip BEFORE drawing the border and child components
-        //to prevent the edge and child components from being cut by the rounded clip
-        g2.setClip(originalClip);
-
-        float borderWidth = 2.0f;
-        g2.setStroke(new BasicStroke(borderWidth));
-        g2.setColor(Color.BLACK);
-
-        // Draw the border slightly indented to keep it within the bounds of the panel.
-        RoundRectangle2D borderOutline = new RoundRectangle2D.Float(
-                borderWidth / 2, borderWidth / 2,
-                width - borderWidth, height - borderWidth,
-                arc, arc
-        );
-        g2.draw(borderOutline);
-
-        g2.dispose();
-
-        // Paint child components
-        super.paintComponent(g);
     }
 
     public void updateContent(){
@@ -454,6 +383,57 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             }
         });
 
+    }
+
+// ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
+
+    // Custom painting to render the rounded background and border
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g.create();
+
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        int width = getWidth();
+        int height = getHeight();
+        int arc = 30;
+
+        // Rounded rectangle clipping for a smooth shape
+        RoundRectangle2D panelShape = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
+        // Save the original clip of the graphic context
+        Shape originalClip = g2.getClip();
+
+        g2.setClip(panelShape);
+
+        // Draw background image or fallback to white
+        if (backgroundImage != null) {
+            g2.drawImage(backgroundImage, 0, 0, width, height, this);
+        } else {
+            g2.setColor(Color.WHITE);
+            g2.fillRect(0, 0, width, height);
+        }
+
+        // Draw rounded border
+        //Restore the original clip BEFORE drawing the border and child components
+        //to prevent the edge and child components from being cut by the rounded clip
+        g2.setClip(originalClip);
+
+        float borderWidth = 2.0f;
+        g2.setStroke(new BasicStroke(borderWidth));
+        g2.setColor(Color.BLACK);
+
+        // Draw the border slightly indented to keep it within the bounds of the panel.
+        RoundRectangle2D borderOutline = new RoundRectangle2D.Float(
+                borderWidth / 2, borderWidth / 2,
+                width - borderWidth, height - borderWidth,
+                arc, arc
+        );
+        g2.draw(borderOutline);
+
+        g2.dispose();
+
+        // Paint child components
+        super.paintComponent(g);
     }
 
     @Override

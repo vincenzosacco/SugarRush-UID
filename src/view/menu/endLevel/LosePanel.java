@@ -1,7 +1,6 @@
-package view.menu;
+package view.menu.endLevel;
 
 import controller.GameLoop;
-import view.View;
 
 import javax.swing.*;
 import java.awt.*;

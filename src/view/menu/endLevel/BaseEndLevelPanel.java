@@ -1,8 +1,7 @@
-package view.menu;
+package view.menu.endLevel;
 
 import controller.ControllerObj;
-import controller.GameLoop;
-import model.Model;
+import controller.menu.endLevel.BaseEndLevelController;
 import view.View;
 import view.ViewComp;
 import view.button.ExitButton;
@@ -29,10 +28,9 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
     protected SettingsButton settingsButton;
 
     protected JLabel levelLabel;
-
     private int currentLevel;
 
-
+    // Sets the current level and updates the label if already created
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
         if (levelLabel != null) {
@@ -45,10 +43,11 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         setOpaque(false);
         setLayout(new BorderLayout());
 
-        loadBackgroundImage();
-        createButtons();
-        setupCommonLayoutElements();
+        loadBackgroundImage(); // Load panel background
+        createButtons();       // Create common control buttons
+        setupCommonLayoutElements(); // Set layout without center panel
 
+        // Dynamically scale UI elements when resized
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -56,13 +55,13 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
             }
         });
 
-        // Force an initial resize
         SwingUtilities.invokeLater(this::applyScalingBasedOnCurrentDimensions);
 
         this.setFocusable(true);
-        this.setVisible(false); // Initially not visible
+        this.setVisible(false); // Hidden by default
     }
 
+    // Loads the background image from resources
     private void loadBackgroundImage() {
         try {
             URL imageUrl = getClass().getResource("/imgs/panels/levels/endLevelImage.jpg");
@@ -77,89 +76,74 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         }
     }
 
+    // Initializes the control buttons and binds actions
     private void createButtons() {
+        BaseEndLevelController controller = new BaseEndLevelController(this);
+
         restartButton = new RestartButton();
-        restartButton.addActionListener(e -> {
-            int levelToRestart = Model.getInstance().getGame().getCurrLevel();
-            this.setVisible(false);
-//            Start the level showing the GamePanel
-            View.getInstance().getGamePanel().endGame();
-            Model.getInstance().getGame().clearGameMatrix();
-
-            View.getInstance().getGamePanel().resetPanelForNewLevel();
-            Model.getInstance().getGame().setLevel(levelToRestart);
-            View.getInstance().showPanel(View.PanelName.GAME.getName());
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
-            GameLoop.getInstance().start();
-        });
-
+        restartButton.addActionListener(e -> controller.onRestart());
 
         exitButton = new ExitButton();
-        exitButton.addActionListener(e -> {
-            this.setVisible(false);
-            GameLoop.getInstance().shutdown();
-            Model.getInstance().getGame().clearGameMatrix();
-            View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
-        });
+        exitButton.addActionListener(e -> controller.onExit());
 
-        settingsButton=new SettingsButton();
-        settingsButton.addActionListener(e ->{
-            View.getInstance().showPanel(View.PanelName.SETTINGS.getName());
-        });
-
+        settingsButton = new SettingsButton();
+        settingsButton.addActionListener(e -> View.getInstance().showPanel(View.PanelName.SETTINGS.getName()));
     }
+
     JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    // This method configures the common layout elements, but not the center panel
+
+    // Sets up top and bottom layout areas
     private void setupCommonLayoutElements() {
         // --- TOP PANEL ---
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // 10 pixels of space at the top
-        // Left placeholder for settings button
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        // Left side: Settings button
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         leftPanel.setOpaque(false);
-        leftPanel.add(settingsButton); // Add settings button here
+        leftPanel.add(settingsButton);
         topPanel.add(leftPanel, BorderLayout.LINE_START);
 
-        // Centered layer label
-        JLabel levelLabel = new JLabel("Level " + currentLevel, SwingConstants.CENTER); // Initial text of the level, can be updated
+        // Center: Level label
+        JLabel levelLabel = new JLabel("Level " + currentLevel, SwingConstants.CENTER);
         levelLabel.setForeground(Color.BLACK);
-        // Layer label resizing
-        if (levelLabel != null) {
-            int levelFontSize = Math.min(getWidth() / 8, getHeight() / 8);
-            levelFontSize = Math.max(25, levelFontSize);
-            levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
-        }
+        int levelFontSize = Math.min(getWidth() / 8, getHeight() / 8);
+        levelFontSize = Math.max(25, levelFontSize);
+        levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
         topPanel.add(levelLabel, BorderLayout.CENTER);
 
-        // Pright placeholder (empty panel)
+        // Right side: empty for spacing
         JPanel rightPanel = new JPanel();
         rightPanel.setOpaque(false);
         topPanel.add(rightPanel, BorderLayout.EAST);
 
         add(topPanel, BorderLayout.PAGE_START);
 
-        // --- BOTTOM PANEL (Buttons) ---
+        // --- BOTTOM PANEL ---
         bottomPanel.setOpaque(false);
         bottomPanel.add(exitButton);
         bottomPanel.add(restartButton);
         add(bottomPanel, BorderLayout.PAGE_END);
-    }
-    protected abstract JPanel setupCenterPanel(); // This method will be implemented by subclasses
 
+        this.levelLabel = levelLabel; // Save reference for dynamic updates
+    }
+
+    // Abstract method to allow subclasses to define their own center panel
+    protected abstract JPanel setupCenterPanel();
+
+    // Resize and reposition components based on panel size
     protected void applyScalingBasedOnCurrentDimensions() {
         int panelWidth = getWidth();
         int panelHeight = getHeight();
 
-        // Example: resizing buttons
         int buttonSize = Math.min(panelWidth, panelHeight) / 10;
-        buttonSize = Math.max(buttonSize, 30); // Minimum size
+        buttonSize = Math.max(buttonSize, 30);
 
         restartButton.setPreferredSize(new Dimension(buttonSize * 2, buttonSize));
         exitButton.setPreferredSize(new Dimension(buttonSize * 2, buttonSize));
-        settingsButton.setPreferredSize(new Dimension(buttonSize*2, buttonSize));
+        settingsButton.setPreferredSize(new Dimension(buttonSize * 2, buttonSize));
 
-        // Layer label resizing
         if (levelLabel != null) {
             int levelFontSize = Math.min(getWidth() / 8, getHeight() / 8);
             levelFontSize = Math.max(25, levelFontSize);
@@ -169,6 +153,8 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         revalidate();
         repaint();
     }
+
+    // ---------------------------------------- OVERRIDE METHODS -------------------------------------------------------
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -185,7 +171,7 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         if (backgroundImage != null) {
             g2.drawImage(backgroundImage, 0, 0, width, height, this);
         } else {
-            g2.setColor(Color.WHITE); // Fallback
+            g2.setColor(Color.WHITE); // Fallback if no image
             g2.fillRect(0, 0, width, height);
         }
 
@@ -197,14 +183,16 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
         g2.dispose();
         super.paintComponent(g);
     }
+
+    // Dynamically updates the level label with a new level
     public void updateLabels(int level) {
-        // Update the level label
-        JLabel levelLabel = (JLabel) ((JPanel) getComponent(0)).getComponent(1); // Access the level label in the topPanel
+        JLabel levelLabel = (JLabel) ((JPanel) getComponent(0)).getComponent(1);
         levelLabel.setText("Level " + level);
         applyScalingBasedOnCurrentDimensions();
     }
 
     @Override
     public void bindController(ControllerObj controller) {
+        // Optional override if needed
     }
 }

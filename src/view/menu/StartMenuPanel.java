@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 
 import static config.ViewConfig.BOARD_HEIGHT;
 import static config.ViewConfig.BOARD_WIDTH;
@@ -36,8 +37,8 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         // Initialize the array of level buttons
         levelButton = new LevelButton[numLevel];
 
-        ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png"));
-// Resize the icon to fit better
+        ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));
+        // Resize the icon to fit better
         Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
         coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
@@ -184,6 +185,8 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         dialog.setVisible(true);
     }
 
+// ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
+
     // Override paintComponent to draw the scaled background image behind the buttons
     @Override
     protected void paintComponent(Graphics g) {
@@ -209,7 +212,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
 
     // Returns the specific level button at index i
     public LevelButton getLevelButton(int i) {
-
         return levelButton[i];
     }
 

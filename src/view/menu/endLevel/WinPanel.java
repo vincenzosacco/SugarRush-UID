@@ -1,7 +1,7 @@
-package view.menu;
+package view.menu.endLevel;
 
+import controller.menu.endLevel.WinController;
 import model.profile.Profile;
-import view.View;
 import view.button.NextLevelButton;
 import controller.GameLoop;
 import model.Model;
@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Objects;
 
 public class WinPanel extends BaseEndLevelPanel {
 
@@ -21,8 +22,8 @@ public class WinPanel extends BaseEndLevelPanel {
 
     private JPanel starsPanel; //  JPanel to display the number of stars
     private JLabel coinLabel;   // Label to display the number of coins
-    private ImageIcon starIcon = new ImageIcon(getClass().getResource( "/imgs/icons/star.jpg"));;     // Icon for stars
-    private ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png" ));;     // Icon for coins
+    private final ImageIcon starIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/star.jpg")));;     // Icon for stars
+    private final ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));;     // Icon for coins
 
     public WinPanel() {
         super(); // Call the base class constructor
@@ -82,31 +83,7 @@ public class WinPanel extends BaseEndLevelPanel {
         coinLabel.setFont(new Font("Arial", Font.BOLD, 25));
 
         nextLevelButton = new NextLevelButton();
-        nextLevelButton.addActionListener(e -> {
-            View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
-            this.setVisible(false);
-            GameLoop.getInstance().shutdown();
-            Model.getInstance().getGame().clearGameMatrix();
-            int nextLevel = Model.getInstance().getGame().getCurrLevel() + 1;
-            // Handling the case where there are no more levels
-            if (nextLevel <= 6) { // Assuming a maximum of 6 levels
-                View.getInstance().getGamePanel().endGame();
-                View.getInstance().getGamePanel().resetPanelForNewLevel();
-                Model.getInstance().getGame().setLevel(nextLevel);
-                View.getInstance().showPanel(View.PanelName.GAME.getName());
-                this.requestFocusInWindow(); // needed to get user input
-                assert this.getParent() != null ;
-                JOptionPane.showMessageDialog(this.getParent(),"Try to reach the sugar piece",
-                    "New Game",JOptionPane.INFORMATION_MESSAGE);
-                GameLoop.getInstance().start();
-            } else {
-                // You have completed all levels, return to the main menu or show a final message (if levels are unlocked gradually)
-                JOptionPane.showMessageDialog(this, "You have completed all the levels! Congratulations! ", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-                Model.getInstance().getGame().clearGameMatrix();
-                View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
-            }
-
-        });
+        nextLevelButton.addActionListener(new WinController(this));
 
     }
 
