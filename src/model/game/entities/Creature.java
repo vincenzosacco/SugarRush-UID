@@ -52,7 +52,7 @@ public class Creature extends Entity {
 
     @Override
     public boolean manageCollision(Constants.Block block, Cell cell ) {
-        // Direction.NONE case is handled in shouldPerform
+        assert block != Constants.Block.CREATURE : "Creature cannot collide with itself, there is a bug somewhere";
 
         boolean canMove = true;
 
@@ -74,9 +74,9 @@ public class Creature extends Entity {
             }
             case SPACE -> {/*do nothing*/}
             case WALL -> {
+                this.direction = Direction.NONE; // says that the creature is not moving. Check isMoving() method
                 GameAudioController.getInstance().playSfx("wall");
-                this.direction = Direction.NONE; // stop moving
-                return false;
+                canMove = false;
             }
             // DIE if collides with an enemy or thorns //
             case ENEMY1 -> {
@@ -84,12 +84,10 @@ public class Creature extends Entity {
                 Model.getInstance().getGame().killCreature();
             }
             case THORNS -> {
+                this.direction = Direction.NONE; // says that the creature is not moving. Check isMoving() method
                 GameAudioController.getInstance().playSfx("thorns");
                 Model.getInstance().getGame().killCreature();
             }
-
-            case CREATURE -> throw new AssertionError("Creature cannot collide with creature, there is a bug somewhere");
-
             default -> throw new IllegalStateException("Unexpected value: " + block);
         }
 

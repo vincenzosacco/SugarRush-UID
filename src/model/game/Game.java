@@ -141,7 +141,6 @@ public class Game {
                 Cell oldCoord = ent.getCoord();
                 gameMat.setCell(oldCoord, Constants.Block.SPACE);
 
-
                 // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
 
