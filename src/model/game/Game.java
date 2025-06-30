@@ -231,7 +231,7 @@ public class Game {
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().winLevel();
 
-            ProfileManager.getLastProfile().setCoins(ProfileManager.getLastProfile().getCoins()+getStarCount()*10); // 10 coins per star
+            ProfileManager.getLastProfile().sumCoins(getStarCount()*10); // 10 coins per star
             View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(ProfileManager.getLastProfile().getCoins());
         });
     }

@@ -9,8 +9,10 @@ import java.util.List;
 
 public class Profile implements Serializable {
     private static final long serialVersionUID = 1L;
-    String name;
-    private int coins;
+    String name = "DefaultPlayer";
+    /** * The number of coins collected by the player. Min 0 and Max {@link ModelConfig#MAX_COINS} */
+    private int coins = 0; // Default to half of the maximum coins
+
     //a list of booleans
     private final ArrayList<Boolean> characters; // Represents available characters, true if available, false if locked
     private int currentCharacterIndex;
@@ -28,8 +30,6 @@ public class Profile implements Serializable {
 
 
     public Profile(){
-        this.name = "Player";
-        this.coins = 0;
         characters = new ArrayList<>(List.of(true, false, false, false, false, false)); // Default: only first character is available
         currentCharacterIndex = 0; // Default to the first character
 
@@ -48,8 +48,17 @@ public class Profile implements Serializable {
     public int getCoins() {
         return coins;
     }
-    public void setCoins(int c) {
-        coins = c;
+
+    /**
+     * Adds or subtracts coins from the current total. Coins cannot go below 0 or above {@link ModelConfig#MAX_COINS}.
+     @param c the number of coins to add (can be negative to subtract)
+     */
+    public void sumCoins(int c){
+        int sum = coins + c;
+        assert sum >= 0;
+
+        // Cap the coins to ModelConfig.MAX_COINS
+        if (sum <= ModelConfig.MAX_COINS) coins = sum;
     }
 
     public List<Boolean> getCharacters() {

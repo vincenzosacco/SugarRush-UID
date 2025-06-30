@@ -19,7 +19,7 @@ public class ShopModel {
         creatures = profile.getCharacters();
 
         if (coins >= price && !creatures.get(creatureIndex)) {
-            profile.setCoins(profile.getCoins() - price);
+            profile.sumCoins(-price);
             profile.setCharacters(creatureIndex);
             ProfileManager.saveProfile(profile);
             View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(profile.getCoins());

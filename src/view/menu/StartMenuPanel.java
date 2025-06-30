@@ -2,9 +2,7 @@ package view.menu;
 
 import config.ModelConfig;
 import controller.ControllerObj;
-import model.game.LevelData;
 import model.profile.ProfileManager;
-import view.View;
 import view.ViewComp;
 import view.button.LevelButton;
 import view.button.TutorialButton;
@@ -18,10 +16,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 
+import static config.ModelConfig.MAX_COINS;
 import static config.ViewConfig.BOARD_HEIGHT;
 import static config.ViewConfig.BOARD_WIDTH;
 
@@ -36,6 +34,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     private final int numLevel = ModelConfig.NUM_LEVELS;
 
     private final JLabel coinCounterLabel;
+    private ImageIcon coinIcon; // needed for the coin counter label resizing
 
     // Tutorial's button
     private JButton tutorialButton;
@@ -44,15 +43,17 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         // Initialize the array of level buttons
         levelButton = new LevelButton[numLevel];
 
-        ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));
+        coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));
         // Resize the icon to fit better
         Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
+
         // The current number of coins
         coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
         coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
         coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
         add(coinCounterLabel);
+
         // The tutorial's button
         tutorialButton = new TutorialButton();
         add(tutorialButton);
@@ -62,10 +63,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         // Create each level button and load its corresponding level data
         for (int i = 1; i <= numLevel; i++) {
             LevelButton button = new LevelButton(i);
-
-            // Load level data file
-            InputStream file = getClass().getResourceAsStream("/maps/map" + i + ".txt");
-            LevelData levelData = new LevelData(file);
 
             // Set coins collected status for the button (used to update its display)
             button.setStarsCollected(ProfileManager.getLastProfile().getLevelStarsCount(i));
@@ -110,18 +107,23 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         this.setFocusable(true);
     }
 
+    // FIXME ci sono modi più efficienti e con meno righe per fare questo. Ad esempio usare un layout manager adatto
     // Position the level buttons dynamically based on the current size of the panel
     private void positionButtons() {
         int w = getWidth();   // Current width of the panel
         int h = getHeight();  // Current height of the panel
 
         // Coin label
-        int labelWidth = (int)(w * 0.12);  // 12% of panel width
-        int labelHeight = (int)(h * 0.07); // 7% of panel height
-        int labelX= (int)(w * 0.02);
-        int labelY= (int)(h * 0.05);
-        coinCounterLabel.setBounds(labelX, labelY, labelWidth, labelHeight);
+        FontMetrics fm= coinCounterLabel.getFontMetrics(coinCounterLabel.getFont());
 
+//        int labelWidth = (int)(w * 0.12);  // 12% of panel width
+//        int labelHeight = (int)(h * 0.07); // 7% of panel height
+        int labelWidth= fm.stringWidth(String.valueOf(MAX_COINS)) +coinIcon.getImage().getWidth(null)+10;
+        int labelHeight= fm.getHeight();
+
+        int labelX= (int) (w * 0.02);
+        int labelY= (int) (h * 0.05);
+        coinCounterLabel.setBounds(labelX, labelY, labelWidth, labelHeight);
         // Tutorial button
         int tutBtnWidth = (int)(w * 0.2);  // 20% of width
         int tutBtnHeight = (int)(h * 0.08); // 8% of height
@@ -254,7 +256,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         // coinCounter con lable
         int coins = ProfileManager.getLastProfile().getCoins();
         coinCounterLabel.setText(String.valueOf(coins));
-        // updatecoins in the Shop
     }
 
     // Provides external access to the array of level buttons

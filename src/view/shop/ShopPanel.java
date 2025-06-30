@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import static config.ModelConfig.MAX_COINS;
+
 public class ShopPanel extends JPanel implements ViewComp {
 
     // an array that idicates which creatures are available in the shop
@@ -68,7 +70,13 @@ public class ShopPanel extends JPanel implements ViewComp {
         coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
         coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
         coinCounterLabel.setText(String.valueOf(coins));
-        coinCounterLabel.setBounds(20, 20, 120, 40);
+
+        FontMetrics fm = coinCounterLabel.getFontMetrics(coinCounterLabel.getFont());
+        // Calculate the width of the label based on the text and icon size.
+        int labelWidth= fm.stringWidth(String.valueOf(MAX_COINS)) + coinIcon.getImage().getWidth(null)+10;
+        // Set the label height based on the font metrics height
+        int labelHeight= fm.getHeight();
+        coinCounterLabel.setBounds(20, 20, labelWidth, labelHeight);
         add(coinCounterLabel);
 
         addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg")), 0, creatures.get(0), 0);
