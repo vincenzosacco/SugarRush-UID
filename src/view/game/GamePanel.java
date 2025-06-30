@@ -1,7 +1,7 @@
 package view.game;
 
-import controller.ControllerObj;
 import controller.GameController;
+import controller.ControllerObj;
 import controller.GameLoop;
 import model.Model;
 import utils.audio.GameAudioController;
@@ -16,8 +16,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import static config.ViewConfig.BOARD_HEIGHT;
-import static config.ViewConfig.BOARD_WIDTH;
+import static config.ViewConfig.*;
 
 /**
  * Main game panel (Contains graphics, UI, menus, pause/win logic)
@@ -47,8 +46,7 @@ public class GamePanel extends JPanel implements ViewComp {
     public GamePanel() {
         setLayout(new GridLayout(1,1));
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
-        Color skyblue = new Color(0, 188, 250);
-        setBackground(skyblue);
+        setBackground(GAME_BG);
 
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
@@ -67,7 +65,7 @@ public class GamePanel extends JPanel implements ViewComp {
         layeredPane.add(timerCountLabel);
 
         gameContentDrawingPanel.setOpaque(true); //Opaque to cover the background underneath
-        gameContentDrawingPanel.setBackground(skyblue);
+        gameContentDrawingPanel.setBackground(GAME_BG);
         layeredPane.add(gameContentDrawingPanel, JLayeredPane.DEFAULT_LAYER); // Added to the lowest level
 
         pauseButton=new PauseButton();
