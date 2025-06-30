@@ -35,7 +35,7 @@ public class GameController extends KeyAdapter implements ControllerObj {
         }
 
         // NOTIFY MODEL
-        if (GameLoop.getInstance().isRunning() && Model.getInstance().getGame().isStarted()) {
+        if (GameLoop.getInstance().isRunning() && model.isStarted()) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP -> {
                     model.setCreatureDirection(UP);

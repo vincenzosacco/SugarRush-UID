@@ -3,6 +3,7 @@ package view.menu;
 import controller.ControllerObj;
 import controller.menu.LevelController;
 import model.game.LevelData;
+import model.profile.ProfileManager;
 import utils.Resources;
 import view.ViewComp;
 import view.button.RoundCloseButton;
@@ -40,7 +41,7 @@ public class LevelPanel extends JPanel implements ViewComp{
     public LevelPanel(InputStream levelFile, int levelIndex){
         // Load level data (coin status and descriptive text)
         LevelData levelData = new LevelData(levelFile);
-        boolean[] coinsCollected = levelData.getCoinsCollected();
+        Boolean[] coinsCollected = ProfileManager.loadLastProfile().getLevelStarsCount(levelIndex);
         String[] textRequest = levelData.getTextRequest();
 
         // Use BorderLayout and transparency

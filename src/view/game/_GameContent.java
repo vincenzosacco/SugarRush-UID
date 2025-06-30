@@ -17,11 +17,11 @@ import static config.ViewConfig.*;
 import static config.ViewConfig.TILE_SIZE;
 
 // Draw the map and dynamic entities (game graphics).
-class GameContent extends JPanel {
+class _GameContent extends JPanel {
     // BufferedImage to cache static background and reduce graphics load.
     BufferedImage staticBackground = null;
 
-    public GameContent() {}
+    public _GameContent() {}
 
     @Override
     protected void paintComponent(Graphics g) {

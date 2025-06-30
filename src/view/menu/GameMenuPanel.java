@@ -4,6 +4,7 @@ import controller.ControllerObj;
 import controller.menu.GameMenuController;
 import model.game.LevelData;
 import model.game.MapParser;
+import model.profile.ProfileManager;
 import view.ViewComp;
 import view.button.*;
 import javax.imageio.ImageIO;
@@ -44,7 +45,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
     // Original images for resizing
     private final Image[] originalImages = new Image[3];
 
-    private int currentLevel;
+    private int currentLevel=1; // Current level number, cannot be < 1 or > ModelConfig.NUM_LEVELS
 
     public boolean open = false;
 
@@ -62,7 +63,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 
         // Load level data (coin status and descriptive text)
         LevelData levelData = new LevelData(levelFile);
-        boolean[] coinsCollected = levelData.getCoinsCollected();
+        Boolean[] coinsCollected = ProfileManager.loadLastProfile().getLevelStarsCount(currentLevel);
         String[] textRequest = levelData.getTextRequest();
 
         // Use BorderLayout and transparency
@@ -203,9 +204,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         });
 
         // Force an initial resize event to apply layout immediately
-        SwingUtilities.invokeLater(() -> {
-            applyScalingBasedOnCurrentDimensions();
-        });
+        SwingUtilities.invokeLater(this::applyScalingBasedOnCurrentDimensions);
 
 
         this.setFocusable(true);
@@ -256,13 +255,13 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 
         if (levelData == null) {
             System.err.println("Unable to load LevelData for level " + currentLevel);
-            boolean[] fallbackCoins = new boolean[3];
+            Boolean[] fallbackCoins = new Boolean[3];
             String[] fallbackTexts = {"Error loading.", "Error loading.", "Error loading."};
             updateLabels(currentLevel, fallbackCoins, fallbackTexts);
             return;
         }
 
-        boolean[] coinsCollected = levelData.getCoinsCollected();
+        Boolean[] coinsCollected = ProfileManager.loadLastProfile().getLevelStarsCount(currentLevel);
         String[] textRequest = levelData.getTextRequest();
 
         updateLabels(currentLevel, coinsCollected, textRequest);
@@ -272,7 +271,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
     }
 
     // Helper method to update labels (text and icons)
-    private void updateLabels(int level, boolean[] coinsCollected, String[] textRequest) {
+    private void updateLabels(int level, Boolean[] coinsCollected, String[] textRequest) {
         // Update the level label
         JLabel levelLabel = (JLabel) ((JPanel) getComponent(0)).getComponent(1); // Access the level label in the topPanel
         levelLabel.setText("Level " + level);

@@ -133,9 +133,11 @@ public abstract class Entity{
         this.direction = direction;
     }
 
+
     /** @return a new {@code Cell} instance representing the current coordinates of the entity */
     public Cell getCoord() {
         return new Cell(coord);
     }
+
 
 }

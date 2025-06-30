@@ -52,26 +52,31 @@ public class Creature extends Entity {
 
     @Override
     public boolean manageCollision(Constants.Block block, Cell cell ) {
-        // Direction.NONE case is handled in shouldPerform
+        assert block != Constants.Block.CREATURE : "Creature cannot collide with itself, there is a bug somewhere";
 
         boolean canMove = true;
 
         switch (block) {
             case SUGAR ->  {
+                GameAudioController.getInstance().playSfx("bite");
+                View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
+
                 Model.getInstance().getGame().addstar();
                 Model.getInstance().getGame().win();
-                GameAudioController.getInstance().playSfx("bite");
             }
             case CANDY -> {
+                GameAudioController.getInstance().playSfx("bite");
+                View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
+
                 addCandy();
-                Model.getInstance().getGame().setBlockAt(cell, Constants.Block.SPACE);
                 Model.getInstance().getGame().addstar();
+
             }
             case SPACE -> {/*do nothing*/}
             case WALL -> {
+                this.direction = Direction.NONE; // says that the creature is not moving. Check isMoving() method
                 GameAudioController.getInstance().playSfx("wall");
-                this.direction = Direction.NONE;
-                return false;
+                canMove = false;
             }
             // DIE if collides with an enemy or thorns //
             case ENEMY1 -> {
@@ -79,12 +84,10 @@ public class Creature extends Entity {
                 Model.getInstance().getGame().killCreature();
             }
             case THORNS -> {
+                this.direction = Direction.NONE; // says that the creature is not moving. Check isMoving() method
                 GameAudioController.getInstance().playSfx("thorns");
                 Model.getInstance().getGame().killCreature();
             }
-
-            case CREATURE -> throw new AssertionError("Creature cannot collide with creature, there is a bug somewhere");
-
             default -> throw new IllegalStateException("Unexpected value: " + block);
         }
 
@@ -101,12 +104,21 @@ public class Creature extends Entity {
     }
 
 
+    // CREATURE BEHAVIOR //
+
     private void addCandy() {
         candyCount++;
     }
-
-    // GETTERS & SETTERS //
     public int getCandyCount() {
         return candyCount;
+    }
+
+
+    /**Checks if the creature is currently moving.
+     * A creature is considered moving if its direction is not NONE.
+     * @return true if the creature is moving, false otherwise
+     */
+    public boolean isMoving() {
+        return this.direction != Direction.NONE; // this.direction is set to NONE when the creature collides with a wall
     }
 }

@@ -21,6 +21,4 @@ xxxxxxxxxxx xxxxxxx
 xs                t
 xxxxxxxxxxxxxxxxxxx
 
-coins=0,0,0
-
 textRequest=Eat the candy,Win the game in 30 seconds,Eat the special candy

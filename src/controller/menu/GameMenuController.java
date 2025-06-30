@@ -4,12 +4,7 @@ import controller.ControllerObj;
 import controller.GameLoop;
 import model.Model;
 import view.View;
-import view.ViewComp;
 import view.menu.GameMenuPanel;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GameMenuController implements ControllerObj {
 
@@ -35,7 +30,7 @@ public class GameMenuController implements ControllerObj {
         //Start the level showing the GamePanel
         View.getInstance().getGamePanel().endGame();
         Model.getInstance().getGame().clearGameMatrix();
-        View.getInstance().getGamePanel().resetPanelForNewLevel();
+        View.getInstance().getGamePanel().repaintBackground();
         Model.getInstance().getGame().setLevel(levelToRestart);
         View.getInstance().showPanel(View.PanelName.GAME.getName());
         View.getInstance().getGamePanel().getPauseButton().setEnabled(true);

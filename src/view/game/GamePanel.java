@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements ViewComp {
 
     private final JLayeredPane layeredPane;
 
-    private final GameContent gameContentDrawingPanel=new GameContent();
+    private final _GameContent gameContentDrawingPanel=new _GameContent();
 
     private final GameLoop gameLoop=GameLoop.getInstance();
 
@@ -199,7 +199,7 @@ public class GamePanel extends JPanel implements ViewComp {
      * </p>
      */
 
-    public void resetPanelForNewLevel() {
+    public void repaintBackground() {
         gameContentDrawingPanel.staticBackground = null; // Force background to redraw on next paintComponent
         this.repaint(); // Requires the panel to redraw itself
     }

@@ -1,5 +1,6 @@
 package controller.menu;
 
+import config.ModelConfig;
 import controller.ControllerObj;
 import utils.Resources;
 import view.button.LevelButton;
@@ -21,7 +22,7 @@ public class StartMenuController implements ControllerObj {
 
     // Adds ActionListeners to all level selection buttons
     private void initListeners() {
-        for (int i = 0; i < startMenuPanel.getNumLevels(); i++) {
+        for (int i = 0; i < ModelConfig.NUM_LEVELS; i++) {
             final int levelIndex = i + 1; // Level numbers start from 1
             LevelButton button = startMenuPanel.getLevelButton(i);
 
