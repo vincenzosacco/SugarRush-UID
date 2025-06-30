@@ -122,9 +122,9 @@ public class LevelButton extends JButton {
         return Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) <= radius * radius;
     }
 
-    // Setter method to update which coins have been collected
-    public void setCoinsCollected(Boolean[] coins) {
-        this.coinsCollected = coins.clone();
+    // Setter method to update which stars have been collected
+    public void setStarsCollected(Boolean[] stars) {
+        this.coinsCollected = stars.clone();
         repaint(); // Refresh button appearance
     }
 }

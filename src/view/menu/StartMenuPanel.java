@@ -68,7 +68,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             LevelData levelData = new LevelData(file);
 
             // Set coins collected status for the button (used to update its display)
-            button.setCoinsCollected(ProfileManager.getLastProfile().getLevelStarsCount(i));
+            button.setStarsCollected(ProfileManager.getLastProfile().getLevelStarsCount(i));
 
             // Store button in the array and add to the panel
             levelButton[i - 1] = button;
@@ -255,7 +255,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         int coins = ProfileManager.getLastProfile().getCoins();
         coinCounterLabel.setText(String.valueOf(coins));
         // updatecoins in the Shop
-        View.getInstance().getCustomTabbedPane().shopPanel.updateCoins();
+        View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(); // FIXME perchè qui e non direttamente in ShopPanel?
     }
 
     // Provides external access to the array of level buttons
