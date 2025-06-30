@@ -1,5 +1,8 @@
 package view.settings;
 
+import model.settings.SettingsManager;
+import view.button.InternalSettingsButton;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -14,14 +17,11 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
 
-import model.settings.SettingsManager;
-import view.button.InternalSettingsButton;
-
 public class BaseSettingsPanel extends JPanel implements PropertyChangeListener {
 
     private Image backgroundImage;
 
-    private InternalSettingsButton gameControlsButton;
+    private final InternalSettingsButton gameControlsButton;
     private JLabel musicLabel;
     private JButton musicSoundButton; // Button with audio icon
     private JSlider musicVolumeSlider;

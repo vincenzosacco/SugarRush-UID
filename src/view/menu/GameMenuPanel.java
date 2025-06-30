@@ -6,7 +6,11 @@ import model.game.LevelData;
 import model.game.MapParser;
 import model.profile.ProfileManager;
 import view.ViewComp;
-import view.button.*;
+import view.button.ExitButton;
+import view.button.RestartButton;
+import view.button.RoundPlayButton;
+import view.button.SettingsButton;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;

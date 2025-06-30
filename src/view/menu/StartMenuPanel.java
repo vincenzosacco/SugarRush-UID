@@ -33,7 +33,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     // Total number of levels available in the game
     private final int numLevel = ModelConfig.NUM_LEVELS;
 
-    private JLabel coinCounterLabel;
+    private final JLabel coinCounterLabel;
 
     public StartMenuPanel() {
         // Initialize the array of level buttons

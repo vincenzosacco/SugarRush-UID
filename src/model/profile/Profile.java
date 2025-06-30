@@ -1,9 +1,9 @@
 package model.profile;
+
 import config.ModelConfig;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 
 public class Profile implements Serializable {
     private static final long serialVersionUID = 1L;

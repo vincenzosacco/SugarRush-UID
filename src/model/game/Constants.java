@@ -55,6 +55,6 @@ public interface Constants {
         ENEMY1,
         CANDY,
         /** A block that if you touch it you die.*/
-        THORNS;;
+        THORNS;
     }
 }

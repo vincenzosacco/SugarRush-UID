@@ -1,10 +1,9 @@
 import controller.Controller;
-import model.profile.Profile;
 import model.profile.ProfileManager;
 import utils.Resources;
 import view.View;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.io.IOException;
 
 public class Main {

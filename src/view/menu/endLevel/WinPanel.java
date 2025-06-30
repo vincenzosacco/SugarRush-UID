@@ -1,9 +1,9 @@
 package view.menu.endLevel;
 
-import controller.menu.endLevel.WinController;
-import view.button.NextLevelButton;
 import controller.GameLoop;
+import controller.menu.endLevel.WinController;
 import model.Model;
+import view.button.NextLevelButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +21,8 @@ public class WinPanel extends BaseEndLevelPanel {
 
     private JPanel starsPanel; //  JPanel to display the number of stars
     private JLabel coinLabel;   // Label to display the number of coins
-    private final ImageIcon starIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/star.jpg")));;     // Icon for stars
-    private final ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));;     // Icon for coins
+    private final ImageIcon starIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/star.jpg")));     // Icon for stars
+    private final ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));     // Icon for coins
 
     public WinPanel() {
         super(); // Call the base class constructor

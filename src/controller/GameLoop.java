@@ -1,7 +1,6 @@
 package controller;
 
 import model.Model;
-import model.profile.ProfileManager;
 import utils.audio.GameAudioController;
 import view.View;
 

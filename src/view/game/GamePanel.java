@@ -1,7 +1,7 @@
 package view.game;
 
-import controller.GameController;
 import controller.ControllerObj;
+import controller.GameController;
 import controller.GameLoop;
 import model.Model;
 import utils.audio.GameAudioController;
@@ -12,13 +12,12 @@ import view.menu.endLevel.LosePanel;
 import view.menu.endLevel.WinPanel;
 
 import javax.swing.*;
-
 import java.awt.*;
-
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import static config.ViewConfig.*;
+import static config.ViewConfig.BOARD_HEIGHT;
+import static config.ViewConfig.BOARD_WIDTH;
 
 /**
  * Main game panel (Contains graphics, UI, menus, pause/win logic)

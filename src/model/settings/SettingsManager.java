@@ -15,7 +15,7 @@ public class SettingsManager {
     private int savedSfxVolume;
 
     // Support for PropertyChangeListener, which notifies of property changes
-    private PropertyChangeSupport support;
+    private final PropertyChangeSupport support;
 
     //singleton class
     private SettingsManager() {

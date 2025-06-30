@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static config.ViewConfig.*;
-import static config.ViewConfig.TILE_SIZE;
 
 // Draw the map and dynamic entities (game graphics).
 class _GameContent extends JPanel {

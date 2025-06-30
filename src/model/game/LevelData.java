@@ -1,12 +1,15 @@
 package model.game;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LevelData {
     // Stores the request or challenge text associated with each coin/star
-    private final String[] textRequest = new String[]{"Error: Text not loaded.", "Error: Text not loaded.", "Error: Text not loaded."};;
+    private final String[] textRequest = new String[]{"Error: Text not loaded.", "Error: Text not loaded.", "Error: Text not loaded."};
 
 
     // Constructor: loads coin and request data from the provided level file

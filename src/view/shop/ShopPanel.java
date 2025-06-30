@@ -10,12 +10,12 @@ import java.awt.*;
 public class ShopPanel extends JPanel implements ViewComp {
 
     // an array that idicates which creatures are available in the shop
-    private boolean [] creatures = {true, false, false, false, false, false};
+    private final boolean [] creatures = {true, false, false, false, false, false};
 
     private int coins;
     private JLabel coinCounterLabel;
 
-    private ImageIcon backgroundImage;
+    private final ImageIcon backgroundImage;
 
     public ShopPanel(){
 

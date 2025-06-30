@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class WinController implements ActionListener {
-    private WinPanel panel;
+    private final WinPanel panel;
     public WinController(WinPanel panel) {
         this.panel=panel;
     }

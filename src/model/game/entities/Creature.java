@@ -2,9 +2,9 @@ package model.game.entities;
 
 import model.Model;
 import model.game.Constants;
+import model.game.Constants.Direction;
 import model.game.Entity;
 import model.game.utils.Cell;
-import model.game.Constants.Direction;
 import utils.audio.GameAudioController;
 import view.View;
 

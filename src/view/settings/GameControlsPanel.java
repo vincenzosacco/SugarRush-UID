@@ -3,13 +3,13 @@ package view.settings;
 import utils.Resources;
 import view.button.RoundCloseButton;
 
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
@@ -53,7 +53,7 @@ public class GameControlsPanel extends JPanel {
             // Find the parent window (which should be the JDialog)
             Window window = SwingUtilities.getWindowAncestor(GameControlsPanel.this);
             if (window instanceof JDialog) {
-                ((JDialog) window).dispose(); // Close and release resources of the dialog
+                window.dispose(); // Close and release resources of the dialog
             } else {
                 // Fallback for unexpected parent or if this panel is used differently
                 setVisible(false);

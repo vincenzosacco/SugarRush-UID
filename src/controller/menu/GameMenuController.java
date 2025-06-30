@@ -8,7 +8,7 @@ import view.menu.GameMenuPanel;
 
 public class GameMenuController implements ControllerObj {
 
-    private GameMenuPanel panel;
+    private final GameMenuPanel panel;
 
     public GameMenuController(GameMenuPanel panel) {
         this.panel=panel;

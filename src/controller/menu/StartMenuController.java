@@ -2,13 +2,11 @@ package controller.menu;
 
 import config.ModelConfig;
 import controller.ControllerObj;
-import utils.Resources;
 import view.button.LevelButton;
 import view.menu.LevelPanel;
 import view.menu.StartMenuPanel;
-import java.io.InputStream;
 
-import java.io.File;
+import java.io.InputStream;
 
 public class StartMenuController implements ControllerObj {
     // Reference to the start menu panel

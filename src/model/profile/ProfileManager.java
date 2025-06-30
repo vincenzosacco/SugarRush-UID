@@ -9,7 +9,9 @@ public class ProfileManager {
             // Create profiles directory on startup
             File savesDir = new File(SAVES_PATH);
             if (!savesDir.exists()) {
-                savesDir.mkdirs();
+                if (!savesDir.mkdirs()) {
+                    throw new IOException("Failed to create saves directory: " + SAVES_PATH);
+                }
             }
 
             // Create default profile if no profiles exist

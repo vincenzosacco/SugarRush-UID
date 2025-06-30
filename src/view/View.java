@@ -106,7 +106,7 @@ public class View {
         // Request focus to the panel that is being shown TODO modfica questo
         for (Component comp : Container.getComponents()) {
             if (comp.isVisible() && comp instanceof JComponent) {
-                ((JComponent) comp).requestFocusInWindow();
+                comp.requestFocusInWindow();
                 break; // Only request focus for the first visible component
             }
         }

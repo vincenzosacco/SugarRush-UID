@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 
 public class GameSettings extends BaseSettingsPanel implements ViewComp {
 
-    private RoundCloseButton closeButton;
+    private final RoundCloseButton closeButton;
 
     public GameSettings(){
         super();
