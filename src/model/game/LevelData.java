@@ -33,8 +33,6 @@ public class LevelData {
     }
 
     private void processAllLevelData(List<String> lines) {
-        boolean readingMap = false;
-
         for (String line : lines) {
             // "textRequest="
             if (line.startsWith("textRequest=")) {
@@ -43,7 +41,6 @@ public class LevelData {
                     this.textRequest[i] = parts[i].trim();
                 }
             }
-
         }
     }
 

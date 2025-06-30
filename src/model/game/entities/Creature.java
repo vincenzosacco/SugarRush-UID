@@ -75,7 +75,7 @@ public class Creature extends Entity {
             case SPACE -> {/*do nothing*/}
             case WALL -> {
                 GameAudioController.getInstance().playSfx("wall");
-                this.direction = Direction.NONE;
+                this.direction = Direction.NONE; // stop moving
                 return false;
             }
             // DIE if collides with an enemy or thorns //
@@ -106,12 +106,21 @@ public class Creature extends Entity {
     }
 
 
+    // CREATURE BEHAVIOR //
+
     private void addCandy() {
         candyCount++;
     }
-
-    // GETTERS & SETTERS //
     public int getCandyCount() {
         return candyCount;
+    }
+
+
+    /**Checks if the creature is currently moving.
+     * A creature is considered moving if its direction is not NONE.
+     * @return true if the creature is moving, false otherwise
+     */
+    public boolean isMoving() {
+        return this.direction != Direction.NONE; // this.direction is set to NONE when the creature collides with a wall
     }
 }

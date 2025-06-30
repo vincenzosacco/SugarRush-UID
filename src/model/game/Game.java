@@ -159,20 +159,6 @@ public class Game {
     }
 
 
-    /**
-     * Checks if in {@code cell} coordinates contains a block of type {@code blockType}.
-     * @param cell the cell to check
-     * @param blockType the type of block to compare against
-     * @return true if the cell contains the specified block type, false otherwise
-     */
-    public boolean isBlock(Cell cell, Constants.Block blockType) {
-        if (cell.getRow() < 0 || cell.getRow() >= ROW_COUNT ||
-                cell.getCol() < 0 || cell.getCol() >= COL_COUNT) {
-            return false;
-        }
-        return gameMat.getCell(cell) == blockType;
-    }
-
     /**@return the block at the specified cell in the game matrix*/
     public Constants.Block blockAt(Cell cell) {
         if (cell.getRow() < 0 || cell.getRow() >= ROW_COUNT ||
@@ -193,21 +179,20 @@ public class Game {
     }
 
 
-    private Creature getCreature(){
-        for (Entity entity : entities) {
-            if (entity instanceof Creature creature) {
-                return creature;
-            }
-        }
-        throw new AssertionError("Creature not found in the game blocks. This should never happen.");
-    }
     /** Sets the direction of the creature. On the next {@link #updateState()} call,
      * the creature will move in the specified direction.
      * @param direction the direction to set for the creature
      */
     public void setCreatureDirection(Constants.Direction direction) {
-        Creature creature = getCreature();
-        if (creature != null) {
+        Creature creature = null;
+        for (Entity entity : entities) {
+            if (entity instanceof Creature) {
+                creature = (Creature) entity;
+            }
+        }
+        assert creature != null : "Creature should not be null";
+
+        if (! creature.isMoving()) {
             creature.setDirection(direction);
         }
     }
@@ -234,6 +219,8 @@ public class Game {
         // Clear all entities
         entities.clear();
     }
+
+
     public void win(){
         SwingUtilities.invokeLater(() -> {
 
@@ -255,7 +242,4 @@ public class Game {
         });
     }
 
-    public void setBlockAt(Cell coord, Constants.Block block) {
-        gameMat.setCell(coord, block);
-    }
 }
