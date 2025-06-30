@@ -14,7 +14,7 @@ public class ShopModel {
 
     public static boolean buyCreature(int creatureIndex, int price) {
 
-        Profile profile = ProfileManager.loadLastProfile();
+        Profile profile = ProfileManager.getLastProfile();
         coins = profile.getCoins();
         creatures = profile.getCharacters();
 
@@ -38,7 +38,7 @@ public class ShopModel {
 
     // Select a creature by index
     public static void selectCreature(int creatureIndex) {
-        Profile profile = ProfileManager.loadLastProfile();
+        Profile profile = ProfileManager.getLastProfile();
         profile.setCurrentCharacterIndex(creatureIndex);
         ProfileManager.saveProfile(profile);
         View.getInstance().getCustomTabbedPane().shopPanel.refreshCreatures();

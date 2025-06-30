@@ -27,8 +27,8 @@ public class ShopPanel extends JPanel implements ViewComp {
 
         setLayout(new BorderLayout());
 
-        creatures = ProfileManager.loadLastProfile().getCharacters();
-        currentCharacterIndex = ProfileManager.loadLastProfile().getCurrentCharacterIndex();
+        creatures = ProfileManager.getLastProfile().getCharacters();
+        currentCharacterIndex = ProfileManager.getLastProfile().getCurrentCharacterIndex();
 
         //setBackground(Color.green);
 
@@ -36,7 +36,7 @@ public class ShopPanel extends JPanel implements ViewComp {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
 
-        coins = ProfileManager.loadLastProfile().getCoins();
+        coins = ProfileManager.getLastProfile().getCoins();
 
         addCreatures(contentPanel);
 
@@ -128,7 +128,7 @@ public class ShopPanel extends JPanel implements ViewComp {
             actionButton.setToolTipText("Buy this creature");
             actionButton.addActionListener(e -> {
                 // Buy the creature
-                ShopModel.buyCreature(cretureNumber, price);
+                ShopModel.buyCreature(cretureNumber, price); //FIXME questa view è controllata da un Model e non da un Controller. SBAGLIATO
             });
             priceLabel.setIcon(coinIcon); // coin icon
             priceLabel.setFont(new Font("Arial", Font.BOLD, 50));
@@ -168,8 +168,8 @@ public class ShopPanel extends JPanel implements ViewComp {
         this.removeAll();
         setLayout(new BorderLayout());
 
-        creatures = ProfileManager.loadLastProfile().getCharacters();
-        currentCharacterIndex = ProfileManager.loadLastProfile().getCurrentCharacterIndex();
+        creatures = ProfileManager.getLastProfile().getCharacters();
+        currentCharacterIndex = ProfileManager.getLastProfile().getCurrentCharacterIndex();
 
         //setBackground(Color.green);
 
@@ -177,7 +177,7 @@ public class ShopPanel extends JPanel implements ViewComp {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
 
-        coins = ProfileManager.loadLastProfile().getCoins();
+        coins = ProfileManager.getLastProfile().getCoins();
 
         addCreatures(contentPanel);
 

@@ -58,7 +58,11 @@ public class Profile implements Serializable {
         assert sum >= 0;
 
         // Cap the coins to ModelConfig.MAX_COINS
-        if (sum <= ModelConfig.MAX_COINS) coins = sum;
+        if (sum <= ModelConfig.MAX_COINS){
+            coins = sum;
+            ProfileManager.saveProfile(this); // Save the profile after updating coins
+        }
+
     }
 
     public List<Boolean> getCharacters() {
@@ -72,12 +76,14 @@ public class Profile implements Serializable {
             throw new IllegalArgumentException("Invalid character index: " + index);
         }
         currentCharacterIndex = index;
+        ProfileManager.saveProfile(this); // Save the profile after updating coins
     }
     public void setCharacters(int index) {
         if (characters == null || characters.size() != this.characters.size()) {
             throw new IllegalArgumentException("Characters array must have length " + this.characters.size());
         }
         characters.set(index, true); // Unlock the character at the given index
+        ProfileManager.saveProfile(this); // Save the profile after updating coins
     }
 
     public void setLevelStarsCount(int level, Boolean[] stars) {
@@ -92,6 +98,7 @@ public class Profile implements Serializable {
 
         // //
         levelStarsCount.put(level, stars); // TODO, check if this can cause bugs
+        ProfileManager.saveProfile(this); // Save the profile after updating coins
     }
 
 
