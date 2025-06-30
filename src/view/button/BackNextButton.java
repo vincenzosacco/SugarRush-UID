@@ -3,17 +3,19 @@ package view.button;
 import javax.swing.*;
 import java.awt.*;
 
-public class ExitButton extends JButton {
-    public ExitButton() {
+public class BackNextButton extends JButton {
+    private String string;
+    public BackNextButton(String string) {
         super();
+        this.string=string;
         setContentAreaFilled(false); // Disable default background rendering by JButton
         setFocusPainted(false);      // Disable focus border rendering
-        setForeground(Color.WHITE);  // Set text color to white (not used directly, but kept for consistency)
-        setBackground(Color.RED); // Set custom red background color
+        setForeground(Color.BLACK);  // Set text color to black (not used directly, but kept for consistency)
+        setBackground(Color.WHITE); // Set custom white background color
         setFont(new Font("Arial", Font.BOLD, 16)); // Set font style for any possible text
         setOpaque(false); // Make button non-opaque (custom paint instead)
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Show hand cursor on hover
-        setToolTipText("Exit Game"); // Tooltip displayed on mouse hover
+        setToolTipText(string+" page"); // Tooltip displayed on mouse hover
         setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12)); // Padding around the content
         setText(null); // Removes any default text
     }
@@ -24,18 +26,18 @@ public class ExitButton extends JButton {
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Smooth rendering
 
-        // Draw rounded red background
-        g2.setColor(Color.RED);
+        // Draw rounded white background
+        g2.setColor(Color.WHITE);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.BLACK);
 
         int fontSize = Math.min(getWidth(), getHeight()) / 3; // Example: 1/3 of the smallest size
         g2.setFont(new Font("Arial", Font.BOLD, Math.max(12, fontSize))); // At least 12
 
         // Get font metrics to calculate text position
         FontMetrics fm = g2.getFontMetrics();
-        String text = "EXIT";
+        String text = string;
         int textWidth = fm.stringWidth(text);
         int textHeight = fm.getAscent(); // Text height from baseline
 

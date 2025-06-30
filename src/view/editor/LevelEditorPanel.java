@@ -1,7 +1,7 @@
 package view.editor;
 
+import config.ViewConfig;
 import controller.ControllerObj;
-import model.game.GameConstants;
 import view.ViewComp;
 import view.game.BlocksImages;
 
@@ -14,7 +14,7 @@ public class LevelEditorPanel extends JPanel implements ViewComp {
 
     public LevelEditorPanel(){
 
-       this.setBackground(Color.RED);
+       this.setBackground(ViewConfig.GAME_BG);
         // Main layout
         setLayout(new BorderLayout());
 
@@ -31,6 +31,13 @@ public class LevelEditorPanel extends JPanel implements ViewComp {
 
     }
 
+    @Override
+    public void paintComponents(Graphics g) {
+
+
+        super.paintComponents(g);
+    }
+
     // MAKE COMPONENTS //
 
     private void makeSidebar() {
@@ -44,4 +51,6 @@ public class LevelEditorPanel extends JPanel implements ViewComp {
             sidebar.add(button);
         }
     }
+
+
 }

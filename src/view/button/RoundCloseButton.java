@@ -27,31 +27,28 @@ public class RoundCloseButton extends JButton {
 
         int width = getWidth();
         int height = getHeight();
-        float strokeWidth = 2f;
 
-        // Fill the button with a solid red circular background
+        // Fill the button with a red circular background
         g2.setColor(Color.RED);
         g2.fillOval(0, 0, width, height);
 
         // Draw a black inner border with centered stroke
+        float strokeInner = 2f;
         g2.setColor(Color.BLACK);
-        g2.setStroke(new BasicStroke(strokeWidth));
-        float offset = strokeWidth / 2f;
-        g2.draw(new Ellipse2D.Float(offset, offset, width - strokeWidth, height - strokeWidth));
-
-        // Remove clipping to allow full drawing range
-        g2.setClip(null);
-
-        // Draw a darker red outer border for extra definition
-        g2.setColor(Color.RED.darker());
-        g2.setStroke(new BasicStroke(3f));
-        g2.drawOval(1, 1, width - 3, height - 3);
+        g2.setStroke(new BasicStroke(strokeInner));
+        float offsetInner = strokeInner / 2f;
+        g2.drawOval(
+                Math.round(offsetInner),
+                Math.round(offsetInner),
+                Math.round(width - strokeInner),
+                Math.round(height - strokeInner)
+        );
 
         // Draw the white "X" in the center of the button
         g2.setColor(Color.WHITE);
 
         int fontSize = Math.max(width / 2, 12);  // Font size is half the width, but at least 12
-        Font font = new Font("Arial", Font.BOLD, fontSize);
+        Font font = new Font("Monospaced", Font.BOLD, fontSize);
         g2.setFont(font);
 
         FontMetrics fm = g2.getFontMetrics();

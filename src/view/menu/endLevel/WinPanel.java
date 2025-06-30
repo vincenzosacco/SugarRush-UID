@@ -7,6 +7,7 @@ import view.button.NextLevelButton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Objects;
@@ -55,6 +56,8 @@ public class WinPanel extends BaseEndLevelPanel {
                 requestFocusInWindow();
             }
         });
+
+        setupKeyBindings();
 
         // An initial resizing is forced to position the components correctly
         SwingUtilities.invokeLater(this::applyScalingBasedOnCurrentDimensions);
@@ -139,6 +142,28 @@ public class WinPanel extends BaseEndLevelPanel {
         }
         starsPanel.revalidate();
         starsPanel.repaint();
+    }
+
+    // Method to set up key bindings
+    private void setupKeyBindings() {
+        // Get the InputMap for when the component is focused or one of its children is focused
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        // Get the ActionMap to associate keys with actions
+        ActionMap actionMap = this.getActionMap();
+
+        // --- Bind ENTER key to Next button ---
+        // Create an InputStroke for the ENTER key
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke("ENTER");
+        // Put the KeyStroke and an identifier (e.g., "pressNext") into the InputMap
+        inputMap.put(escapeKeyStroke, "pressNext");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressNext", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the nextButton
+                nextLevelButton.doClick();
+            }
+        });
     }
 
     @Override
