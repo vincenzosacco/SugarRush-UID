@@ -1,6 +1,7 @@
 package model.game;
 
 import controller.GameLoop;
+import model.Model;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
 import model.profile.ProfileManager;
@@ -227,14 +228,14 @@ public class Game {
     public void win(){
         SwingUtilities.invokeLater(() -> {
 
-            // update profile
-            ProfileManager.loadLastProfile().setCoins(
-                    (ProfileManager.loadLastProfile().getCoins() + getStarCount()) * 10); // 10 coins per star
-
-
             GameLoop.getInstance().pauseGameTimer();
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().winLevel();
+
+            System.out.println(getStarCount());
+            ProfileManager.loadLastProfile().setCoins(
+                    (ProfileManager.loadLastProfile().getCoins() + getStarCount()*10)); // 10 coins per star
+            System.out.println(ProfileManager.loadLastProfile().getCoins());
         });
     }
 

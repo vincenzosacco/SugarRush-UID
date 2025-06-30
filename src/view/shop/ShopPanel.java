@@ -65,7 +65,6 @@ public class ShopPanel extends JPanel implements ViewComp {
         coinCounterLabel.setText(String.valueOf(coins));
         coinCounterLabel.setBounds(20, 20, 120, 40);
         add(coinCounterLabel);
-        System.out.println("ShopCoins"+coins);
 
         addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg")), 0, creatures[0]);
         addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature2.png")), 100, creatures[1]);

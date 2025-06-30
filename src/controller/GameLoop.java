@@ -1,6 +1,7 @@
 package controller;
 
 import model.Model;
+import model.profile.ProfileManager;
 import utils.audio.GameAudioController;
 import view.View;
 
@@ -99,6 +100,7 @@ public class GameLoop implements Runnable {
         }
         // reset stars
         Model.getInstance().getGame().resetStarCount(); // Reset the star count in the game model
+        // update profile
 
         if (!running) {
             return;
