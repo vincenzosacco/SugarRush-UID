@@ -49,7 +49,7 @@ public class PauseButton extends JButton {
         int height = getHeight();
         float strokeWidth = 2f;
 
-        // Fill the button with a solid White circular background
+        // Fill the button with a White circular background
         g2.setColor(Color.WHITE);
         g2.fillOval(0, 0, width, height);
 
@@ -62,7 +62,7 @@ public class PauseButton extends JButton {
         // Remove clipping to allow full drawing range
         g2.setClip(null);
 
-        // Draw a darker gray outer border for extra definition
+        // Draw a black outer border for extra definition
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(3f));
         g2.drawOval(1, 1, width - 3, height - 3);

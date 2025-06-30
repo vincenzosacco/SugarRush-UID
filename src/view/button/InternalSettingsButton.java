@@ -10,7 +10,7 @@ public class InternalSettingsButton extends JButton {
         buttonText=text;
         setContentAreaFilled(false); // Disable default background rendering by JButton
         setFocusPainted(false);      // Disable focus border rendering
-        setForeground(Color.BLACK);  // Set text color to white (not used directly, but kept for consistency)
+        setForeground(Color.BLACK);  // Set text color to black (not used directly, but kept for consistency)
         setBackground(Color.GREEN); // Set custom green background color
         setFont(new Font("Arial", Font.BOLD, 16)); // Set font style for any possible text
         setOpaque(false); // Make button non-opaque (custom paint instead)
@@ -64,16 +64,8 @@ public class InternalSettingsButton extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Smooth rendering
-        if(buttonText.equals("Cancel")) {
-            g2.setColor(Color.RED.darker());
-        } else if (buttonText.equals("Save")) {
-            g2.setColor(Color.GREEN.darker());
-        } else if (buttonText.equals("Game controls")) {
-            g2.setColor(Color.GRAY.darker());
-        } else {
-            g2.setColor(Color.BLACK);
-        } // Use a darker color for the border
-        g2.setStroke(new BasicStroke(3f)); // Set border thickness
+        g2.setColor(Color.BLACK); // Use black color for the border
+        g2.setStroke(new BasicStroke(2f)); // Set border thickness
 
         // Draw rounded border around the button
         g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);

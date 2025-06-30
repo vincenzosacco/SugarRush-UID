@@ -88,7 +88,7 @@ public class LevelButton extends JButton {
         // Draw a white circular border around the button
         g2.setClip(null); // Remove clip so border isn't cut
         g2.setColor(Color.WHITE);
-        g2.setStroke(new BasicStroke(3f)); // 3-pixel border
+        g2.setStroke(new BasicStroke(2.5f)); // 2.5-pixel border
         g2.drawOval(1, 1, getWidth() - 3, getHeight() - 3); // Circle border
 
         // Draw coin indicators at the bottom of the button

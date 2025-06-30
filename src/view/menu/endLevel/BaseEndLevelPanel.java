@@ -11,6 +11,7 @@ import view.button.SettingsButton;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -54,6 +55,8 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
                 applyScalingBasedOnCurrentDimensions();
             }
         });
+
+        setupKeyBindings();
 
         SwingUtilities.invokeLater(this::applyScalingBasedOnCurrentDimensions);
 
@@ -152,6 +155,28 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
 
         revalidate();
         repaint();
+    }
+
+    // Method to set up key bindings
+    private void setupKeyBindings() {
+        // Get the InputMap for when the component is focused or one of its children is focused
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        // Get the ActionMap to associate keys with actions
+        ActionMap actionMap = this.getActionMap();
+
+        // --- Bind ESCAPE key to Exit button ---
+        // Create an InputStroke for the ESCAPE key
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke("ESCAPE");
+        // Put the KeyStroke and an identifier (e.g., "pressExit") into the InputMap
+        inputMap.put(escapeKeyStroke, "pressExit");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressExit", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the exitButton
+                exitButton.doClick();
+            }
+        });
     }
 
     // ---------------------------------------- OVERRIDE METHODS -------------------------------------------------------

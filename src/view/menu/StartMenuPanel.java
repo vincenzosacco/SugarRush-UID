@@ -7,6 +7,8 @@ import model.profile.ProfileManager;
 import view.View;
 import view.ViewComp;
 import view.button.LevelButton;
+import view.button.TutorialButton;
+import view.menu.tutorial.Tutorial;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,6 +37,9 @@ public class StartMenuPanel extends JPanel implements ViewComp {
 
     private final JLabel coinCounterLabel;
 
+    // Tutorial's button
+    private JButton tutorialButton;
+
     public StartMenuPanel() {
         // Initialize the array of level buttons
         levelButton = new LevelButton[numLevel];
@@ -43,10 +48,16 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         // Resize the icon to fit better
         Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
+        // The current number of coins
         coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
         coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
         coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
         add(coinCounterLabel);
+        // The tutorial's button
+        tutorialButton = new TutorialButton();
+        add(tutorialButton);
+
+        tutorialButton.addActionListener(e -> showTutorialDialog());
 
         // Create each level button and load its corresponding level data
         for (int i = 1; i <= numLevel; i++) {
@@ -103,9 +114,21 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     private void positionButtons() {
         int w = getWidth();   // Current width of the panel
         int h = getHeight();  // Current height of the panel
-        int labelWidth = 120;
-        int labelHeight = 40;
-        coinCounterLabel.setBounds(20, 20, labelWidth, labelHeight);
+
+        // Coin label
+        int labelWidth = (int)(w * 0.12);  // 12% of panel width
+        int labelHeight = (int)(h * 0.07); // 7% of panel height
+        int labelX= (int)(w * 0.02);
+        int labelY= (int)(h * 0.05);
+        coinCounterLabel.setBounds(labelX, labelY, labelWidth, labelHeight);
+
+        // Tutorial button
+        int tutBtnWidth = (int)(w * 0.2);  // 20% of width
+        int tutBtnHeight = (int)(h * 0.08); // 8% of height
+        int tutBtnX = (int)(w * 0.77);      // margin from right
+        int tutBtnY = (int)(h * 0.05);
+        tutorialButton.setBounds(tutBtnX, tutBtnY, tutBtnWidth, tutBtnHeight);
+        tutorialButton.setFont(new Font("Arial", Font.BOLD, Math.max(12, tutBtnHeight / 3)));  // scale font
 
         int posX = 0, posY = 0;
 
@@ -147,8 +170,39 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             levelButton[i].setBounds(posX, posY, (int) DimButton, (int) DimButton);
         }
     }
+    // Opens a dialog window containing the tutorial
+    private void showTutorialDialog() {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        JDialog dialog = new JDialog(parentWindow);
+        //Removes the standard window decoration, i.e. title bar, borders,etc.
+        dialog.setUndecorated(true);
+        //Set the dialog to modal.
+        //This means that as long as the dialog is open, the user cannot interact with other windows of the same application.
+        dialog.setModal(true);
+        dialog.setResizable(false);
 
+        Tutorial tutorialPanel = new Tutorial(dialog);
 
+        Dimension parentSize = parentWindow.getSize();
+        int newWidth = (int) (parentSize.width * 0.8);
+        int newHeight = (int) (parentSize.height * 0.8);
+        tutorialPanel.setPreferredSize(new Dimension(newWidth, newHeight));
+
+        //Adds the tutorialPanel component to the dialog window's content pane.
+        dialog.getContentPane().add(tutorialPanel);
+        //Calculates the minimum size needed and resizes the window accordingly.
+        dialog.pack();
+
+        try {
+            dialog.setShape(new RoundRectangle2D.Double(0, 0, dialog.getWidth(), dialog.getHeight(), 30, 30));
+        } catch (UnsupportedOperationException ex) {
+            System.out.println("Rounded corners not supported");
+        }
+
+        //the dialog is positioned in the center of the parentWindow.
+        dialog.setLocationRelativeTo(parentWindow);
+        dialog.setVisible(true);
+    }
 
     // Opens a dialog window containing the selected level's panel
     public void showLevelDialog(LevelPanel levelPanel) {

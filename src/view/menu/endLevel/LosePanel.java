@@ -4,6 +4,7 @@ import controller.GameLoop;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -35,6 +36,8 @@ public class LosePanel extends BaseEndLevelPanel {
             }
         });
 
+        setupKeyBindings();
+
         // An initial resizing is forced to position the components correctly
         SwingUtilities.invokeLater(this::applyScalingBasedOnCurrentDimensions);
     }
@@ -47,6 +50,35 @@ public class LosePanel extends BaseEndLevelPanel {
         timerLabel=new JLabel("Time: " + elapsedTime +"s",SwingConstants.CENTER);
         timerLabel.setForeground(Color.BLACK);
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 24));
+    }
+
+    // Method to set up key bindings
+    private void setupKeyBindings() {
+        // Get the InputMap for when the component is focused or one of its children is focused
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        // Get the ActionMap to associate keys with actions
+        ActionMap actionMap = this.getActionMap();
+
+        // --- Bind ENTER key to Restart button ---
+        // Create an InputStroke for the ENTER key
+        KeyStroke enterKeyStroke = KeyStroke.getKeyStroke("ENTER");
+        // Put the KeyStroke and an identifier (e.g., "restart") into the InputMap
+        inputMap.put(enterKeyStroke, "restart");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("restart", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the restartButton
+                restartButton.doClick();
+            }
+        });
+    }
+
+    // Update the time
+    public void setElapsedTime(int seconds) {
+        timerLabel.setText("Time: " + seconds + "s");
+        timerLabel.revalidate();
+        timerLabel.repaint();
     }
 
     @Override
@@ -66,13 +98,6 @@ public class LosePanel extends BaseEndLevelPanel {
         centerPanel.add(timerLabel, gbc);
 
         return centerPanel;
-    }
-
-    // Update the time
-    public void setElapsedTime(int seconds) {
-        timerLabel.setText("Time: " + seconds + "s");
-        timerLabel.revalidate();
-        timerLabel.repaint();
     }
 
     @Override

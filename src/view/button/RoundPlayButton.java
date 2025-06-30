@@ -69,8 +69,8 @@ public class RoundPlayButton extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Smooth rendering
-        g2.setColor(getBackground().darker()); // Use a darker color for the border
-        g2.setStroke(new BasicStroke(3f)); // Set border thickness
+        g2.setColor(Color.BLACK); // Use a Black color for the border
+        g2.setStroke(new BasicStroke(2f)); // Set border thickness
 
         // Draw rounded border around the button
         g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
