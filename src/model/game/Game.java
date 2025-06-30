@@ -227,10 +227,6 @@ public class Game {
     public void win(){
         SwingUtilities.invokeLater(() -> {
 
-            // get time from timer
-            //GameLoop.getInstance().resetGameTimer();
-            //int elapsedSeconds = GameLoop.getInstance().getElapsedSeconds();
-
             // update profile
             ProfileManager.loadLastProfile().setCoins(
                     (ProfileManager.loadLastProfile().getCoins() + getStarCount()) * 10); // 10 coins per star
