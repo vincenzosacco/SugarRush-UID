@@ -81,6 +81,10 @@ public class Game {
      */
     public void addstar(){
         starCount++;
+        if (starCount > 3) {
+            throw new IllegalStateException("Star count cannot exceed 3. Current count: " + starCount);
+        }
+
     }
 
     public void resetStarCount(){
@@ -224,11 +228,8 @@ public class Game {
         SwingUtilities.invokeLater(() -> {
 
             // get time from timer
-            GameLoop.getInstance().resetGameTimer();
-            int elapsedSeconds = GameLoop.getInstance().getElapsedSeconds();
-            if (elapsedSeconds < 30) {
-                addstar();
-            }
+            //GameLoop.getInstance().resetGameTimer();
+            //int elapsedSeconds = GameLoop.getInstance().getElapsedSeconds();
 
             // update profile
             ProfileManager.loadLastProfile().setCoins(
