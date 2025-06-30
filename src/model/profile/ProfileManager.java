@@ -101,7 +101,7 @@ public class ProfileManager {
      *
      * @return the last profile or a new default profile if none exist
      */
-    private static Profile loadLastProfile() {
+    public static Profile loadLastProfile() {
         // Use the same path construction as saving
         File savesDir = new File(SAVES_PATH);
         if (!savesDir.exists() || !savesDir.isDirectory()) {

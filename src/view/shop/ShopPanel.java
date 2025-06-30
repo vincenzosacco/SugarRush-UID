@@ -1,34 +1,40 @@
 package view.shop;
 
 import controller.ControllerObj;
+import model.game.utils.ShopModel;
 import model.profile.ProfileManager;
 import view.ViewComp;
+import view.button.InternalSettingsButton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class ShopPanel extends JPanel implements ViewComp {
 
     // an array that idicates which creatures are available in the shop
-    private final boolean [] creatures = {true, false, false, false, false, false};
+    private List<Boolean> creatures ;
+    private int currentCharacterIndex;
 
     private int coins;
     private JLabel coinCounterLabel;
 
-    private final ImageIcon backgroundImage;
+    private ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/imgs/panels/levels/shopBG.png"));;
 
     public ShopPanel(){
 
         setLayout(new BorderLayout());
 
-        backgroundImage = new ImageIcon(getClass().getResource("/imgs/panels/levels/shopBG.png"));
+        creatures = ProfileManager.loadLastProfile().getCharacters();
+        currentCharacterIndex = ProfileManager.loadLastProfile().getCurrentCharacterIndex();
+
         //setBackground(Color.green);
 
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
 
-        coins = ProfileManager.getLastProfile().getCoins();
+        coins = ProfileManager.loadLastProfile().getCoins();
 
         addCreatures(contentPanel);
 
@@ -65,15 +71,15 @@ public class ShopPanel extends JPanel implements ViewComp {
         coinCounterLabel.setBounds(20, 20, 120, 40);
         add(coinCounterLabel);
 
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg")), 0, creatures[0]);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature2.png")), 100, creatures[1]);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature3.png")), 200, creatures[2]);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature4.png")), 400, creatures[3]);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature5.png")), 800, creatures[4]);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature6.png")), 1200, creatures[5]);
+        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg")), 0, creatures.get(0), 0);
+        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature2.png")), 100, creatures.get(1), 1);
+        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature3.png")), 200, creatures.get(2), 2);
+        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature4.png")), 400, creatures.get(3), 3);
+        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature5.png")), 800, creatures.get(4), 4);
+        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature6.png")), 1200, creatures.get(5), 5);
     }
 
-    private void addCreatureLine(JPanel parent, ImageIcon creatureIcon, int price, boolean bought) {
+    private void addCreatureLine(JPanel parent, ImageIcon creatureIcon, int price, boolean bought, int cretureNumber) {
         JPanel linePanel = new JPanel();
         linePanel.setLayout(new BoxLayout(linePanel, BoxLayout.X_AXIS));
         linePanel.setOpaque(false);
@@ -97,12 +103,25 @@ public class ShopPanel extends JPanel implements ViewComp {
         // buy if not bought and select otherwise
         JButton actionButton;
         if (bought){
-            actionButton = new JButton("Select");
-            actionButton.setToolTipText("Select this creature");
+            if (cretureNumber == currentCharacterIndex) {
+                actionButton = new JButton("Selected");
+            } else {
+                actionButton = new JButton("Select");
+                actionButton.setToolTipText("Select this creature");
+                actionButton.addActionListener(e -> {
+                    // Select the creature
+                    ShopModel.selectCreature(cretureNumber);
+                });
+            }
             linePanel.add(Box.createHorizontalStrut(250)); // space between left and right
-        } else {
+        }
+        else {
             actionButton = new JButton("Buy");
             actionButton.setToolTipText("Buy this creature");
+            actionButton.addActionListener(e -> {
+                // Buy the creature
+                ShopModel.buyCreature(cretureNumber, price);
+            });
             priceLabel.setIcon(coinIcon); // coin icon
             priceLabel.setFont(new Font("Arial", Font.BOLD, 50));
             priceLabel.setBounds(20, 20, 120, 40);
@@ -128,9 +147,43 @@ public class ShopPanel extends JPanel implements ViewComp {
         }
     }
 
-    public void updateCoins() {
-        this.coins = ProfileManager.getLastProfile().getCoins();
+    public void updateCoins(int c) {
+        coins = c;
         coinCounterLabel.setText(String.valueOf(coins));
+        coinCounterLabel.revalidate();
         coinCounterLabel.repaint();
+        this.revalidate();
+        this.repaint();
+    }
+
+    public void refreshCreatures(){
+        this.removeAll();
+        setLayout(new BorderLayout());
+
+        creatures = ProfileManager.loadLastProfile().getCharacters();
+        currentCharacterIndex = ProfileManager.loadLastProfile().getCurrentCharacterIndex();
+
+        //setBackground(Color.green);
+
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setOpaque(false);
+
+        coins = ProfileManager.loadLastProfile().getCoins();
+
+        addCreatures(contentPanel);
+
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null);
+
+        // Make the scroll pane faster
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPane.getVerticalScrollBar().setBlockIncrement(128);
+
+        add(scrollPane, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 }

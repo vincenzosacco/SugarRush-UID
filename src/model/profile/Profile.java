@@ -3,12 +3,18 @@ package model.profile;
 import config.ModelConfig;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Profile implements Serializable {
     private static final long serialVersionUID = 1L;
-    String name = "DefaultPlayer"; // Default name, can be changed later
-    private int coins = 0;
+    String name;
+    private int coins;
+    //a list of booleans
+    private final ArrayList<Boolean> characters; // Represents available characters, true if available, false if locked
+    private int currentCharacterIndex;
+
 
     /**
      * <p>Map of start collected for each level.</p>
@@ -20,7 +26,13 @@ public class Profile implements Serializable {
      */
     private final HashMap<Integer, Boolean[]> levelStarsCount;
 
+
     public Profile(){
+        this.name = "Player";
+        this.coins = 0;
+        characters = new ArrayList<>(List.of(true, false, false, false, false, false)); // Default: only first character is available
+        currentCharacterIndex = 0; // Default to the first character
+
         levelStarsCount = new HashMap<>();
         for (int i = 1; i <= ModelConfig.NUM_LEVELS; i++) {
             levelStarsCount.put(i, new Boolean[]{false, false, false}); // Initialize with no stars collected
@@ -33,22 +45,31 @@ public class Profile implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    /**@return the number of coins collected by the player.*/
     public int getCoins() {
         return coins;
     }
-
-    /** Add coins to the player's profile.
-     * @param coins the number of coins to add, must be non-negative.
-     * @throws IllegalArgumentException if coins is negative.
-     */
-    public void addCoins(int coins) {
-        if (coins < 0) {
-            throw new IllegalArgumentException("Cannot add negative coins.");
-        }
-        this.coins += coins;
+    public void setCoins(int c) {
+        coins = c;
     }
 
+    public List<Boolean> getCharacters() {
+        return characters;
+    }
+    public int getCurrentCharacterIndex() {
+        return currentCharacterIndex;
+    }
+    public void setCurrentCharacterIndex(int index) {
+        if (index < 0 || index >= characters.size()) {
+            throw new IllegalArgumentException("Invalid character index: " + index);
+        }
+        currentCharacterIndex = index;
+    }
+    public void setCharacters(int index) {
+        if (characters == null || characters.size() != this.characters.size()) {
+            throw new IllegalArgumentException("Characters array must have length " + this.characters.size());
+        }
+        characters.set(index, true); // Unlock the character at the given index
+    }
 
     public void setLevelStarsCount(int level, Boolean[] stars) {
         // CHECKS

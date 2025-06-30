@@ -6,4 +6,5 @@ public interface ModelConfig {
 
     /** Number of levels available in the game. Starts from 1 to NUM_LEVELS.*/
     int NUM_LEVELS = 6;
+
 }
