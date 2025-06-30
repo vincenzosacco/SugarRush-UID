@@ -201,7 +201,6 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         int coins = ProfileManager.getLastProfile().getCoins();
         coinCounterLabel.setText(String.valueOf(coins));
         // updatecoins in the Shop
-        View.getInstance().getCustomTabbedPane().shopPanel.updateCoins();
     }
 
     // Provides external access to the array of level buttons
