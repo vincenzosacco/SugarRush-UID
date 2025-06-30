@@ -3,8 +3,10 @@ package view.menu;
 import controller.ControllerObj;
 import model.game.LevelData;
 import model.profile.ProfileManager;
+import view.View;
 import view.ViewComp;
 import view.button.LevelButton;
+import view.shop.ShopPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -198,6 +200,8 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         // coinCounter con lable
         int coins = ProfileManager.loadLastProfile().getCoins();
         coinCounterLabel.setText(String.valueOf(coins));
+        // updatecoins in the Shop
+        View.getInstance().getCustomTabbedPane().shopPanel.updateCoins();
     }
 
     // Provides external access to the array of level buttons

@@ -56,7 +56,7 @@ public class WinPanel extends BaseEndLevelPanel {
 
                 //save the coins achieved into the profile
                 Profile.setCoins(Profile.getCoins() + stars * 10); // 10 coins per star
-
+                // Update the coin counter label in the Shop
                 requestFocusInWindow();
             }
         });

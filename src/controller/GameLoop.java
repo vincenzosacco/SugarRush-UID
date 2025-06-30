@@ -93,6 +93,10 @@ public class GameLoop implements Runnable {
     public void shutdown() {
         resetGameTimer(); // Reset the game timer to zero
 
+        // if time is less than 30, add a star
+        if (getElapsedSeconds() < 30) {
+            Model.getInstance().getGame().addstar(); // Add a star if the elapsed time is less than 30 seconds
+        }
         // reset stars
         Model.getInstance().getGame().resetStarCount(); // Reset the star count in the game model
 

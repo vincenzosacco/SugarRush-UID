@@ -62,9 +62,10 @@ public class ShopPanel extends JPanel implements ViewComp {
         coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
         coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
         coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
-        add(coinCounterLabel);
-        coinCounterLabel.setBounds(20, 20, 120, 40);
         coinCounterLabel.setText(String.valueOf(coins));
+        coinCounterLabel.setBounds(20, 20, 120, 40);
+        add(coinCounterLabel);
+        System.out.println("ShopCoins"+coins);
 
         addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg")), 0, creatures[0]);
         addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature2.png")), 100, creatures[1]);
@@ -96,13 +97,13 @@ public class ShopPanel extends JPanel implements ViewComp {
         linePanel.add(Box.createHorizontalStrut(20)); // space between left and center
 
         // buy if not bought and select otherwise
-        InternalSettingsButton actionButton;
+        JButton actionButton;
         if (bought){
-            actionButton = new InternalSettingsButton("Select");
+            actionButton = new JButton("Select");
             actionButton.setToolTipText("Select this creature");
             linePanel.add(Box.createHorizontalStrut(250)); // space between left and right
         } else {
-            actionButton = new InternalSettingsButton("Buy");
+            actionButton = new JButton("Buy");
             actionButton.setToolTipText("Buy this creature");
             priceLabel.setIcon(coinIcon); // coin icon
             priceLabel.setFont(new Font("Arial", Font.BOLD, 50));
@@ -113,7 +114,7 @@ public class ShopPanel extends JPanel implements ViewComp {
 
         actionButton.setPreferredSize(new Dimension(120, 50)); // width, height
         actionButton.setMaximumSize(new Dimension(120, 50));
-        actionButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        actionButton.setBackground(new Color(144, 238, 144)); // A light green (Medium Aquamarine
 
         linePanel.add(actionButton); // right
 
@@ -127,5 +128,11 @@ public class ShopPanel extends JPanel implements ViewComp {
         if (backgroundImage != null) {
             g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
         }
+    }
+
+    public void updateCoins() {
+        this.coins = ProfileManager.loadLastProfile().getCoins();
+        coinCounterLabel.setText(String.valueOf(coins));
+        coinCounterLabel.repaint();
     }
 }

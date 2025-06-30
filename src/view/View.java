@@ -120,12 +120,12 @@ public class View {
     }
 
     private final GamePanel gamePanel = new GamePanel();
-    public GamePanel getGamePanel(){
-        return gamePanel;
+    public GamePanel getGamePanel(){return gamePanel;
     }
 
     //GETTERS
     public CustomTabbedPane getCustomTabbedPane(){
+
         return customTabbedPane;
     }
 }

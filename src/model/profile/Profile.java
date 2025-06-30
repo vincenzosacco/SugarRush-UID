@@ -24,5 +24,4 @@ public class Profile implements Serializable {
         coins = c;
     }
 
-
 }
