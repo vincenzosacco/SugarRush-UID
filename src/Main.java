@@ -11,10 +11,9 @@ public class Main {
 
     public static void main(String[] args) {
         // Register shutdown hook to save the last profile on exit
-        Profile lastProfile = ProfileManager.loadLastProfile();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            ProfileManager.saveProfile(lastProfile);
+            ProfileManager.saveProfile(ProfileManager.getLastProfile()); // TODO fix this. What happens when there is more than one profile?
             System.out.println("Profile saved on exit.");
         }));
         try {

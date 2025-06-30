@@ -63,7 +63,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 
         // Load level data (coin status and descriptive text)
         LevelData levelData = new LevelData(levelFile);
-        Boolean[] coinsCollected = ProfileManager.loadLastProfile().getLevelStarsCount(currentLevel);
+        Boolean[] coinsCollected = ProfileManager.getLastProfile().getLevelStarsCount(currentLevel);
         String[] textRequest = levelData.getTextRequest();
 
         // Use BorderLayout and transparency
@@ -261,7 +261,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             return;
         }
 
-        Boolean[] coinsCollected = ProfileManager.loadLastProfile().getLevelStarsCount(currentLevel);
+        Boolean[] coinsCollected = ProfileManager.getLastProfile().getLevelStarsCount(currentLevel);
         String[] textRequest = levelData.getTextRequest();
 
         updateLabels(currentLevel, coinsCollected, textRequest);

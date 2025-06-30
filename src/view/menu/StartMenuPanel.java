@@ -7,7 +7,6 @@ import model.profile.ProfileManager;
 import view.View;
 import view.ViewComp;
 import view.button.LevelButton;
-import view.shop.ShopPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -58,7 +57,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             LevelData levelData = new LevelData(file);
 
             // Set coins collected status for the button (used to update its display)
-            button.setCoinsCollected(ProfileManager.loadLastProfile().getLevelStarsCount(i));
+            button.setCoinsCollected(ProfileManager.getLastProfile().getLevelStarsCount(i));
 
             // Store button in the array and add to the panel
             levelButton[i - 1] = button;
@@ -199,7 +198,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
         // coinCounter con lable
-        int coins = ProfileManager.loadLastProfile().getCoins();
+        int coins = ProfileManager.getLastProfile().getCoins();
         coinCounterLabel.setText(String.valueOf(coins));
         // updatecoins in the Shop
         View.getInstance().getCustomTabbedPane().shopPanel.updateCoins();

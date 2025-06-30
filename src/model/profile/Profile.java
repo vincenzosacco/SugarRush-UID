@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Profile implements Serializable {
     private static final long serialVersionUID = 1L;
-    String name;
-    private int coins;
+    String name = "DefaultPlayer"; // Default name, can be changed later
+    private int coins = 0;
 
     /**
      * <p>Map of start collected for each level.</p>
@@ -20,11 +20,7 @@ public class Profile implements Serializable {
      */
     private final HashMap<Integer, Boolean[]> levelStarsCount;
 
-
     public Profile(){
-        this.name = "Player";
-        this.coins = 0;
-
         levelStarsCount = new HashMap<>();
         for (int i = 1; i <= ModelConfig.NUM_LEVELS; i++) {
             levelStarsCount.put(i, new Boolean[]{false, false, false}); // Initialize with no stars collected
@@ -37,11 +33,20 @@ public class Profile implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    /**@return the number of coins collected by the player.*/
     public int getCoins() {
         return coins;
     }
-    public void setCoins(int c) {
-        coins = c;
+
+    /** Add coins to the player's profile.
+     * @param coins the number of coins to add, must be non-negative.
+     * @throws IllegalArgumentException if coins is negative.
+     */
+    public void addCoins(int coins) {
+        if (coins < 0) {
+            throw new IllegalArgumentException("Cannot add negative coins.");
+        }
+        this.coins += coins;
     }
 
 

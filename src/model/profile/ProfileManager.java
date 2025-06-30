@@ -4,7 +4,6 @@ import java.io.*;
 
 public class ProfileManager {
     private static final String SAVES_PATH = "resources/profiles";
-
     static {
         try {
             // Create profiles directory on startup
@@ -24,6 +23,7 @@ public class ProfileManager {
             System.err.println("Error initializing ProfileManager: " + e.getMessage());
         }
     }
+    private static final Profile lastProfile = loadLastProfile(); // Load the last profile on startup
 
     private static Profile createProfile() {
         return new Profile();
@@ -81,7 +81,25 @@ public class ProfileManager {
         return profiles;
     }
 
-    public static Profile loadLastProfile() {
+    /**
+     * Returns the last profile based on the last modified time of the profile files.
+     * If no profiles exist, it creates a new default profile.
+     *
+     * @return the last profile or a new default profile if none exist
+     */
+    public static Profile getLastProfile() {
+        assert lastProfile != null;
+        return lastProfile;
+    }
+
+    // PRIVATE UTILS //
+    /**
+     * Loads the last profile based on the last modified time of the profile files.
+     * If no profiles exist, it creates a new default profile.
+     *
+     * @return the last profile or a new default profile if none exist
+     */
+    private static Profile loadLastProfile() {
         // Use the same path construction as saving
         File savesDir = new File(SAVES_PATH);
         if (!savesDir.exists() || !savesDir.isDirectory()) {
@@ -90,6 +108,8 @@ public class ProfileManager {
 
         File[] files = savesDir.listFiles((dir, name) -> name.endsWith(".dat"));
         if (files == null || files.length == 0) {
+            System.err.println("No last profile found in: " + savesDir.getAbsolutePath() +
+                               ". Creating a new default profile.");
             return createProfile();
         }
 

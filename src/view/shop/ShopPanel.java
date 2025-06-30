@@ -3,7 +3,6 @@ package view.shop;
 import controller.ControllerObj;
 import model.profile.ProfileManager;
 import view.ViewComp;
-import view.button.InternalSettingsButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,7 @@ public class ShopPanel extends JPanel implements ViewComp {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
 
-        coins = ProfileManager.loadLastProfile().getCoins();
+        coins = ProfileManager.getLastProfile().getCoins();
 
         addCreatures(contentPanel);
 
@@ -130,7 +129,7 @@ public class ShopPanel extends JPanel implements ViewComp {
     }
 
     public void updateCoins() {
-        this.coins = ProfileManager.loadLastProfile().getCoins();
+        this.coins = ProfileManager.getLastProfile().getCoins();
         coinCounterLabel.setText(String.valueOf(coins));
         coinCounterLabel.repaint();
     }

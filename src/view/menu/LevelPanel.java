@@ -41,7 +41,7 @@ public class LevelPanel extends JPanel implements ViewComp{
     public LevelPanel(InputStream levelFile, int levelIndex){
         // Load level data (coin status and descriptive text)
         LevelData levelData = new LevelData(levelFile);
-        Boolean[] coinsCollected = ProfileManager.loadLastProfile().getLevelStarsCount(levelIndex);
+        Boolean[] coinsCollected = ProfileManager.getLastProfile().getLevelStarsCount(levelIndex);
         String[] textRequest = levelData.getTextRequest();
 
         // Use BorderLayout and transparency
