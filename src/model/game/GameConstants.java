@@ -5,7 +5,7 @@ package model.game;
  * that define key aspects of the game's domain, such as directions for movement
  * and block types in the game's game.
  */
-public interface Constants {
+public interface GameConstants {
 
     /**
      * <p>

@@ -1,9 +1,9 @@
 package model.game.entities.evil;
 
 import model.Model;
-import model.game.Constants;
-import model.game.Constants.Direction;
+import model.game.GameConstants;
 import model.game.utils.Cell;
+import model.game.GameConstants.Direction;
 import utils.audio.GameAudioController;
 
 /**
@@ -16,8 +16,8 @@ import utils.audio.GameAudioController;
 public class Enemy1 extends Enemy {
 
     @Override
-    public Constants.Block blockType() {
-        return Constants.Block.ENEMY1;
+    public GameConstants.Block blockType() {
+        return GameConstants.Block.ENEMY1;
     }
 
     public Enemy1(int row, int col) {
@@ -48,14 +48,14 @@ public class Enemy1 extends Enemy {
 
 
     @Override
-    public boolean manageCollision(Constants.Block block, Cell cell) {
+    public boolean manageCollision(GameConstants.Block block, Cell cell) {
 //        if (this.direction == Direction.NONE) return false;
 
         // CAN MOVE ONLY IF THE BLOCK IS SPACE or CREATURE//
-        if (block == Constants.Block.SPACE) {
+        if (block == GameConstants.Block.SPACE) {
             return true;
         }
-        else if (block == Constants.Block.CREATURE){
+        else if (block == GameConstants.Block.CREATURE){
             Model.getInstance().getGame().killCreature();
             GameAudioController.getInstance().playSfx("killBee");
             return true;

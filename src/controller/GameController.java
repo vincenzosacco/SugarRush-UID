@@ -8,7 +8,7 @@ import view.game.GamePanel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import static model.game.Constants.Direction.*;
+import static model.game.GameConstants.Direction.*;
 
 
 // MOVEMENT:

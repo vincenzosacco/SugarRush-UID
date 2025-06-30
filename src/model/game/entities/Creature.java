@@ -1,10 +1,10 @@
 package model.game.entities;
 
 import model.Model;
-import model.game.Constants;
-import model.game.Constants.Direction;
+import model.game.GameConstants;
 import model.game.Entity;
 import model.game.utils.Cell;
+import model.game.GameConstants.Direction;
 import utils.audio.GameAudioController;
 import view.View;
 
@@ -22,8 +22,8 @@ public class Creature extends Entity {
 
 
     @Override
-    public Constants.Block blockType() {
-        return Constants.Block.CREATURE;
+    public GameConstants.Block blockType() {
+        return GameConstants.Block.CREATURE;
     }
 
     @Override
@@ -51,8 +51,8 @@ public class Creature extends Entity {
     }
 
     @Override
-    public boolean manageCollision(Constants.Block block, Cell cell ) {
-        assert block != Constants.Block.CREATURE : "Creature cannot collide with itself, there is a bug somewhere";
+    public boolean manageCollision(GameConstants.Block block, Cell cell ) {
+        assert block != GameConstants.Block.CREATURE : "Creature cannot collide with itself, there is a bug somewhere";
 
         boolean canMove = true;
 

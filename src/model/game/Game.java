@@ -37,10 +37,10 @@ public class Game {
      * @implNote The list is immutable, ensuring external code cannot modify the game's game. This is essential to maintain
      * the integrity of the game state during gameplay. Changes to the game are managed internally within the
      * {@code Game} class logic.
-     * @see Constants.Block
+     * @see GameConstants.Block
      * @see GameMatrix#makeReadOnly()
      */
-    private final List<List<Constants.Block>> gameMatRO = gameMat.makeReadOnly();
+    private final List<List<GameConstants.Block>> gameMatRO = gameMat.makeReadOnly();
 
     // experimental approach
     private final List<Entity> entitiesRO = Collections.unmodifiableList(entities);
@@ -105,9 +105,9 @@ public class Game {
      *
      * @return a two-dimensional unmodifiable list where each element is a {@code Constants.Block}
      * representing the current state of the game game.
-     * @see Constants.Block
+     * @see GameConstants.Block
      */
-    public List<List<Constants.Block>> getState() {
+    public List<List<GameConstants.Block>> getState() {
         return gameMatRO;
     }
 
@@ -143,7 +143,7 @@ public class Game {
             if (ent.shouldPerform()) {
                 // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
                 Cell oldCoord = ent.getCoord();
-                gameMat.setCell(oldCoord, Constants.Block.SPACE);
+                gameMat.setCell(oldCoord, GameConstants.Block.SPACE);
 
                 // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
@@ -163,10 +163,10 @@ public class Game {
 
 
     /**@return the block at the specified cell in the game matrix*/
-    public Constants.Block blockAt(Cell cell) {
+    public GameConstants.Block blockAt(Cell cell) {
         if (cell.getRow() < 0 || cell.getRow() >= ROW_COUNT ||
                 cell.getCol() < 0 || cell.getCol() >= COL_COUNT) {
-            return Constants.Block.SPACE;
+            return GameConstants.Block.SPACE;
         }
         return gameMat.getCell(cell);
     }
@@ -186,7 +186,7 @@ public class Game {
      * the creature will move in the specified direction.
      * @param direction the direction to set for the creature
      */
-    public void setCreatureDirection(Constants.Direction direction) {
+    public void setCreatureDirection(GameConstants.Direction direction) {
         Creature creature = null;
         for (Entity entity : entities) {
             if (entity instanceof Creature) {
@@ -213,9 +213,9 @@ public class Game {
         // Clear the game matrix
         gameMat.clear();
         for (int r = 0; r < ROW_COUNT; r++) {
-            ArrayList<Constants.Block> row = new ArrayList<>(COL_COUNT);
+            ArrayList<GameConstants.Block> row = new ArrayList<>(COL_COUNT);
             for (int c = 0; c < COL_COUNT; c++) {
-                row.add(Constants.Block.SPACE);
+                row.add(GameConstants.Block.SPACE);
             }
             gameMat.add(row);
         }
