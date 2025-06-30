@@ -61,13 +61,10 @@ class _GameContent extends JPanel {
                 int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
 
                 // DRAW ONLY STATIC BLOCKS //
-                if (game.blockAt(new Cell(row, col)) == GameConstants.Block.WALL ||
-                        game.blockAt(new Cell(row, col)) == GameConstants.Block.THORNS ||
-                        game.blockAt(new Cell(row, col)) == GameConstants.Block.SUGAR ||
-                        game.blockAt(new Cell(row, col)) == GameConstants.Block.CANDY) // static blocks
+                GameConstants.Block block = gameMatrix.get(row).get(col);
+                if (BlocksImages.getInstance().isStaticBlock(block)) // static blocks
                 {
 
-                    GameConstants.Block block = gameMatrix.get(row).get(col);
                     Image image = BlocksImages.getInstance().getStaticBlockImg(block); // get the image for the block type
                     if (!(image == null))
                         bg.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);

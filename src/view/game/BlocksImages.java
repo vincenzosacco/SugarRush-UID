@@ -170,4 +170,10 @@ public class BlocksImages {
         return key;
     }
 
+    public boolean isStaticBlock(GameConstants.Block block) {
+        if (block == null) {
+            throw new IllegalArgumentException("Block cannot be null");
+        }
+        return staticBlocks.contains(block);
+    }
 }
