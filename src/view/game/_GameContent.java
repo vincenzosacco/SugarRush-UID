@@ -1,7 +1,7 @@
 package view.game;
 
 import model.Model;
-import model.game.Constants;
+import model.game.GameConstants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
@@ -53,7 +53,7 @@ class _GameContent extends JPanel {
 
         // DRAW in BUFFERED IMAGE //
         Game game = Model.getInstance().getGame();
-        List<List<Constants.Block>> gameMatrix = game.getState();
+        List<List<GameConstants.Block>> gameMatrix = game.getState();
         assert gameMatrix != null && !gameMatrix.isEmpty();
 
         for (int row = 0; row < gameMatrix.size(); row++) {
@@ -62,14 +62,14 @@ class _GameContent extends JPanel {
                 int x = col * TILE_SIZE; // iterating col in model matrix corresponds to moving on x-axis(from left to right) on graphics coordinates.
 
                 // DRAW ONLY STATIC BLOCKS //
-                if (game.blockAt(new Cell(row, col)) == Constants.Block.WALL ||
-                        game.blockAt(new Cell(row, col)) == Constants.Block.THORNS ||
-                        game.blockAt(new Cell(row, col)) == Constants.Block.SUGAR ||
-                        game.blockAt(new Cell(row, col)) == Constants.Block.CANDY) // static blocks
+                if (game.blockAt(new Cell(row, col)) == GameConstants.Block.WALL ||
+                        game.blockAt(new Cell(row, col)) == GameConstants.Block.THORNS ||
+                        game.blockAt(new Cell(row, col)) == GameConstants.Block.SUGAR ||
+                        game.blockAt(new Cell(row, col)) == GameConstants.Block.CANDY) // static blocks
                 {
 
-                    Constants.Block block = gameMatrix.get(row).get(col);
-                    Image image = _BlocksImage.getInstance().getStaticBlockImg(block); // get the image for the block type
+                    GameConstants.Block block = gameMatrix.get(row).get(col);
+                    Image image = BlocksImages.getInstance().getStaticBlockImg(block); // get the image for the block type
                     if (!(image == null))
                         bg.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
                 }
@@ -95,8 +95,8 @@ class _GameContent extends JPanel {
             int x = col * TILE_SIZE;
             int y = row * TILE_SIZE;
 
-            Constants.Block blockType = entity.blockType();
-            Image image = _BlocksImage.getInstance().getDynamicBlockImg(blockType, entity.getDirection());
+            GameConstants.Block blockType = entity.blockType();
+            Image image = BlocksImages.getInstance().getDynamicBlockImg(blockType, entity.getDirection());
 
             Objects.requireNonNull(image, "The image cannot be null");
             g2d.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);

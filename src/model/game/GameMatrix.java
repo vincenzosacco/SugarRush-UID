@@ -2,7 +2,7 @@ package model.game;
 
 
 import model.game.utils.Cell;
-import model.game.Constants.Block;
+import model.game.GameConstants.Block;
 
 import java.util.ArrayList;
 import java.util.Collections;

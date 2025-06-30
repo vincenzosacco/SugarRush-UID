@@ -1,7 +1,7 @@
 package view.game;
 
 import config.ViewConfig;
-import model.game.Constants;
+import model.game.GameConstants;
 import utils.Resources;
 
 import java.awt.image.BufferedImage;
@@ -10,31 +10,35 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-class _BlocksImage {
+/**
+ * Singleton class that manages the images for game blocks.
+ * It loads static and dynamic block images from the resources.
+ */
+public class BlocksImages {
     private static final String BLOCKS_PATH = "/imgs/game/blocks/";
     private static final StringBuilder keyBuilder = new StringBuilder(BLOCKS_PATH);
-    private static final List<Constants.Block> staticBlocks = Arrays.asList(
-            Constants.Block.WALL,
-            Constants.Block.THORNS,
-            Constants.Block.SUGAR,
-            Constants.Block.SPACE,
-            Constants.Block.CANDY
+    private static final List<GameConstants.Block> staticBlocks = Arrays.asList(
+            GameConstants.Block.WALL,
+            GameConstants.Block.THORNS,
+            GameConstants.Block.SUGAR,
+            GameConstants.Block.SPACE,
+            GameConstants.Block.CANDY
     );
-    private final HashMap<Constants.Block, List<BufferedImage>> blockImages = new HashMap<>();
+    private final HashMap<GameConstants.Block, List<BufferedImage>> blockImages = new HashMap<>();
 
-    private _BlocksImage() {
+    private BlocksImages() {
         // TODO trova un modo per poter usare tutte le estensioni di file immagine. Probabilmente dovrai
         //  cambiare completamente il metodo
         ArrayList<BufferedImage> tmp_imgs = new ArrayList<>();
         String key;
 
         // Remove the SPACE from iteration since it has no image
-        List<Constants.Block> blocks = new ArrayList<>(List.of(Constants.Block.values()));
-        blocks.remove(Constants.Block.SPACE);
+        List<GameConstants.Block> blocks = new ArrayList<>(List.of(GameConstants.Block.values()));
+        blocks.remove(GameConstants.Block.SPACE);
 
-        for (Constants.Block block : blocks) {
+        for (GameConstants.Block block : blocks) {
 
-            if (block.equals(Constants.Block.SPACE)) continue;
+            if (block.equals(GameConstants.Block.SPACE)) continue;
 
             // 1- PARSE THE KEY FOR THE BLOCK //
 
@@ -50,7 +54,7 @@ class _BlocksImage {
             }
             // IF BLOCK IS DYNAMIC
             else
-                for (Constants.Direction direction : Constants.Direction.values()){
+                for (GameConstants.Direction direction : GameConstants.Direction.values()){
                     key = parseKey(block, direction);
                     tmp_imgs.add(Resources.getBestImage(key, ViewConfig.TILE_SIZE, ViewConfig.TILE_SIZE));
                 }
@@ -62,22 +66,22 @@ class _BlocksImage {
     }
 
     // SINGLETON //
-    private static _BlocksImage instance = null;
+    private static BlocksImages instance = null;
 
-    static _BlocksImage getInstance() {
+    public static BlocksImages getInstance() {
         if (instance == null) {
-            instance = new _BlocksImage();
+            instance = new BlocksImages();
         }
         return instance;
     }
 
-    // UTILS //
-    public BufferedImage getStaticBlockImg(Constants.Block block) {
+    // PACKAGE METHODS //
+    BufferedImage getStaticBlockImg(GameConstants.Block block) {
         if (block == null) {
             throw new IllegalArgumentException("Block cannot be null");
         }
 
-        if (block == Constants.Block.SPACE) {
+        if (block == GameConstants.Block.SPACE) {
             // Return null for SPACE block
             return null;
         }
@@ -93,7 +97,7 @@ class _BlocksImage {
         return blockImages.get(block).getFirst();
     }
 
-    BufferedImage getDynamicBlockImg(Constants.Block block, Constants.Direction direction) {
+    BufferedImage getDynamicBlockImg(GameConstants.Block block, GameConstants.Direction direction) {
         if (block == null || direction == null) {
             throw new IllegalArgumentException("Block and direction cannot be null");
         }
@@ -104,18 +108,44 @@ class _BlocksImage {
 
 
         assert blockImages.containsKey(block);
-        assert blockImages.get(block).size() == Constants.Direction.values().length : "Dynamic block should have images for all directions";
+        assert blockImages.get(block).size() == GameConstants.Direction.values().length : "Dynamic block should have images for all directions";
         assert direction.ordinal() < blockImages.get(block).size() : "Direction index out of bounds for block: " + block;
         // Return the image for the specified direction
         return blockImages.get(block).get(direction.ordinal());
 
     }
 
+    // PUBLIC METHODS //
+    /**
+     * Returns all blocks image in a single array. For dynamic blocks (which have multiple images for each direction),
+     * returns the {@code Direction.RIGHT} image.
+     * @return An array of BufferedImage containing all default images for blocks.
+     * @see GameConstants.Block
+     * @see GameConstants.Direction
+     * @see BlocksImages#getStaticBlockImg
+     * @see BlocksImages#getDynamicBlockImg
+     */
+    public BufferedImage[] getAllDefaultImgs(){
+        BufferedImage[] allImgs = new BufferedImage[GameConstants.Block.values().length - 1]; // -1 for SPACE block
+        int index = 0;
 
-    private static String parseKey(Constants.Block block, Constants.Direction direction) {
+        for (GameConstants.Block block : GameConstants.Block.values()) {
+            if (block == GameConstants.Block.SPACE) continue; // Skip SPACE block
+
+            if (staticBlocks.contains(block)) {
+                allImgs[index++] = getStaticBlockImg(block);
+            } else {
+                allImgs[index++] = getDynamicBlockImg(block, GameConstants.Direction.RIGHT);
+            }
+        }
+
+        return allImgs;
+    }
+    // UTILS //
+    private static String parseKey(GameConstants.Block block, GameConstants.Direction direction) {
         // IF BLOCK IS STATIC
         if (staticBlocks.contains(block)) {
-            if (!block.equals(Constants.Block.SPACE)) {
+            if (!block.equals(GameConstants.Block.SPACE)) {
                 // file name is in the format: <blockname>.jpg. Example: "wall.jpg"
                 keyBuilder.append(block.name().toLowerCase()).append(".jpg");
             }

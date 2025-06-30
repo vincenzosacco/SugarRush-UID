@@ -11,9 +11,9 @@ public abstract class Entity{
      */
     protected Cell coord;
 
-    /**{@link model.game.Constants.Direction} in which the entity would move.
+    /**{@link GameConstants.Direction} in which the entity would move.
      * Defalut is NONE, which means idle. */
-    protected Constants.Direction direction = Constants.Direction.NONE;
+    protected GameConstants.Direction direction = GameConstants.Direction.NONE;
 
 
 
@@ -57,9 +57,9 @@ public abstract class Entity{
      * The block type represents the specific kind of block that the entity occupies or is represented as
      * within the game's environment.
      *
-     * @return the block type of the entity, as an instance of {@link Constants.Block}
+     * @return the block type of the entity, as an instance of {@link GameConstants.Block}
      */
-    public abstract Constants.Block blockType();
+    public abstract GameConstants.Block blockType();
 
 
     // GAME MODEL UPDATE METHODS //
@@ -80,7 +80,7 @@ public abstract class Entity{
      * @param block the block with which the entity is colliding
      * @return true if the entity can perform its action after the collision, false otherwise
      */
-    protected abstract boolean manageCollision(Constants.Block block, Cell cell);
+    protected abstract boolean manageCollision(GameConstants.Block block, Cell cell);
 
     /**
      * Executes the action or behavior specific to the entity
@@ -116,9 +116,9 @@ public abstract class Entity{
     // GETTERS AND SETTERS //
     /**
      * @return the current direction where the entity is moving.
-     * @apiNote {@link model.game.Constants.Direction} NONE means the entity is idle.
+     * @apiNote {@link GameConstants.Direction} NONE means the entity is idle.
      */
-    public Constants.Direction getDirection() {
+    public GameConstants.Direction getDirection() {
         return direction;
     }
     /**
@@ -126,7 +126,7 @@ public abstract class Entity{
      * @param direction the new direction to set for the entity
      * @throws IllegalArgumentException if the provided direction is null
      */
-    public void setDirection(Constants.Direction direction) {
+    public void setDirection(GameConstants.Direction direction) {
         if (direction == null) {
             throw new IllegalArgumentException("Direction cannot be null.");
         }

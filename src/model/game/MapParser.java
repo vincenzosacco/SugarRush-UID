@@ -1,6 +1,6 @@
 package model.game;
 
-import model.game.Constants.Block;
+import model.game.GameConstants.Block;
 import model.game.entities.Creature;
 import model.game.entities.evil.Enemy1;
 import utils.Resources;
