@@ -6,7 +6,7 @@ import controller.GameLoop;
 import model.Model;
 import utils.audio.GameAudioController;
 import view.ViewComp;
-import view.button.PauseButton;
+import view.button.CustomRoundLogoButton;
 import view.menu.GameMenuPanel;
 import view.menu.endLevel.LosePanel;
 import view.menu.endLevel.WinPanel;
@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements ViewComp {
     private final LosePanel losePanel;
     private final WinPanel winPanel;
 
-    private final PauseButton pauseButton;
+    private final CustomRoundLogoButton pauseButton;
 
     private final JLayeredPane layeredPane;
 
@@ -35,7 +35,7 @@ public class GamePanel extends JPanel implements ViewComp {
 
     private final GameLoop gameLoop=GameLoop.getInstance();
 
-    public PauseButton getPauseButton() {
+    public CustomRoundLogoButton getPauseButton() {
         return pauseButton;
     }
 
@@ -68,7 +68,7 @@ public class GamePanel extends JPanel implements ViewComp {
         gameContentDrawingPanel.setBackground(GAME_BG);
         layeredPane.add(gameContentDrawingPanel, JLayeredPane.DEFAULT_LAYER); // Added to the lowest level
 
-        pauseButton=new PauseButton();
+        pauseButton=new CustomRoundLogoButton("pause",Color.WHITE);
         pauseButton.setEnabled(true);
         int minSizePanel=Math.min(BOARD_WIDTH,BOARD_HEIGHT);
         int buttonSize=Math.max(30,minSizePanel/15);

@@ -6,8 +6,8 @@ import model.game.LevelData;
 import model.profile.ProfileManager;
 import utils.Resources;
 import view.ViewComp;
+import view.button.CustomLogoButton;
 import view.button.RoundCloseButton;
-import view.button.RoundPlayButton;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,7 +28,7 @@ public class LevelPanel extends JPanel implements ViewComp{
 
     // Buttons for closing and starting the level
     private final RoundCloseButton closeButton;
-    private final RoundPlayButton playButton;
+    private final CustomLogoButton playButton;
 
     // Arrays to store coin icons and corresponding text
     private final JLabel[] iconLabels = new JLabel[3];
@@ -74,7 +74,7 @@ public class LevelPanel extends JPanel implements ViewComp{
         });
 
         // Create and configure the play button
-        playButton = new RoundPlayButton();
+        playButton = new CustomLogoButton("play",Color.GREEN.darker());
         playButton.addActionListener(e -> {
             controller.onPlay(levelIndex);
         });

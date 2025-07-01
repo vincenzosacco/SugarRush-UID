@@ -6,10 +6,7 @@ import model.game.LevelData;
 import model.game.MapParser;
 import model.profile.ProfileManager;
 import view.ViewComp;
-import view.button.ExitButton;
-import view.button.RestartButton;
-import view.button.RoundPlayButton;
-import view.button.SettingsButton;
+import view.button.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -37,10 +34,10 @@ public class GameMenuPanel extends JPanel implements ViewComp {
 
     // Buttons for closing and starting the level
     //private final RoundCloseButton closeButton;
-    private final RoundPlayButton playButton;
-    private final RestartButton restartButton;
-    private final SettingsButton settingsButton;
-    private final ExitButton exitButton;
+    private final CustomLogoButton playButton;
+    private final CustomLogoButton restartButton;
+    private final CustomRoundLogoButton settingsButton;
+    private final CustomButton exitButton;
 
     // Arrays to store coin icons and corresponding text
     private final JLabel[] iconLabels = new JLabel[3];
@@ -91,24 +88,24 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         GameMenuController controller=new GameMenuController(this);
 
         // Create and configure the play button
-        playButton = new RoundPlayButton();
+        playButton = new CustomLogoButton("play",Color.GREEN.darker());
         playButton.addActionListener(e -> {
             controller.onPlay();
         });
         // Create and configure the restart button
-        restartButton=new RestartButton();
+        restartButton=new CustomLogoButton("restart",Color.ORANGE);
         restartButton.addActionListener(e -> {
             controller.onRestart();
         });
 
         // Create and configure the EXIT button
-        exitButton=new ExitButton();
+        exitButton=new CustomButton("EXIT",Color.WHITE,Color.RED);
         exitButton.addActionListener(e ->{
             controller.onExit();
         });
 
         // Create and configure the settings button
-        settingsButton=new SettingsButton();
+        settingsButton=new CustomRoundLogoButton("settings",Color.GRAY.brighter());
         settingsButton.addActionListener(e ->{
             controller.onSettings();
         });

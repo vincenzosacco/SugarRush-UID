@@ -4,7 +4,6 @@ import controller.ControllerObj;
 import model.game.utils.ShopModel;
 import model.profile.ProfileManager;
 import view.ViewComp;
-import view.button.InternalSettingsButton;
 
 import javax.swing.*;
 import java.awt.*;

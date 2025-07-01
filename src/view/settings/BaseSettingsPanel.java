@@ -1,7 +1,7 @@
 package view.settings;
 
 import model.settings.SettingsManager;
-import view.button.InternalSettingsButton;
+import view.button.CustomButton;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,7 +21,7 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
 
     private Image backgroundImage;
 
-    private final InternalSettingsButton gameControlsButton;
+    private final CustomButton gameControlsButton;
     private JLabel musicLabel;
     private JButton musicSoundButton; // Button with audio icon
     private JSlider musicVolumeSlider;
@@ -30,8 +30,8 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
     private JButton sfxSoundButton; // Button with sound effects icon
     private JSlider sfxVolumeSlider;
 
-    private InternalSettingsButton cancelButton;
-    private InternalSettingsButton saveButton;
+    private CustomButton cancelButton;
+    private CustomButton saveButton;
 
 
     // Audio icons - will be loaded and scaled dynamically
@@ -43,7 +43,7 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         //setPreferredSize(new Dimension(600, 400)); // Default size for the settings panel
         setOpaque(false);
 
-        gameControlsButton = new InternalSettingsButton("Game controls");
+        gameControlsButton = new CustomButton("Game controls",Color.BLACK,Color.GRAY);
 
         // Load background image and icons once
         loadImages();
@@ -244,8 +244,8 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0)); // FlowLayout for the buttons
         buttonPanel.setOpaque(false);
 
-        cancelButton = new InternalSettingsButton("Cancel");
-        saveButton = new InternalSettingsButton("Save");
+        cancelButton = new CustomButton("Cancel",Color.BLACK,Color.RED);
+        saveButton = new CustomButton("Save",Color.BLACK,Color.GREEN);
         buttonPanel.add(cancelButton);
         buttonPanel.add(saveButton);
 

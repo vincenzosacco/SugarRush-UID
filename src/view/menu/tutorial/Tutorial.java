@@ -1,7 +1,6 @@
 package view.menu.tutorial;
 
-import view.button.BackNextButton;
-import view.button.ExitButton;
+import view.button.CustomButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +16,9 @@ public class Tutorial extends JPanel {
 
     private final CardLayout cardLayout;
     private final JPanel cardPanel;
-    private final BackNextButton backButton;
-    private final BackNextButton nextButton;
-    private final ExitButton exitButton;
+    private final CustomButton backButton;
+    private final CustomButton nextButton;
+    private final CustomButton exitButton;
 
     private int currentPageIndex = 0;
     private final List<String> pageNames = new ArrayList<>();
@@ -63,9 +62,9 @@ public class Tutorial extends JPanel {
 
         // Navigation panel with Back, Next, and Exit buttons at the bottom
         JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        backButton = new BackNextButton("← Back");
-        nextButton = new BackNextButton("Next →");
-        exitButton = new ExitButton();
+        backButton = new CustomButton("← Back",Color.BLACK,Color.WHITE);
+        nextButton = new CustomButton("Next →",Color.BLACK,Color.WHITE);
+        exitButton = new CustomButton("EXIT",Color.WHITE,Color.RED);
 
         navPanel.add(backButton);
         navPanel.add(nextButton);

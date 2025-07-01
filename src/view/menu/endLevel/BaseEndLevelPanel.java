@@ -4,9 +4,9 @@ import controller.ControllerObj;
 import controller.menu.endLevel.BaseEndLevelController;
 import view.View;
 import view.ViewComp;
-import view.button.ExitButton;
-import view.button.RestartButton;
-import view.button.SettingsButton;
+import view.button.CustomButton;
+import view.button.CustomLogoButton;
+import view.button.CustomRoundLogoButton;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,9 +24,9 @@ import static config.ViewConfig.BOARD_WIDTH;
 public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
 
     protected Image backgroundImage;
-    protected RestartButton restartButton;
-    protected ExitButton exitButton;
-    protected SettingsButton settingsButton;
+    protected CustomLogoButton restartButton;
+    protected CustomButton exitButton;
+    protected CustomRoundLogoButton settingsButton;
 
     protected JLabel levelLabel;
     private int currentLevel;
@@ -83,13 +83,13 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
     private void createButtons() {
         BaseEndLevelController controller = new BaseEndLevelController(this);
 
-        restartButton = new RestartButton();
+        restartButton = new CustomLogoButton("restart",Color.ORANGE);
         restartButton.addActionListener(e -> controller.onRestart());
 
-        exitButton = new ExitButton();
+        exitButton = new CustomButton("EXIT",Color.WHITE,Color.RED);
         exitButton.addActionListener(e -> controller.onExit());
 
-        settingsButton = new SettingsButton();
+        settingsButton = new CustomRoundLogoButton("settings",Color.GRAY.brighter());
         settingsButton.addActionListener(e -> View.getInstance().showPanel(View.PanelName.SETTINGS.getName()));
     }
 

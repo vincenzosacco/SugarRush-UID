@@ -3,7 +3,7 @@ package view.menu.endLevel;
 import controller.GameLoop;
 import controller.menu.endLevel.WinController;
 import model.Model;
-import view.button.NextLevelButton;
+import view.button.CustomLogoButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class WinPanel extends BaseEndLevelPanel {
 
     private JLabel winMessageLabel;
     private JLabel timerLabel;
-    private NextLevelButton nextLevelButton; // Specific button for victory
+    private CustomLogoButton nextLevelButton; // Specific button for victory
     private int stars;    // Number of stars earned in the level
     private int elapsedTime = 0;
 
@@ -80,7 +80,7 @@ public class WinPanel extends BaseEndLevelPanel {
         // Set a larger font for the label
         coinLabel.setFont(new Font("Arial", Font.BOLD, 25));
 
-        nextLevelButton = new NextLevelButton();
+        nextLevelButton = new CustomLogoButton("nextLevel",Color.GREEN);
         nextLevelButton.addActionListener(new WinController(this));
 
     }

@@ -4,8 +4,8 @@ import config.ModelConfig;
 import controller.ControllerObj;
 import model.profile.ProfileManager;
 import view.ViewComp;
+import view.button.CustomButton;
 import view.button.LevelButton;
-import view.button.TutorialButton;
 import view.menu.tutorial.Tutorial;
 
 import javax.imageio.ImageIO;
@@ -37,7 +37,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
     private ImageIcon coinIcon; // needed for the coin counter label resizing
 
     // Tutorial's button
-    private JButton tutorialButton;
+    private final CustomButton tutorialButton;
 
     public StartMenuPanel() {
         // Initialize the array of level buttons
@@ -55,7 +55,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         add(coinCounterLabel);
 
         // The tutorial's button
-        tutorialButton = new TutorialButton();
+        tutorialButton = new CustomButton("Tutorial",Color.BLACK,Color.YELLOW);
         add(tutorialButton);
 
         tutorialButton.addActionListener(e -> showTutorialDialog());
