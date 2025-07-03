@@ -22,33 +22,8 @@ public class ShopPanel extends JPanel implements ViewComp {
 
     private ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/imgs/panels/levels/shopBG.png"));;
 
-    public ShopPanel(){
-
-        setLayout(new BorderLayout());
-
-        creatures = ProfileManager.getLastProfile().getCharacters();
-        currentCharacterIndex = ProfileManager.getLastProfile().getCurrentCharacterIndex();
-
-        //setBackground(Color.green);
-
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setOpaque(false);
-
-        coins = ProfileManager.getLastProfile().getCoins();
-
-        addCreatures(contentPanel);
-
-        JScrollPane scrollPane = new JScrollPane(contentPanel);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(null);
-
-        // Make the scroll pane faster
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.getVerticalScrollBar().setBlockIncrement(128);
-
-        add(scrollPane, BorderLayout.CENTER);
+    public ShopPanel() {
+        refreshCreatures();
     }
 
     @Override
@@ -66,16 +41,9 @@ public class ShopPanel extends JPanel implements ViewComp {
         Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
         coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
-        coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 10));
         coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
         coinCounterLabel.setText(String.valueOf(coins));
-
-        FontMetrics fm = coinCounterLabel.getFontMetrics(coinCounterLabel.getFont());
-        // Calculate the width of the label based on the text and icon size.
-        int labelWidth= fm.stringWidth(String.valueOf(MAX_COINS)) + coinIcon.getImage().getWidth(null)+10;
-        // Set the label height based on the font metrics height
-        int labelHeight= fm.getHeight();
-        coinCounterLabel.setBounds(20, 20, labelWidth, labelHeight);
         add(coinCounterLabel);
 
         addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg")), 0, creatures.get(0), 0);
@@ -100,12 +68,12 @@ public class ShopPanel extends JPanel implements ViewComp {
         JLabel priceLabel = new JLabel(String.valueOf(price));
         ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png"));
         // Resize the icon to fit better
-        Image image = coinIcon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+        Image image = coinIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
 
 
         linePanel.add(creatureLabel); // left
-        linePanel.add(Box.createHorizontalStrut(20)); // space between left and center
+        linePanel.add(Box.createHorizontalStrut(30)); // space between left and center
 
         // buy if not bought and select otherwise
         JButton actionButton;
@@ -120,7 +88,7 @@ public class ShopPanel extends JPanel implements ViewComp {
                     ShopModel.selectCreature(cretureNumber);
                 });
             }
-            linePanel.add(Box.createHorizontalStrut(250)); // space between left and right
+            linePanel.add(Box.createHorizontalStrut(220)); // space between left and right
         }
         else {
             actionButton = new JButton("Buy");
@@ -130,10 +98,15 @@ public class ShopPanel extends JPanel implements ViewComp {
                 ShopModel.buyCreature(cretureNumber, price); //FIXME questa view è controllata da un Model e non da un Controller. SBAGLIATO
             });
             priceLabel.setIcon(coinIcon); // coin icon
-            priceLabel.setFont(new Font("Arial", Font.BOLD, 50));
+            priceLabel.setFont(new Font("Arial", Font.BOLD, 40));
             priceLabel.setBounds(20, 20, 120, 40);
             linePanel.add(priceLabel); // center
-            linePanel.add(Box.createHorizontalStrut(100)); // space between center and right
+            if (price<1000) {
+                linePanel.add(Box.createHorizontalStrut(100)); // space between center and right
+            }
+            else{
+                linePanel.add(Box.createHorizontalStrut(78)); // space between center and right
+            }
         }
 
         actionButton.setPreferredSize(new Dimension(120, 50)); // width, height
