@@ -3,6 +3,7 @@ package model.game;
 import model.game.GameConstants.Block;
 import model.game.entities.Creature;
 import model.game.entities.evil.Enemy1;
+import model.game.entities.evil.Enemy2;
 import utils.Resources;
 
 import java.io.BufferedReader;
@@ -56,7 +57,7 @@ public class MapParser {
                             continue; // Move to next line immediately
                         } else if (readingMap) {
                             if (line.startsWith("coins=") || line.startsWith("textRequest=")) {
-                                break; // fine della sezione mappa
+                                break; // end map
                             }
                             // Here you add the lines that are *actually* part of the game.
                             // If a blank line within the game section is to represent a blank line in the grid,
@@ -113,6 +114,22 @@ public class MapParser {
                     case 'e' -> {
                         mat.get(row).add(Block.ENEMY1);
                         game.entities.add(new Enemy1(row,col));
+                    }
+                    case 'r' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        game.entities.add(new Enemy2(row, col, GameConstants.Direction.RIGHT));
+                    }
+                    case 'l' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        game.entities.add(new Enemy2(row, col, GameConstants.Direction.LEFT));
+                    }
+                    case 'u' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        game.entities.add(new Enemy2(row, col,GameConstants.Direction.UP));
+                    }
+                    case 'd' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        game.entities.add(new Enemy2(row, col, GameConstants.Direction.DOWN));
                     }
                     case 't' -> mat.get(row).add(Block.THORNS);
                     case ' '-> mat.get(row).add(Block.SPACE);

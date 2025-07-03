@@ -53,6 +53,8 @@ public interface GameConstants {
         /**A collectible item in the game that can be consumed by the creature.*/
         SUGAR,
         ENEMY1,
+        ENEMY2, // Enemy shooting projectiles
+        PROJECTILE, // For ENEMY2
         CANDY,
         /** A block that if you touch it you die.*/
         THORNS;

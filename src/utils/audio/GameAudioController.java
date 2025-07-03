@@ -18,6 +18,7 @@ public class GameAudioController implements PropertyChangeListener {
     private static final String BITE_SFX_PATH = "/audio/biteSound.wav";
     private static final String THORNS_SFX_PATH = "/audio/thornsSound.wav";
     private static final String KILL_BEE_SFX_PATH = "/audio/killBeeSound.wav";
+    private static final String HIT_SHOT_PATH = "/audio/hitShotSound.wav";
 
     private GameAudioController() {
         audioManager = new AudioManager();
@@ -74,6 +75,9 @@ public class GameAudioController implements PropertyChangeListener {
                 break;
             case "killBee":
                 path= KILL_BEE_SFX_PATH;
+                break;
+            case "hitShot":
+                path= HIT_SHOT_PATH;
                 break;
             default:
                 System.err.println("SFX non riconosciuto: " + sfxIdentifier);

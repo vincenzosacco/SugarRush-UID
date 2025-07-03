@@ -78,9 +78,17 @@ public class Creature extends Entity {
                 GameAudioController.getInstance().playSfx("wall");
                 canMove = false;
             }
-            // DIE if collides with an enemy or thorns //
+            // DIE if collides with an enemy,projectile or thorns //
             case ENEMY1 -> {
                 GameAudioController.getInstance().playSfx("killBee");
+                Model.getInstance().getGame().killCreature();
+            }
+            case ENEMY2 -> {
+                this.direction = Direction.NONE;
+                canMove = false;
+            }
+            case PROJECTILE -> {
+                GameAudioController.getInstance().playSfx("hitShot");
                 Model.getInstance().getGame().killCreature();
             }
             case THORNS -> {

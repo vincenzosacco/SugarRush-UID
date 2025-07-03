@@ -51,8 +51,8 @@ public class Enemy1 extends Enemy {
     public boolean manageCollision(GameConstants.Block block, Cell cell) {
 //        if (this.direction == Direction.NONE) return false;
 
-        // CAN MOVE ONLY IF THE BLOCK IS SPACE or CREATURE//
-        if (block == GameConstants.Block.SPACE) {
+        // CAN MOVE ONLY IF THE BLOCK IS SPACE, CREATURE or PROJECTILE//
+        if (block == GameConstants.Block.SPACE || block == GameConstants.Block.PROJECTILE) {
             return true;
         }
         else if (block == GameConstants.Block.CREATURE){

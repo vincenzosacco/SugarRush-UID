@@ -2,6 +2,7 @@ package model.game;
 
 import controller.GameLoop;
 import model.game.entities.Creature;
+import model.game.entities.evil.Projectile;
 import model.game.utils.Cell;
 import model.profile.ProfileManager;
 import view.View;
@@ -115,6 +116,11 @@ public class Game {
         return entitiesRO;
     }
 
+    // Method to add the Projectile
+    public void addEntity(Entity e){
+        entities.add(e);
+    }
+
     /**
      * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.
      * <p>
@@ -157,6 +163,12 @@ public class Game {
                 // APPLY NEW COORDS IN THE GAME MATRIX //
                 Cell newCoord = ent.getCoord();
                 gameMat.setCell(newCoord, ent.blockType());
+
+                if (!canPerform && ent instanceof Projectile){
+                    // Free the cell and remove the projectile
+                    gameMat.setCell(ent.getCoord(), GameConstants.Block.SPACE);
+                    entities.remove(ent);
+                }
             }
         }
     }
@@ -235,5 +247,4 @@ public class Game {
             View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(ProfileManager.getLastProfile().getCoins());
         });
     }
-
 }
