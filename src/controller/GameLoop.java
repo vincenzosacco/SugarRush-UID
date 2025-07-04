@@ -1,6 +1,7 @@
 package controller;
 
 import model.Model;
+import model.game.MapParser;
 import utils.audio.GameAudioController;
 import view.View;
 
@@ -102,9 +103,12 @@ public class GameLoop implements Runnable {
     public void shutdown() {
         resetGameTimer(); // Reset the game timer to zero
 
-        // if time is less than 30, add a star
-        if (getElapsedSeconds() < 30) {
-            Model.getInstance().getGame().addstar(); // Add a star if the elapsed time is less than 30 seconds
+        // Get the time limit from MapParser
+        int timeLimit = MapParser.getTimeLimit();
+
+        // if time is less than the specified time limit, add a star
+        if (getElapsedSeconds() < timeLimit && timeLimit > 0) { // Ensure timeLimit is positive
+            Model.getInstance().getGame().addstar(); // Add a star if the elapsed time is less than the specified time limit
         }
         // reset stars
         Model.getInstance().getGame().resetStarCount(); // Reset the star count in the game model

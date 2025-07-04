@@ -36,6 +36,14 @@ public class MapParser {
     public final static String MAP_4 = "/maps/map4.txt";
     public final static String MAP_5 = "/maps/map5.txt";
     public final static String MAP_6 = "/maps/map6.txt";
+
+    // To store the time limit from the map file
+    private static int timeLimit=0;
+
+    public static int getTimeLimit() {
+        return timeLimit;
+    }
+
     /**
      * Read a .txt file a convert each line to a String element of the returned Array.
      * @return a String[] containing lines
@@ -56,10 +64,19 @@ public class MapParser {
                             // The actual content of the game starts on the next line.
                             continue; // Move to next line immediately
                         } else if (readingMap) {
-                            if (line.startsWith("coins=") || line.startsWith("textRequest=")) {
+                            if (line.startsWith("time=")) {
+                                // Set the time limit from the map file
+                                try{
+                                    timeLimit=Integer.parseInt(line.substring("time=".length()).trim());
+                                }catch (NumberFormatException e){
+                                    System.err.println("Invalid time format in map file: " + line);
+                                    timeLimit = 0; // Default to 0 or handle as an error
+                                }
+                                continue; // Don't add this line to mapLines
+                            }else if (line.startsWith("textRequest=")) {
                                 break; // end map
                             }
-                            // Here you add the lines that are *actually* part of the game.
+                                // Here you add the lines that are *actually* part of the game.
                             // If a blank line within the game section is to represent a blank line in the grid,
                             // then `mapLines.add(line)` is correct for those.
                             mapLines.add(line);
