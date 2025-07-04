@@ -42,8 +42,13 @@ public class GameLoop implements Runnable {
     }
 
     private Timer gameTimer;
-    private int elapsedSeconds = 0;
-    private int oldElapsedSeconds = 0;
+    // Variable to keep count of total milliseconds elapsed
+    private long totalElapsedMillis = 0;
+    // Time when the timer was started or resumed
+    private long startTimeMillis;
+
+    private int oldElapsedSeconds = 0; // Used for shutdown logic
+
 
     /**
      * Starts the game loop if it's not already running.
@@ -60,13 +65,15 @@ public class GameLoop implements Runnable {
             GameAudioController.getInstance().playGameMusic();
             startGameTimer(); // Start the game timer to track elapsed time
         } else if (running) {
-
             // Here the game loop is already active with a live thread, do nothing.
         } else {
             // This case means that gameThread exists and is alive, but 'running' is false.
             // This could indicate an inconsistency, but to be safe, reset the state to running=true.
             running = true;
+            startGameTimer();
         }
+        // Record the current moment as start or resume time
+        startTimeMillis = System.currentTimeMillis();
     }
 
 
@@ -80,6 +87,8 @@ public class GameLoop implements Runnable {
 
         pauseGameTimer(); // Pause the game timer if it was running
         running = false; // Set the execution status to false to terminate the loop in run()
+        // Calculates the time elapsed since the last start/resume and adds it to the total
+        totalElapsedMillis += (System.currentTimeMillis() - startTimeMillis);
 
         // Interrupt the thread to wake it from any sleep or block
         if (gameThread != null) {
@@ -186,7 +195,9 @@ public class GameLoop implements Runnable {
      * This method is called as often as possible while maintaining the target FPS.
      */
     private void renderView() {
-        View.getInstance().getGamePanel().setElapsedSeconds(elapsedSeconds);
+        // Calculate total seconds by combining total milliseconds with current milliseconds
+        long currentTotalSeconds = (totalElapsedMillis + (System.currentTimeMillis() - startTimeMillis)) / 1000;
+        View.getInstance().getGamePanel().setElapsedSeconds(currentTotalSeconds);
         View.getInstance().notifyView();
     }
 
@@ -200,13 +211,14 @@ public class GameLoop implements Runnable {
 
     private void startGameTimer() {
         if (gameTimer == null) {
-            gameTimer = new Timer(1000, e -> {
-                elapsedSeconds++;
+            // The timer will update the view every 100ms for smoother display of seconds
+            gameTimer = new Timer(100, e -> {
+                // `total ElapsedMillis` is only updated when the game is paused/resumed
+                // Here we just update the view with the time calculated in renderView()
                 renderView();
             });
         }
         if (!gameTimer.isRunning()) {
-            gameTimer.restart();
             gameTimer.start();
         }
     }
@@ -219,12 +231,15 @@ public class GameLoop implements Runnable {
 
     public void resetGameTimer() {
         this.pauseGameTimer();
-        oldElapsedSeconds = elapsedSeconds;
-        elapsedSeconds = 0; // Reset elapsed seconds to zero
-        View.getInstance().getGamePanel().setElapsedSeconds(elapsedSeconds); // Update the view
+        oldElapsedSeconds = (int) ((totalElapsedMillis + (System.currentTimeMillis() - startTimeMillis)) / 1000);
+        totalElapsedMillis = 0; // Reset the total milliseconds to zero
+        startTimeMillis = System.currentTimeMillis(); // Reset start time
+        View.getInstance().getGamePanel().setElapsedSeconds(0); // Update the view to zero
     }
 
+
     public int getElapsedSeconds() {
+        // Returns the entire elapsed seconds, which were saved at shutdown time
         return oldElapsedSeconds;
     }
 
