@@ -55,7 +55,7 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         add(coinCounterLabel);
 
         // The tutorial's button
-        tutorialButton = new CustomButton("Tutorial",Color.BLACK,Color.YELLOW);
+        tutorialButton = new CustomButton("Tutorial", Color.BLACK, new Color(255, 235, 59)); // Soft Yellow
         add(tutorialButton);
 
         tutorialButton.addActionListener(e -> showTutorialDialog());

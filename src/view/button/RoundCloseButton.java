@@ -29,7 +29,7 @@ public class RoundCloseButton extends JButton {
         int height = getHeight();
 
         // Fill the button with a red circular background
-        g2.setColor(Color.RED);
+        g2.setColor(new Color(220, 53, 69));
         g2.fillOval(0, 0, width, height);
 
         // Draw a black inner border with centered stroke

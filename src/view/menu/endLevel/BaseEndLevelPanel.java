@@ -83,13 +83,13 @@ public abstract class BaseEndLevelPanel extends JPanel implements ViewComp {
     private void createButtons() {
         BaseEndLevelController controller = new BaseEndLevelController(this);
 
-        restartButton = new CustomLogoButton("restart",Color.ORANGE);
+        restartButton = new CustomLogoButton("restart",new Color(255, 193, 7)); // Amber / Golden Yellow
         restartButton.addActionListener(e -> controller.onRestart());
 
-        exitButton = new CustomButton("EXIT",Color.WHITE,Color.RED);
+        exitButton = new CustomButton("EXIT",Color.WHITE,new Color(220, 53, 69)); // Bootstrap's "Danger" Red
         exitButton.addActionListener(e -> controller.onExit());
 
-        settingsButton = new CustomRoundLogoButton("settings",Color.GRAY.brighter());
+        settingsButton = new CustomRoundLogoButton("settings",new Color(119, 136, 153)); // Light Slate Gray
         settingsButton.addActionListener(e -> View.getInstance().showPanel(View.PanelName.SETTINGS.getName()));
     }
 

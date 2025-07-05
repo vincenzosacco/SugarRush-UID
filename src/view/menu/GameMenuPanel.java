@@ -88,24 +88,24 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         GameMenuController controller=new GameMenuController(this);
 
         // Create and configure the play button
-        playButton = new CustomLogoButton("play",Color.GREEN.darker().darker());
+        playButton = new CustomLogoButton("play",new Color(50, 205, 50));
         playButton.addActionListener(e -> {
             controller.onPlay();
         });
         // Create and configure the restart button
-        restartButton=new CustomLogoButton("restart",Color.ORANGE);
+        restartButton=new CustomLogoButton("restart",new Color(255, 193, 7));
         restartButton.addActionListener(e -> {
             controller.onRestart();
         });
 
         // Create and configure the EXIT button
-        exitButton=new CustomButton("EXIT",Color.WHITE,Color.RED);
+        exitButton=new CustomButton("EXIT",Color.WHITE,new Color(220, 53, 69));
         exitButton.addActionListener(e ->{
             controller.onExit();
         });
 
         // Create and configure the settings button
-        settingsButton=new CustomRoundLogoButton("settings",Color.GRAY.brighter());
+        settingsButton=new CustomRoundLogoButton("settings",new Color(119, 136, 153));
         settingsButton.addActionListener(e ->{
             controller.onSettings();
         });
@@ -162,7 +162,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             // Text description for each coin objective
             JTextArea textArea = new JTextArea(textRequest[i]);
             textArea.setFont(new Font("Arial", Font.PLAIN, 14));
-            textArea.setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker());
+            textArea.setForeground(coinsCollected[i] ? new Color(76, 175, 80) : new Color(220, 53, 69));
             textArea.setBackground(new Color(255, 255, 255, 220)); // Semi-transparent white
             // Enables automatic line wrapping when text exceeds the width of the text area.
             textArea.setLineWrap(true);
@@ -294,10 +294,10 @@ public class GameMenuPanel extends JPanel implements ViewComp {
                 originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback
             }
 
-            iconLabels[i].setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker()); // Color the icon for consistency
+            iconLabels[i].setForeground(coinsCollected[i] ? new Color(76, 175, 80) : new Color(220, 53, 69)); // Color the icon for consistency
 
             textLabels[i].setText(textRequest[i]);
-            textLabels[i].setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker());
+            textLabels[i].setForeground(coinsCollected[i] ? new Color(76, 175, 80) : new Color(220, 53, 69));
         }
         applyScalingBasedOnCurrentDimensions();
     }

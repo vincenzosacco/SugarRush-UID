@@ -62,9 +62,9 @@ public class Tutorial extends JPanel {
 
         // Navigation panel with Back, Next, and Exit buttons at the bottom
         JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        backButton = new CustomButton("← Back",Color.BLACK,Color.WHITE);
-        nextButton = new CustomButton("Next →",Color.BLACK,Color.WHITE);
-        exitButton = new CustomButton("EXIT",Color.WHITE,Color.RED);
+        backButton = new CustomButton("← Back", Color.BLACK, Color.WHITE);
+        nextButton = new CustomButton("Next →", Color.BLACK, Color.WHITE);
+        exitButton = new CustomButton("EXIT", Color.WHITE, new Color(220, 53, 69));
 
         navPanel.add(backButton);
         navPanel.add(nextButton);

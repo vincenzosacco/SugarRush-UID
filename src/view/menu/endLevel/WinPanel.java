@@ -65,7 +65,7 @@ public class WinPanel extends BaseEndLevelPanel {
 
     private void createWinSpecificComponents() {
         winMessageLabel = new JLabel("YOU WIN!", SwingConstants.CENTER);
-        winMessageLabel.setForeground(Color.GREEN);
+        winMessageLabel.setForeground(new Color(76, 175, 80)); // Modern green
         winMessageLabel.setFont(new Font("Arial", Font.BOLD, 48)); //Initial dimenison
 
         timerLabel = new JLabel("Time: " + elapsedTime +"s",SwingConstants.CENTER);
@@ -80,7 +80,7 @@ public class WinPanel extends BaseEndLevelPanel {
         // Set a larger font for the label
         coinLabel.setFont(new Font("Arial", Font.BOLD, 25));
 
-        nextLevelButton = new CustomLogoButton("nextLevel",Color.GREEN);
+        nextLevelButton = new CustomLogoButton("nextLevel", new Color(76, 175, 80)); // Modern Green
         nextLevelButton.addActionListener(new WinController(this));
 
     }

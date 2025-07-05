@@ -43,7 +43,7 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         //setPreferredSize(new Dimension(600, 400)); // Default size for the settings panel
         setOpaque(false);
 
-        gameControlsButton = new CustomButton("Game controls",Color.BLACK,Color.GRAY);
+        gameControlsButton = new CustomButton("Game controls", Color.BLACK, new Color(112, 128, 144)); // Slate Gray
 
         // Load background image and icons once
         loadImages();
@@ -244,8 +244,8 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0)); // FlowLayout for the buttons
         buttonPanel.setOpaque(false);
 
-        cancelButton = new CustomButton("Cancel",Color.BLACK,Color.RED);
-        saveButton = new CustomButton("Save",Color.BLACK,Color.GREEN);
+        cancelButton = new CustomButton("Cancel", Color.WHITE, new Color(220, 53, 69)); // Soft Red
+        saveButton = new CustomButton("Save", Color.WHITE, new Color(76, 175, 80));     // Modern Green
         buttonPanel.add(cancelButton);
         buttonPanel.add(saveButton);
 

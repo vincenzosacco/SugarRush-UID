@@ -44,7 +44,7 @@ public class LosePanel extends BaseEndLevelPanel {
 
     private void createLoseSpecificComponents() {
         loseMessageLabel = new JLabel("GAME OVER", SwingConstants.CENTER);
-        loseMessageLabel.setForeground(Color.RED);
+        loseMessageLabel.setForeground(new Color(178, 34, 34)); // Firebrick
         loseMessageLabel.setFont(new Font("Arial", Font.BOLD, 48)); // Initial dimension
 
         timerLabel=new JLabel("Time: " + elapsedTime +"s",SwingConstants.CENTER);

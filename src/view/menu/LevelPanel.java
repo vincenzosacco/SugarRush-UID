@@ -74,7 +74,7 @@ public class LevelPanel extends JPanel implements ViewComp{
         });
 
         // Create and configure the play button
-        playButton = new CustomLogoButton("play",Color.GREEN.darker());
+        playButton = new CustomLogoButton("play", new Color(50, 205, 50)); // Lime green
         playButton.addActionListener(e -> {
             controller.onPlay(levelIndex);
         });
@@ -145,7 +145,7 @@ public class LevelPanel extends JPanel implements ViewComp{
             // Text description for each coin objective
             JTextArea textArea = new JTextArea(textRequest[i]);
             textArea.setFont(new Font("Arial", Font.PLAIN, 14));
-            textArea.setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker());
+            textArea.setForeground(coinsCollected[i] ? new Color(76, 175, 80) : new Color(220, 53, 69));
             textArea.setBackground(new Color(255, 255, 255, 220)); // Semi-transparent white
             // Enables automatic line wrapping when text exceeds the width of the text area.
             textArea.setLineWrap(true);
