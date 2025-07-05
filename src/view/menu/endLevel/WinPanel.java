@@ -119,7 +119,7 @@ public class WinPanel extends BaseEndLevelPanel {
     // Update the number of Coins
     public void setCoins(int stars) {
         this.stars = stars;
-        int coins = stars * 10;         //10 coins per star
+        int coins = (stars * 100)+10;         // 100 coins for each star + 10 coins every time the creature reaches the candy (each victory)
 
         // Scale the icon to a larger size
         Image img = coinIcon.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);

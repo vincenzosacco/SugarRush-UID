@@ -25,7 +25,6 @@ public class Game {
 
     // count star
     private int starCount = 0;
-    private int achievedStarCount = 0;
 
     /**
      * <p>
@@ -45,6 +44,15 @@ public class Game {
 
     // experimental approach
     private final List<Entity> entitiesRO = Collections.unmodifiableList(entities);
+    // Coins of the current level
+    private Boolean[] coinsCollected;
+
+    public void setCoinsCollected(int pos){
+        if(!this.coinsCollected[pos]){
+            this.coinsCollected[pos]=true;
+            addstar();
+        }
+    }
 
     private int currLevel;
 
@@ -54,14 +62,15 @@ public class Game {
 
     public Game() {
         // LOAD MAP FROM RESOURCE
-        //MapParser.loadMap(MapParser.MAP_1, this); // update map related fields
         //default
         currLevel=1;
-
+        coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
     }
     //set the current map of the level
     public void setLevel(int index){
         currLevel=index;
+        coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
+        this.starCount=0;
 
         switch (index) {
             case 1: MapParser.loadMap(MapParser.MAP_1, this); break;
@@ -88,13 +97,8 @@ public class Game {
 
     }
 
-    public void resetStarCount(){
-        achievedStarCount = starCount;
-        starCount = 0;
-    }
-
     public int getStarCount(){
-        return achievedStarCount;
+        return this.starCount;
     }
 
     // MODEL //
@@ -214,6 +218,10 @@ public class Game {
 
     public void killCreature() {
         SwingUtilities.invokeLater(() -> {
+            // Reset if lost
+            this.coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
+            starCount=0;
+
             GameLoop.getInstance().pauseGameTimer();
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().loseLevel();
@@ -238,12 +246,18 @@ public class Game {
 
     public void win(){
         SwingUtilities.invokeLater(() -> {
-
             GameLoop.getInstance().pauseGameTimer();
+
+            // Set the coins taken in this level and save them
+            GameLoop.getInstance().controlTime();
+            ProfileManager.getLastProfile().setLevelStarsCount(this.currLevel,this.coinsCollected);
+
             View.getInstance().getGamePanel().endGame();
             View.getInstance().getGamePanel().winLevel();
 
-            ProfileManager.getLastProfile().sumCoins(getStarCount()*10); // 10 coins per star
+            // Adds the coins
+            ProfileManager.getLastProfile().sumCoins(getStarCount()*100); // 100 coins for each star
+            ProfileManager.getLastProfile().sumCoins(10); //10 coins every time the creature reaches the candy (each victory)
             View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(ProfileManager.getLastProfile().getCoins());
         });
     }

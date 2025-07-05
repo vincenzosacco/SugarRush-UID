@@ -294,7 +294,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
                 originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback
             }
 
-            iconLabels[i].setForeground(coinsCollected[i] ? Color.GREEN : Color.RED); // Colora l'icona per coerenza
+            iconLabels[i].setForeground(coinsCollected[i] ? Color.GREEN : Color.RED); // Color the icon for consistency
 
             textLabels[i].setText(textRequest[i]);
             textLabels[i].setForeground(coinsCollected[i] ? Color.GREEN : Color.RED);

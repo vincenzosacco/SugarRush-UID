@@ -101,17 +101,11 @@ public class GameLoop implements Runnable {
      * Stops the game loop and waits for the game thread to finish.
      */
     public void shutdown() {
-        resetGameTimer(); // Reset the game timer to zero
+        // Compute elapsed time before resetting
+        oldElapsedSeconds = (int) ((totalElapsedMillis + (System.currentTimeMillis() - startTimeMillis)) / 1000);
 
-        // Get the time limit from MapParser
-        int timeLimit = MapParser.getTimeLimit();
-
-        // if time is less than the specified time limit, add a star
-        if (getElapsedSeconds() < timeLimit && timeLimit > 0) { // Ensure timeLimit is positive
-            Model.getInstance().getGame().addstar(); // Add a star if the elapsed time is less than the specified time limit
-        }
-        // reset stars
-        Model.getInstance().getGame().resetStarCount(); // Reset the star count in the game model
+        // Reset timer values
+        resetGameTimer();
         // update profile
 
         if (!running) {
@@ -138,8 +132,19 @@ public class GameLoop implements Runnable {
             gameThread = null; // IMPORTANT: Reset the thread reference after it finishes
         }
     }
+    // Check if the time taken to complete the level allows you to get a star
+    public void controlTime(){
+        // Compute elapsed time
+        oldElapsedSeconds = (int) ((totalElapsedMillis + (System.currentTimeMillis() - startTimeMillis)) / 1000);
 
+        // Get the time limit from MapParser
+        int timeLimit = MapParser.getTimeLimit();
 
+        // if time is less than the specified time limit, add a star if it's possible
+        if (getElapsedSeconds() < timeLimit && timeLimit > 0) { // Ensure timeLimit is positive
+            Model.getInstance().getGame().setCoinsCollected(1); // Pos=1 --> Time Trial Star
+        }
+    }
 
     /**
      * Main game loop implementation.
@@ -232,13 +237,12 @@ public class GameLoop implements Runnable {
             gameTimer.stop();
         }
     }
-
+    // Reset level time
     public void resetGameTimer() {
         this.pauseGameTimer();
-        oldElapsedSeconds = (int) ((totalElapsedMillis + (System.currentTimeMillis() - startTimeMillis)) / 1000);
-        totalElapsedMillis = 0; // Reset the total milliseconds to zero
-        startTimeMillis = System.currentTimeMillis(); // Reset start time
-        View.getInstance().getGamePanel().setElapsedSeconds(0); // Update the view to zero
+        totalElapsedMillis = 0;
+        startTimeMillis = System.currentTimeMillis();
+        View.getInstance().getGamePanel().setElapsedSeconds(0);
     }
 
 

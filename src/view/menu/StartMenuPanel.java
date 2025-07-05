@@ -243,6 +243,19 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         dialog.setVisible(true);
     }
 
+    /**
+     * Update icons and counter when panel becomes visible.
+     */
+    public void refreshLevelButtons() {
+        for (int i = 0; i < numLevel; i++) {
+            Boolean[] stars = ProfileManager.getLastProfile().getLevelStarsCount(i + 1);
+            levelButton[i].setStarsCollected(stars);
+            levelButton[i].repaint(); // Force repaint buttons
+        }
+        coinCounterLabel.setText(String.valueOf(ProfileManager.getLastProfile().getCoins()));
+        repaint(); // Also repaint the panel and background
+    }
+
 // ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
 
     // Override paintComponent to draw the scaled background image behind the buttons
@@ -271,6 +284,5 @@ public class StartMenuPanel extends JPanel implements ViewComp {
 
     @Override
     public void bindController(ControllerObj controller) {
-
     }
 }

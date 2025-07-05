@@ -32,5 +32,7 @@ public class BaseEndLevelController implements ControllerObj {
         GameLoop.getInstance().shutdown();
         Model.getInstance().getGame().clearGameMatrix();
         View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+        //Update the StartMenuPanel button graphics
+        View.getInstance().getCustomTabbedPane().getStartMenuPanel().refreshLevelButtons();
     }
 }
