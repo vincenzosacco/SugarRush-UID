@@ -4,10 +4,12 @@ import controller.ControllerObj;
 import model.game.utils.ShopModel;
 import model.profile.ProfileManager;
 import view.ViewComp;
+import view.button.CustomButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 import static config.ModelConfig.MAX_COINS;
 
@@ -20,7 +22,7 @@ public class ShopPanel extends JPanel implements ViewComp {
     private int coins;
     private JLabel coinCounterLabel;
 
-    private ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/imgs/panels/levels/shopBG.png"));;
+    private final ImageIcon backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/panels/levels/shopBG.png")));;
 
     public ShopPanel() {
         refreshCreatures();
@@ -36,7 +38,7 @@ public class ShopPanel extends JPanel implements ViewComp {
         // Add some space at the top of the panel
         contentPanel.add(Box.createVerticalStrut(50));
 
-        ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png"));
+        ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));
         // Resize the icon to fit better
         Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
@@ -46,12 +48,12 @@ public class ShopPanel extends JPanel implements ViewComp {
         coinCounterLabel.setText(String.valueOf(coins));
         add(coinCounterLabel);
 
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg")), 0, creatures.get(0), 0);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature2.png")), 100, creatures.get(1), 1);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature3.png")), 200, creatures.get(2), 2);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature4.png")), 400, creatures.get(3), 3);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature5.png")), 800, creatures.get(4), 4);
-        addCreatureLine(contentPanel, new ImageIcon(getClass().getResource("/imgs/game/blocks/creature/creature6.png")), 1200, creatures.get(5), 5);
+        addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg"))), 0, creatures.get(0), 0);
+        addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature2.png"))), 100, creatures.get(1), 1);
+        addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature3.png"))), 200, creatures.get(2), 2);
+        addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature4.png"))), 400, creatures.get(3), 3);
+        addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature5.png"))), 800, creatures.get(4), 4);
+        addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature6.png"))), 1200, creatures.get(5), 5);
     }
 
     private void addCreatureLine(JPanel parent, ImageIcon creatureIcon, int price, boolean bought, int cretureNumber) {
@@ -66,7 +68,7 @@ public class ShopPanel extends JPanel implements ViewComp {
         JLabel creatureLabel = new JLabel(creatureIcon);
 
         JLabel priceLabel = new JLabel(String.valueOf(price));
-        ImageIcon coinIcon = new ImageIcon(getClass().getResource("/imgs/icons/coinsImmage.png"));
+        ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));
         // Resize the icon to fit better
         Image image = coinIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         coinIcon = new ImageIcon(image);
@@ -76,12 +78,12 @@ public class ShopPanel extends JPanel implements ViewComp {
         linePanel.add(Box.createHorizontalStrut(30)); // space between left and center
 
         // buy if not bought and select otherwise
-        JButton actionButton;
+        CustomButton actionButton;
         if (bought){
             if (cretureNumber == currentCharacterIndex) {
-                actionButton = new JButton("Selected");
+                actionButton = new CustomButton("Selected", Color.BLACK, new Color(173, 216, 230)); // Light Blue
             } else {
-                actionButton = new JButton("Select");
+                actionButton = new CustomButton("Select", Color.BLACK, new Color(144, 238, 144)); // Light Green
                 actionButton.setToolTipText("Select this creature");
                 actionButton.addActionListener(e -> {
                     // Select the creature
@@ -91,7 +93,7 @@ public class ShopPanel extends JPanel implements ViewComp {
             linePanel.add(Box.createHorizontalStrut(220)); // space between left and right
         }
         else {
-            actionButton = new JButton("Buy");
+            actionButton = new CustomButton("Buy", Color.BLACK, new Color(255, 204, 153)); // Light Orange
             actionButton.setToolTipText("Buy this creature");
             actionButton.addActionListener(e -> {
                 // Buy the creature
@@ -111,7 +113,6 @@ public class ShopPanel extends JPanel implements ViewComp {
 
         actionButton.setPreferredSize(new Dimension(120, 50)); // width, height
         actionButton.setMaximumSize(new Dimension(120, 50));
-        actionButton.setBackground(new Color(144, 238, 144)); // A light green (Medium Aquamarine
 
         linePanel.add(actionButton); // right
 
