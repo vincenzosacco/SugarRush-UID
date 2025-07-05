@@ -88,7 +88,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
         GameMenuController controller=new GameMenuController(this);
 
         // Create and configure the play button
-        playButton = new CustomLogoButton("play",Color.GREEN.darker());
+        playButton = new CustomLogoButton("play",Color.GREEN.darker().darker());
         playButton.addActionListener(e -> {
             controller.onPlay();
         });
@@ -162,7 +162,7 @@ public class GameMenuPanel extends JPanel implements ViewComp {
             // Text description for each coin objective
             JTextArea textArea = new JTextArea(textRequest[i]);
             textArea.setFont(new Font("Arial", Font.PLAIN, 14));
-            textArea.setForeground(coinsCollected[i] ? Color.GREEN : Color.RED);
+            textArea.setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker());
             textArea.setBackground(new Color(255, 255, 255, 220)); // Semi-transparent white
             // Enables automatic line wrapping when text exceeds the width of the text area.
             textArea.setLineWrap(true);
@@ -294,10 +294,10 @@ public class GameMenuPanel extends JPanel implements ViewComp {
                 originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback
             }
 
-            iconLabels[i].setForeground(coinsCollected[i] ? Color.GREEN : Color.RED); // Color the icon for consistency
+            iconLabels[i].setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker()); // Color the icon for consistency
 
             textLabels[i].setText(textRequest[i]);
-            textLabels[i].setForeground(coinsCollected[i] ? Color.GREEN : Color.RED);
+            textLabels[i].setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker());
         }
         applyScalingBasedOnCurrentDimensions();
     }

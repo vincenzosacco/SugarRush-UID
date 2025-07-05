@@ -145,7 +145,7 @@ public class LevelPanel extends JPanel implements ViewComp{
             // Text description for each coin objective
             JTextArea textArea = new JTextArea(textRequest[i]);
             textArea.setFont(new Font("Arial", Font.PLAIN, 14));
-            textArea.setForeground(coinsCollected[i] ? Color.GREEN : Color.RED);
+            textArea.setForeground(coinsCollected[i] ? Color.GREEN.darker() : Color.RED.darker());
             textArea.setBackground(new Color(255, 255, 255, 220)); // Semi-transparent white
             // Enables automatic line wrapping when text exceeds the width of the text area.
             textArea.setLineWrap(true);
