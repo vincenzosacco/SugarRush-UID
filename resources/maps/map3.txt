@@ -2,7 +2,7 @@ map=
 xxxxxxxxxxxxxxxxxxx
 xc       x   x    x
 x                xx
-xx      x    x xxxx
+xx      x u  x xxxx
 xxxxxxxxxxxxtx    x
 x            x    x
 x      xxxx  x    x

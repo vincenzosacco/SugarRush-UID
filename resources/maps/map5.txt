@@ -1,22 +1,22 @@
 map=
 xxxxxxxxxxxxxxxxxxx
 xc           x    x
-x           e    xx
-xx           x xxxx
+x                xx
+xx     u     x xxxx
 xxxxxxxxxxxxtx    x
-x            x    x
+x      S     x    x
 x      xxxx  x    x
-x      x     x    t
+x      d     x    t
 x                 t
 x          xxxxxxxx
-xx                x
+xx         e      x
 x                 x
 x                 x
 t                 x
 xxxxxxxxxxxxxxxx  x
+x        e        x
 x                 x
-x                 x
-x    x            x
+x    u            x
 xxx  x            x
 xs   x            x
 xxxxxxxxxxxxxxxxxxx

@@ -4,11 +4,11 @@ xc           x    x
 x                xx
 xx           x xxxx
 xxxxxxxxxxxxtx    x
-x     d      x    x
+x            x    x
 x      xxxx  x    x
 x      x     x    t
 x                 t
-xu         xxxxxxxx
+x          xxxxxxxx
 xx               Sx
 x                 x
 x                 x

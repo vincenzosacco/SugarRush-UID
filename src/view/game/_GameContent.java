@@ -5,10 +5,13 @@ import model.game.GameConstants;
 import model.game.Entity;
 import model.game.Game;
 import model.game.utils.Cell;
+import model.profile.ProfileManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

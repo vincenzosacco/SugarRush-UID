@@ -2,11 +2,11 @@ map=
 xxxxxxxxxxxxxxxxxxx
 xc           x    x
 x                xx
-xx           x xxxx
+xx      u    x xxxx
 xxxxxxxxxxxxtx    x
 x        S   x    x
 x      xxxx  x    x
-x      x     x    t
+x      d     x    t
 x                 t
 x          xxxxxxxx
 xxe               x
@@ -14,7 +14,7 @@ x                 x
 x                ex
 t                 x
 xxxxxxxxxxxxxxxx  x
-x                 x
+x          d      x
 x                 x
 x    x            x
 xxx  x            x

@@ -24,9 +24,7 @@ public class ShopPanel extends JPanel implements ViewComp {
 
     private final ImageIcon backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/panels/levels/shopBG.png")));;
 
-    public ShopPanel() {
-        refreshCreatures();
-    }
+    public ShopPanel() {refreshCreatures();}
 
     @Override
     public void bindController(ControllerObj controller) {
@@ -34,19 +32,6 @@ public class ShopPanel extends JPanel implements ViewComp {
     }
 
     public void addCreatures(JPanel contentPanel) {
-
-        // Add some space at the top of the panel
-        contentPanel.add(Box.createVerticalStrut(50));
-
-        ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));
-        // Resize the icon to fit better
-        Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        coinIcon = new ImageIcon(image);
-        coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
-        coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 10));
-        coinCounterLabel.setForeground(Color.WHITE); // Make text more visible
-        coinCounterLabel.setText(String.valueOf(coins));
-        add(coinCounterLabel);
 
         addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature-l.jpg"))), 0, creatures.get(0), 0);
         addCreatureLine(contentPanel, new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/game/blocks/creature/creature2.png"))), 100, creatures.get(1), 1);
@@ -143,14 +128,28 @@ public class ShopPanel extends JPanel implements ViewComp {
 
         creatures = ProfileManager.getLastProfile().getCharacters();
         currentCharacterIndex = ProfileManager.getLastProfile().getCurrentCharacterIndex();
+        coins = ProfileManager.getLastProfile().getCoins();
 
-        //setBackground(Color.green);
+        // Top panel for coin counter
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setOpaque(false);
+
+        ImageIcon coinIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/icons/coinsImmage.png")));
+        Image image = coinIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        coinIcon = new ImageIcon(image);
+        coinCounterLabel = new JLabel(coinIcon, JLabel.LEFT);
+        coinCounterLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        coinCounterLabel.setForeground(Color.WHITE);
+        coinCounterLabel.setText(String.valueOf(coins));
+        // Add vertical space above and under the coinCounterLabel
+        topPanel.add(Box.createVerticalStrut(5));
+        topPanel.add(coinCounterLabel);
+
+        add(topPanel, BorderLayout.NORTH);
 
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
-
-        coins = ProfileManager.getLastProfile().getCoins();
 
         addCreatures(contentPanel);
 
@@ -158,12 +157,11 @@ public class ShopPanel extends JPanel implements ViewComp {
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
-
-        // Make the scroll pane faster
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.getVerticalScrollBar().setBlockIncrement(128);
 
         add(scrollPane, BorderLayout.CENTER);
+
         revalidate();
         repaint();
     }
