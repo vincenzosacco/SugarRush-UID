@@ -62,7 +62,6 @@ public class LevelPanel extends JPanel implements ViewComp{
         } catch (IOException e) { // Catch IOException specifically for ImageIO.read
             e.printStackTrace();
             System.err.println("Error loading image level-dialog.jpg: " + e.getMessage());
-            // Optionally, set a fallback image or handle the error
         }
 
         LevelController controller=new LevelController(this);
@@ -186,6 +185,43 @@ public class LevelPanel extends JPanel implements ViewComp{
                     new ComponentEvent(LevelPanel.this, ComponentEvent.COMPONENT_RESIZED)
             );
         });
+    }
+
+    // Opens a dialog window containing the CustomDialog panel
+    public void showCustomDialog(CustomDialog customDialog) {
+        // Retrieve the top-level window (e.g., JFrame) that contains this panel
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+
+        // Get the dimensions of the parent window to calculate proportional dialog size
+        Dimension parentSize = parentWindow.getSize();
+        int newWidth = parentSize.width;
+        int newHeight = parentSize.height/2;
+
+        // Set the preferred size of the CustomDialog panel to be displayed in the dialog
+        customDialog.setPreferredSize(new Dimension(newWidth, newHeight));
+
+        // Create a modal dialog (blocks interaction with other windows while open)
+        JDialog dialog = new JDialog(parentWindow);
+        dialog.setUndecorated(true);  // Remove window borders and title bar
+        dialog.setModal(true);        // Make dialog modal
+        dialog.setResizable(false);   // Disable resizing by the user
+
+        // Add the CustomDialog panel to the dialog and adjust dialog size
+        dialog.getContentPane().add(customDialog);
+        dialog.pack(); // Automatically size dialog to fit its contents
+
+        // Attempt to apply rounded corners to the dialog
+        try {
+            dialog.setShape(new RoundRectangle2D.Double(0, 0, dialog.getWidth(), dialog.getHeight(), 30, 30));
+        } catch (UnsupportedOperationException ex) {
+            System.out.println("Rounded corners not supported on this platform");
+        }
+
+        // Center the dialog relative to the parent window
+        dialog.setLocationRelativeTo(parentWindow);
+
+        // Display the dialog
+        dialog.setVisible(true); // Show dialog
     }
 
     private void resizeComponents(JLabel levelLabel){

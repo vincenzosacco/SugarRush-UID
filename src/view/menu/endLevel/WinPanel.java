@@ -4,12 +4,14 @@ import controller.GameLoop;
 import controller.menu.endLevel.WinController;
 import model.Model;
 import view.button.CustomLogoButton;
+import view.menu.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.util.Objects;
 
 public class WinPanel extends BaseEndLevelPanel {
@@ -142,6 +144,43 @@ public class WinPanel extends BaseEndLevelPanel {
         }
         starsPanel.revalidate();
         starsPanel.repaint();
+    }
+
+    // Opens a dialog window containing the CustomDialog panel
+    public void showCustomDialog(CustomDialog customDialog) {
+        // Retrieve the top-level window (e.g., JFrame) that contains this panel
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+
+        // Get the dimensions of the parent window to calculate proportional dialog size
+        Dimension parentSize = parentWindow.getSize();
+        int newWidth = parentSize.width / 2;
+        int newHeight = parentSize.height / 4;
+
+        // Set the preferred size of the CustomDialog panel to be displayed in the dialog
+        customDialog.setPreferredSize(new Dimension(newWidth, newHeight));
+
+        // Create a modal dialog (blocks interaction with other windows while open)
+        JDialog dialog = new JDialog(parentWindow);
+        dialog.setUndecorated(true);  // Remove window borders and title bar
+        dialog.setModal(true);        // Make dialog modal
+        dialog.setResizable(false);   // Disable resizing by the user
+
+        // Add the CustomDialog panel to the dialog and adjust dialog size
+        dialog.getContentPane().add(customDialog);
+        dialog.pack(); // Automatically size dialog to fit its contents
+
+        // Attempt to apply rounded corners to the dialog
+        try {
+            dialog.setShape(new RoundRectangle2D.Double(0, 0, dialog.getWidth(), dialog.getHeight(), 30, 30));
+        } catch (UnsupportedOperationException ex) {
+            System.out.println("Rounded corners not supported on this platform");
+        }
+
+        // Center the dialog relative to the parent window
+        dialog.setLocationRelativeTo(parentWindow);
+
+        // Display the dialog
+        dialog.setVisible(true); // Show dialog
     }
 
     // Method to set up key bindings

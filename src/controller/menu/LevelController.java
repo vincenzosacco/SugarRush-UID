@@ -4,6 +4,7 @@ import controller.ControllerObj;
 import controller.GameLoop;
 import model.Model;
 import view.View;
+import view.menu.CustomDialog;
 import view.menu.LevelPanel;
 
 import javax.swing.*;
@@ -39,8 +40,8 @@ public class LevelController implements ControllerObj {
         View.getInstance().showPanel(View.PanelName.GAME.getName());
         panel.requestFocusInWindow(); // needed to get user input
         Objects.requireNonNull(panel.getParent(), "The panel does not have a defined parent");
-        JOptionPane.showMessageDialog(panel.getParent(),"Try to reach the sugar piece",
-                "New Game",JOptionPane.INFORMATION_MESSAGE);
+        CustomDialog informationDialog=new CustomDialog("New Game","Try to reach the sugar piece", "Start");
+        panel.showCustomDialog(informationDialog);
         GameLoop.getInstance().start();
     }
 }
