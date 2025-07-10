@@ -51,12 +51,12 @@ public class Enemy2 extends Enemy {
         // If the creature is directly in the next cell, it is killed immediately.
         GameConstants.Block block = Model.getInstance().getGame().blockAt(projCoord);
         if (block == GameConstants.Block.CREATURE) {
-            Model.getInstance().getGame().killCreature(); // Kill
+            Model.getInstance().getGame().end(false); // Kill
             GameAudioController.getInstance().playSfx("hitShot");
         }
         // Create and add the new projectile to the game
         Projectile proj = new Projectile(projCoord, direction);
-        Model.getInstance().getGame().addEntity(proj);
+//        Model.getInstance().getGame().addEntity(proj);
     }
 
     // Enemy2 never moves, so collisions are irrelevant.

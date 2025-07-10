@@ -49,7 +49,7 @@ public class Projectile extends Entity {
             return true;
         } else if (block == GameConstants.Block.CREATURE) {
             // If the projectile hits the creature, kill it and stop
-            Model.getInstance().getGame().killCreature();
+            Model.getInstance().getGame().end(false);
             GameAudioController.getInstance().playSfx("hitShot");
             return false;
         }

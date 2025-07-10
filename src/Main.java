@@ -1,5 +1,4 @@
-import controller.Controller;
-import model.profile.ProfileManager;
+import persistance.profile.ProfileManager;
 import utils.Resources;
 import view.View;
 
@@ -18,9 +17,8 @@ public class Main {
         try {
             Resources.loadAllResources(()->{
                 SwingUtilities.invokeLater(()->{
-                    Controller.bind();
-                    View.getInstance().launchView();
-                    View.getInstance().showPanel(View.PanelName.CUSTOM_TABBED_PANE.getName());
+                    View.getInstance().launch();
+                    View.getInstance().showHome();
                 });
             });
         } catch (IOException e) {

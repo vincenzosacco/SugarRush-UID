@@ -1,20 +1,18 @@
 package controller.menu;
 
-import controller.ControllerObj;
-import controller.GameLoop;
 import model.Model;
 import view.View;
-import view.menu.CustomDialog;
-import view.menu.LevelPanel;
+import view.impl.home.levelsMap.LevelDialog;
+import view.impl.home.levelsMap.LevelInfoDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class LevelController implements ControllerObj {
-    private final LevelPanel panel;
+public class LevelController  {
+    private final LevelInfoDialog panel;
 
-    public LevelController(LevelPanel panel) {
+    public LevelController(LevelInfoDialog panel) {
         this.panel = panel;
     }
 
@@ -37,11 +35,10 @@ public class LevelController implements ControllerObj {
         // 2. Start the level showing the GamePanel
         Model.getInstance().getGame().setLevel(levelIndex);
         View.getInstance().getGamePanel().repaintBackground();
-        View.getInstance().showPanel(View.PanelName.GAME.getName());
+        View.getInstance().showGame();
         panel.requestFocusInWindow(); // needed to get user input
         Objects.requireNonNull(panel.getParent(), "The panel does not have a defined parent");
-        CustomDialog informationDialog=new CustomDialog("New Game","Try to reach the sugar piece", "Start");
+        LevelDialog informationDialog=new LevelDialog("New Game","Try to reach the sugar piece", "Start");
         panel.showCustomDialog(informationDialog);
-        GameLoop.getInstance().start();
     }
 }

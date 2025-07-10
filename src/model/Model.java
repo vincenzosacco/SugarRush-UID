@@ -19,11 +19,8 @@ public class Model {
         return instance;
     }
 
-    // MODEL //
-    private final Game game = new Game();
-
     public Game getGame(){
-        return game;
+        return Game.getInstance();
     }
 
 

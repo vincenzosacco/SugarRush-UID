@@ -1,29 +1,21 @@
 package model.game.utils;
 
-import model.profile.Profile;
-import model.profile.ProfileManager;
-import view.View;
+import persistance.profile.Profile;
+import persistance.profile.ProfileManager;
 
 import javax.swing.*;
 import java.util.List;
 
 public class ShopModel {
-
-    private static int coins;
-    private static List<Boolean> creatures;
-
     public static boolean buyCreature(int creatureIndex, int price) {
-
         Profile profile = ProfileManager.getLastProfile();
-        coins = profile.getCoins();
-        creatures = profile.getCharacters();
+        int coins = profile.getCoins();
+        List<Boolean> creatures = profile.getCharacters();
 
         if (coins >= price && !creatures.get(creatureIndex)) {
             profile.sumCoins(-price);
             profile.setCharacters(creatureIndex);
             ProfileManager.saveProfile(profile);
-            View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(profile.getCoins());
-            View.getInstance().getCustomTabbedPane().shopPanel.refreshCreatures();
             return true;
         }else if (coins < price) {
             JOptionPane.showMessageDialog(
@@ -41,7 +33,7 @@ public class ShopModel {
         Profile profile = ProfileManager.getLastProfile();
         profile.setCurrentCharacterIndex(creatureIndex);
         ProfileManager.saveProfile(profile);
-        View.getInstance().getCustomTabbedPane().shopPanel.refreshCreatures();
+//        View.getInstance().getHome().shopPanel.refreshCreatures();
     }
 
 }

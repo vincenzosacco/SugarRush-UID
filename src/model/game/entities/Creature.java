@@ -61,15 +61,15 @@ public class Creature extends Entity {
                 GameAudioController.getInstance().playSfx("bite");
                 View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
 
-                Model.getInstance().getGame().setCoinsCollected(2); // Pos=2 --> Win Star
-                Model.getInstance().getGame().win();
+                Model.getInstance().getGame().addstar();
+                Model.getInstance().getGame().end(true);
             }
             case CANDY -> {
                 GameAudioController.getInstance().playSfx("bite");
                 View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
 
                 addCandy();
-                Model.getInstance().getGame().setCoinsCollected(0); // Pos=0 --> Candy Star
+                Model.getInstance().getGame().addstar();
 
             }
             case SPACE -> {/*do nothing*/}
@@ -81,7 +81,7 @@ public class Creature extends Entity {
             // DIE if collides with an enemy,projectile or thorns //
             case ENEMY1 -> {
                 GameAudioController.getInstance().playSfx("killBee");
-                Model.getInstance().getGame().killCreature();
+                Model.getInstance().getGame().end(false);
             }
             case ENEMY2 -> {
                 this.direction = Direction.NONE;
@@ -89,12 +89,12 @@ public class Creature extends Entity {
             }
             case PROJECTILE -> {
                 GameAudioController.getInstance().playSfx("hitShot");
-                Model.getInstance().getGame().killCreature();
+                Model.getInstance().getGame().end(false);
             }
             case THORNS -> {
                 this.direction = Direction.NONE; // says that the creature is not moving. Check isMoving() method
                 GameAudioController.getInstance().playSfx("thorns");
-                Model.getInstance().getGame().killCreature();
+                Model.getInstance().getGame().end(false);
             }
             default -> throw new IllegalStateException("Unexpected value: " + block);
         }

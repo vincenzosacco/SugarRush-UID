@@ -1,129 +1,33 @@
 package model.game;
 
-import controller.GameLoop;
+import controller.game.GameController;
 import model.game.entities.Creature;
-import model.game.entities.evil.Projectile;
 import model.game.utils.Cell;
-import model.profile.ProfileManager;
-import view.View;
+import utils.audio.GameAudioController;
+
 
 import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static config.ModelConfig.COL_COUNT;
-import static config.ModelConfig.ROW_COUNT;
+import static config.ModelConfig.NUM_LEVELS;
 
-public class Game {
-    /**
-     * @see GameMatrix
-     */
-    // package visibility needed for MapParser
-    final GameMatrix gameMat = new GameMatrix();
-    final ArrayList<Entity> entities = new ArrayList<>();
-
-    // count star
-    private int starCount = 0;
-
-    /**
-     * <p>
-     * Contains a read-only view of the game's game matrix.
-     * This variable is a two-dimensional, unmodifiable structure backed by the internal {@code GameMatrix},
-     * where each element represents a {@code Block} type.
-     * The {@code Block} represents game-specific elements like walls, empty spaces, the creature, and sugar pieces.
-     * </p>
-     *
-     * @implNote The list is immutable, ensuring external code cannot modify the game's game. This is essential to maintain
-     * the integrity of the game state during gameplay. Changes to the game are managed internally within the
-     * {@code Game} class logic.
-     * @see GameConstants.Block
-     * @see GameMatrix#makeReadOnly()
-     */
-    private final List<List<GameConstants.Block>> gameMatRO = gameMat.makeReadOnly();
-
-    // experimental approach
-    private final List<Entity> entitiesRO = Collections.unmodifiableList(entities);
-    // Coins of the current level
-    private Boolean[] coinsCollected;
-
-    public void setCoinsCollected(int pos){
-        if(!this.coinsCollected[pos]){
-            this.coinsCollected[pos]=true;
-            addstar();
+public class Game extends GameBoard {
+    // SINGLETON because the application has only one game instance at a time.
+    private static Game instance = null;
+    private Game() {
+        super();
+    }
+    public static Game getInstance() {
+        if (instance == null) {
+            instance = new Game();
         }
+        return instance;
     }
 
-    private int currLevel;
-
-    public int getCurrLevel() {
-        return currLevel;
-    }
-
-    public Game() {
-        // LOAD MAP FROM RESOURCE
-        //default
-        currLevel=1;
-        coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
-    }
-    //set the current map of the level
-    public void setLevel(int index){
-        currLevel=index;
-        coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
-        this.starCount=0;
-
-        switch (index) {
-            case 1: MapParser.loadMap(MapParser.MAP_1, this); break;
-            case 2: MapParser.loadMap(MapParser.MAP_2, this); break;
-            case 3: MapParser.loadMap(MapParser.MAP_3, this); break;
-            case 4: MapParser.loadMap(MapParser.MAP_4, this); break;
-            case 5: MapParser.loadMap(MapParser.MAP_5, this); break;
-            case 6: MapParser.loadMap(MapParser.MAP_6, this); break;
-            default:
-                System.err.println("Level not supported: " + index + ". Loading MAP_1 as fallback.");
-                MapParser.loadMap(MapParser.MAP_1, this);
-                break;
-        }
-    }
-
-    /**
-     * This method updates the star count
-     */
-    public void addstar(){
-        starCount++;
-        if (starCount > 3) {
-            throw new IllegalStateException("Star count cannot exceed 3. Current count: " + starCount);
-        }
-
-    }
-
-    public int getStarCount(){
-        return this.starCount;
-    }
-
-    // MODEL //
-
-    /**
-     * Retrieves the current state of the game as a two-dimensional, read-only list of blocks.
-     * Each block represents a specific element within the game's game, such as walls, spaces,
-     * the creature, or collectible items. Access is synchronized to ensure thread-safe state retrieval.
-     *
-     * @return a two-dimensional unmodifiable list where each element is a {@code Constants.Block}
-     * representing the current state of the game game.
-     * @see GameConstants.Block
-     */
-    public List<List<GameConstants.Block>> getState() {
-        return gameMatRO;
-    }
-
-    public List<Entity> getEntities() {
-        return entitiesRO;
-    }
-
-    // Method to add the Projectile
-    public void addEntity(Entity e){
-        entities.add(e);
-    }
+    // GAMELOOP  //
 
     /**
      * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.
@@ -148,53 +52,59 @@ public class Game {
      * preservation of each step's intended functionality.
      */
     public void updateState() {
+        // ASSERTIONS //
+        assert !entities.isEmpty() : "Entities list should not be empty when updating state.";
+        assert !matrix.isEmpty() : "Game matrix should not be null when updating state.";
+
+        // UPDATE ENTITIES //
         List<Entity> currentEntities = new ArrayList<>(entities);
         for (Entity ent : currentEntities) {
             if (ent.shouldPerform()) {
                 // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
                 Cell oldCoord = ent.getCoord();
-                gameMat.setCell(oldCoord, GameConstants.Block.SPACE);
+                matrix.setCell(oldCoord, GameConstants.Block.SPACE);
 
                 // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
 
                 // 2- MANAGE COLLISIONS //
-                boolean canPerform = ent.manageCollision(gameMat.getCell(toMove), toMove );
+                boolean canPerform = ent.manageCollision(matrix.getCell(toMove), toMove );
 
                 // 3- PERFORM ACTION //
                 if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates
 
                 // APPLY NEW COORDS IN THE GAME MATRIX //
                 Cell newCoord = ent.getCoord();
-                gameMat.setCell(newCoord, ent.blockType());
-
-                if (!canPerform && ent instanceof Projectile){
-                    // Free the cell and remove the projectile
-                    gameMat.setCell(ent.getCoord(), GameConstants.Block.SPACE);
-                    entities.remove(ent);
-                }
+                matrix.setCell(newCoord, ent.blockType());
             }
         }
     }
 
 
-    /**@return the block at the specified cell in the game matrix*/
-    public GameConstants.Block blockAt(Cell cell) {
-        if (cell.getRow() < 0 || cell.getRow() >= ROW_COUNT ||
-                cell.getCol() < 0 || cell.getCol() >= COL_COUNT) {
-            return GameConstants.Block.SPACE;
-        }
-        return gameMat.getCell(cell);
+    //-------------------------------------- GAME STATE -----------------------------------------------//
+    @Override
+    void clear() {
+        super.clear(); // clear matrix and entities
+        // Reset all stuffs related to the game state
+        _Timer.stopTimer(); // Stop the timer
+        starCount = 0; // Reset star count
     }
 
-
-    // GAME ACTIONS //
-    private boolean isStarted = false;
-    public boolean isStarted() {
-        return isStarted;
-    }
     public void start(){
-        if (!isStarted) isStarted = true;
+        assert currLevel > 0 && currLevel < NUM_LEVELS : "Current level must be between 1 and " + NUM_LEVELS;
+        assert !entities.isEmpty() : "Entities list should not be empty when starting the game.";
+
+        _Timer.start();
+    }
+    public void restart() {
+        setLevel(currLevel); // Reset the level to the current one
+    }
+    public void togglePause() {
+        _Timer.togglePause();
+    }
+
+    public boolean isRunning() {
+        return _Timer.isRunning();
     }
 
 
@@ -211,54 +121,101 @@ public class Game {
         }
         assert creature != null : "Creature should not be null";
 
+        // IF the creature is already moving, we do not change its direction
         if (! creature.isMoving()) {
             creature.setDirection(direction);
         }
     }
 
-    public void killCreature() {
-        SwingUtilities.invokeLater(() -> {
-            // Reset if lost
-            this.coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
-            starCount=0;
 
-            GameLoop.getInstance().pauseGameTimer();
-            View.getInstance().getGamePanel().endGame();
-            View.getInstance().getGamePanel().loseLevel();
-        });
+    //------------------------------ GAME EVENTS -----------------------------------------------//
+    /* Game events such as win, lose, etc. are handled using the PropertyChangeListener interface
+     * (which can be seen has java modern Observer pattern) in the GameController.
+     * This allows for decoupling of the game logic from the UI, enabling a more modular design.
+     * The GameController listens for property changes and updates the UI accordingly.
+     *
+     * For example, when the game is won, the GameController can listen for a "win" event
+     * and then update the UI to show a win message or transition to the next level.
+     */
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    public void addPropertyChangeListener(GameController gameController) {
+        pcs.addPropertyChangeListener(gameController);
     }
 
+    /**
+     * Enum representing game events that can be observed.
+     */
+    public enum Event {
+        WIN,LOSE,PLAY
+    }
 
-    public void clearGameMatrix() {
-        // Clear the game matrix
-        gameMat.clear();
-        for (int r = 0; r < ROW_COUNT; r++) {
-            ArrayList<GameConstants.Block> row = new ArrayList<>(COL_COUNT);
-            for (int c = 0; c < COL_COUNT; c++) {
-                row.add(GameConstants.Block.SPACE);
+    public void end(boolean isWin){
+        assert pcs.getPropertyChangeListeners().length != 0 : "At least one listener is required";
+
+        togglePause();
+
+        if (isWin) {
+            GameAudioController.getInstance().playSfx("win");
+            // CHECK ADD STAR //
+            if (getElapsedTime()< 60) {
+                addstar(); // if the elapsed time is less than 60 seconds, add a star
             }
-            gameMat.add(row);
+        } else {
+            GameAudioController.getInstance().playSfx("lose");
         }
-        // Clear all entities
-        entities.clear();
+
+        pcs.firePropertyChange(new PropertyChangeEvent(this,
+                GameController.PropertyName.EXIT.toString(),
+                Event.PLAY, isWin ? Event.WIN : Event.LOSE));
+    }
+
+    //------------------------------ GETTERS AND SETTERS -----------------------------------------------//
+
+    // LEVELS //
+    private int currLevel = 1;
+    public int getCurrLevel() {
+        return currLevel;
+    }
+    public void setLevel(int index){
+        currLevel=index;
+        String mapPath = null;
+        switch (index) {
+            case 1 -> mapPath = MapParser.MAP_1;
+            case 2 -> mapPath = MapParser.MAP_2;
+            case 3 -> mapPath = MapParser.MAP_3;
+            case 4 -> mapPath = MapParser.MAP_4;
+            case 5 -> mapPath = MapParser.MAP_5;
+            case 6 -> mapPath = MapParser.MAP_6;
+            default ->{
+                System.err.println("Level not supported: " + index + ". Loading MAP_1 as fallback.");
+                MapParser.loadMap(MapParser.MAP_1, this);
+            }
+        }
+        assert mapPath != null : "Map path should not be null for level " + index;
+        MapParser.loadMap(mapPath, this);
+    }
+
+    // STARS //
+    private int starCount = 0;
+
+    /**
+     * This method updates the star count
+     */
+    public void addstar(){
+        starCount++;
+        if (starCount > 3) {
+            throw new IllegalStateException("Star count cannot exceed 3. Current count: " + starCount);
+        }
+
+    }
+    public int getStarCount(){
+        return starCount;
+    }
+    // ELAPSED TIME //
+    public int getElapsedTime() {
+        return _Timer.elapsedTime;
     }
 
 
-    public void win(){
-        SwingUtilities.invokeLater(() -> {
-            GameLoop.getInstance().pauseGameTimer();
 
-            // Set the coins taken in this level and save them
-            GameLoop.getInstance().controlTime();
-            ProfileManager.getLastProfile().setLevelStarsCount(this.currLevel,this.coinsCollected);
-
-            View.getInstance().getGamePanel().endGame();
-            View.getInstance().getGamePanel().winLevel();
-
-            // Adds the coins
-            ProfileManager.getLastProfile().sumCoins(getStarCount()*100); // 100 coins for each star
-            ProfileManager.getLastProfile().sumCoins(10); //10 coins every time the creature reaches the candy (each victory)
-            View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(ProfileManager.getLastProfile().getCoins());
-        });
-    }
 }

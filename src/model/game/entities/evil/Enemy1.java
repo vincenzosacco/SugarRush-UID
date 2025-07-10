@@ -56,7 +56,7 @@ public class Enemy1 extends Enemy {
             return true;
         }
         else if (block == GameConstants.Block.CREATURE){
-            Model.getInstance().getGame().killCreature();
+            Model.getInstance().getGame().end(false);
             GameAudioController.getInstance().playSfx("killBee");
             return true;
         }
