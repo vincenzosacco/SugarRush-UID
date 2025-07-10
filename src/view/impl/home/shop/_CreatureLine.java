@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-class _CreatureLine extends JPanel {
+public class _CreatureLine extends JPanel {
     /** Button to buy/select the creature */
     private CustomButton button;
     private final int creautureId;
@@ -38,8 +38,6 @@ class _CreatureLine extends JPanel {
         }
         else {
             button = new _BuyButton(creatureId, price);
-            // another action listener to change the button
-            button.addActionListener(this::onBuy);
         }
         button.setPreferredSize(new Dimension(120, 50)); // width, height
         button.setMaximumSize(new Dimension(120, 50));
@@ -53,9 +51,11 @@ class _CreatureLine extends JPanel {
     }
 
     /** Transform the buy button to a select*/
-    private void onBuy(ActionEvent e){
+    public void transformsToSelect(){
         button = new _SelectButton(creautureId);
         button.revalidate();
         button.repaint();
     }
+
+
 }

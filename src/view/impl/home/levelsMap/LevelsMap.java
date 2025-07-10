@@ -28,7 +28,7 @@ public class LevelsMap extends AbsViewPanel {
     // Total number of levelsMap available in the game
     private final int numLevels = ModelConfig.NUM_LEVELS;
 
-    private final CoinCountPanel coinPanel = new CoinCountPanel();
+    private final CoinCountPanel coinPanel = new CoinCountPanel(ProfileManager.getLastProfile().getCoins());
 
     // Tutorial's buttons
     private final CustomButton tutorialButton;

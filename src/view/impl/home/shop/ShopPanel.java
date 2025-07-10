@@ -1,17 +1,15 @@
 package view.impl.home.shop;
 
-import model.game.utils.ShopModel;
 import persistance.profile.ProfileManager;
 import utils.Resources;
-import view.base.AbsViewPanel;
-import view.impl._common.buttons.CustomButton;
+import view.base.BasePanel;
 import view.impl._common.panels.CoinCountPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;;
 
-public class ShopPanel extends AbsViewPanel {
+public class ShopPanel extends BasePanel {
 
     // an array that idicates which creatures are available in the shop
     private List<Boolean> creatures ;
@@ -48,29 +46,6 @@ public class ShopPanel extends AbsViewPanel {
 
         JPanel linePanel = new _CreatureLine(creatureIcon, creatureId, price, bought);
 
-
-
-        // buy if not bought and select otherwise
-//        CustomButton actionButton;
-//        if (bought){
-//            if (cretureNumber == currentCharacterIndex) {
-//                actionButton = new CustomButton("Selected", Color.BLACK, new Color(173, 216, 230)); // Light Blue
-//            } else {
-//                actionButton = new CustomButton("Select", Color.BLACK, new Color(144, 238, 144)); // Light Green
-//                actionButton.setToolTipText("Select this creature");
-//                actionButton.addActionListener(e -> {
-//                    // Select the creature
-//                    ShopModel.selectCreature(cretureNumber);
-//                });
-//            }
-//            linePanel.add(Box.createHorizontalStrut(220)); // space between left and right
-//        }
-//        else {
-//            actionButton = new _BuyButton(cretureNumber, price);
-//
-//
-//        }
-
         parent.add(linePanel);
         parent.add(Box.createVerticalStrut(10)); // space between lines
     }
@@ -82,15 +57,6 @@ public class ShopPanel extends AbsViewPanel {
             g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
         }
     }
-
-//    public void updateCoins(int c) {
-//        coins = c;
-//        playerCoinsPanel.setText(String.valueOf(coins));
-//        playerCoinsPanel.revalidate();
-//        playerCoinsPanel.repaint();
-//        this.revalidate();
-//        this.repaint();
-//    }
 
     public void refreshCreatures(){
         this.removeAll();
@@ -121,17 +87,21 @@ public class ShopPanel extends AbsViewPanel {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.getVerticalScrollBar().setBlockIncrement(128);
-
         add(scrollPane, BorderLayout.CENTER);
 
+        add(Box.createHorizontalStrut((int) (getWidth()*0.1)), BorderLayout.WEST);
+        add(Box.createHorizontalStrut((int) (getWidth()*0.1)), BorderLayout.EAST);
+        
         revalidate();
         repaint();
     }
-
-//--------------------------------------- CONTROLLER METHODS -----------------------------------------------------------------------------
-
+//--------------------------------------- OVERRIDE SWING ----------------------------------------------------------------------------------
     @Override
-    protected void bindController() {
-
+    public void addNotify() {
+        // ADD space between BoxLayout.CENTER and LEFT - RIGHT ("compress CENTER panel")
+        add(Box.createHorizontalStrut((int) (getWidth()*0.1)), BorderLayout.WEST);
+        add(Box.createHorizontalStrut((int) (getWidth()*0.1)), BorderLayout.EAST);
+        super.addNotify(); // <-- this request focus
     }
+
 }
