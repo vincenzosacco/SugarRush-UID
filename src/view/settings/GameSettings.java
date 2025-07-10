@@ -79,9 +79,6 @@ public class GameSettings extends BaseSettingsPanel implements ViewComp {
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Close button clicked.");
-
-                SettingsManager.getInstance().revertToSavedSettings();
                 GameAudioController.getInstance().stopBackgroundMusic();
                 setVisible(false);
             }

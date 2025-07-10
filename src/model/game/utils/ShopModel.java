@@ -22,8 +22,8 @@ public class ShopModel {
             profile.sumCoins(-price);
             profile.setCharacters(creatureIndex);
             ProfileManager.saveProfile(profile);
-            View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(profile.getCoins());
-            View.getInstance().getCustomTabbedPane().shopPanel.refreshCreatures();
+            View.getInstance().getCustomTabbedPane().getShopPanel().updateCoins(profile.getCoins());
+            View.getInstance().getCustomTabbedPane().getShopPanel().refreshCreatures();
             return true;
         }else if (coins < price) {
             JOptionPane.showMessageDialog(
@@ -41,7 +41,7 @@ public class ShopModel {
         Profile profile = ProfileManager.getLastProfile();
         profile.setCurrentCharacterIndex(creatureIndex);
         ProfileManager.saveProfile(profile);
-        View.getInstance().getCustomTabbedPane().shopPanel.refreshCreatures();
+        View.getInstance().getCustomTabbedPane().getShopPanel().refreshCreatures();
     }
 
 }

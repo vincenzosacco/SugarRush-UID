@@ -15,11 +15,6 @@ import java.net.URL;
 
 public class GameControlsPanel extends JPanel {
     private Image gameControlsImage;
-    private final Image upArrowOriginal;
-    private final Image downArrowOriginal;
-    private final Image leftArrowOriginal;
-    private final Image rightArrowOriginal;
-    private final Image escOriginal;
 
     private final RoundCloseButton closeButton;
     private final JLabel gameLabel;
@@ -40,11 +35,11 @@ public class GameControlsPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Load all images
-        upArrowOriginal = loadImages("/imgs/panels/settings/upArrow.jpg");
-        downArrowOriginal = loadImages("/imgs/panels/settings/downArrow.jpg");
-        leftArrowOriginal = loadImages("/imgs/panels/settings/leftArrow.jpg");
-        rightArrowOriginal = loadImages("/imgs/panels/settings/rightArrow.jpg");
-        escOriginal = loadImages("/imgs/panels/settings/esc.jpg");
+        Image upArrowOriginal = loadImages("/imgs/panels/settings/upArrow.jpg");
+        Image downArrowOriginal = loadImages("/imgs/panels/settings/downArrow.jpg");
+        Image leftArrowOriginal = loadImages("/imgs/panels/settings/leftArrow.jpg");
+        Image rightArrowOriginal = loadImages("/imgs/panels/settings/rightArrow.jpg");
+        Image escOriginal = loadImages("/imgs/panels/settings/esc.jpg");
 
         gameControlsImage = Resources.getBestImage("/imgs/panels/settings/gameControlsImage.jpg", desiredSize.width, desiredSize.height);
 

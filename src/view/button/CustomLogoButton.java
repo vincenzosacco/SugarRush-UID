@@ -9,10 +9,8 @@ import java.net.URL;
 
 public class CustomLogoButton extends JButton {
     private BufferedImage image;
-    private String text;
-    private Color color;
+    private final Color color;
     public CustomLogoButton(String text,Color color){
-        this.text=text;
         this.color=color;
         setContentAreaFilled(false);         // Disables the default background filling.
         setBorderPainted(false);             // Disables the default border drawing.

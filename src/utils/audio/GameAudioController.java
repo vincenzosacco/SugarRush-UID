@@ -95,9 +95,4 @@ public class GameAudioController implements PropertyChangeListener {
         }
     }
 
-//    // Method to clean up audio resources when application closes
-//    public void cleanup() {
-//        audioManager.cleanup();
-//        SettingsManager.getInstance().removePropertyChangeListener(this);
-//    }
 }

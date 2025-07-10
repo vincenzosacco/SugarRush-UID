@@ -79,8 +79,8 @@ public class Profile implements Serializable {
         ProfileManager.saveProfile(this); // Save the profile after updating coins
     }
     public void setCharacters(int index) {
-        if (characters == null || characters.size() != this.characters.size()) {
-            throw new IllegalArgumentException("Characters array must have length " + this.characters.size());
+        if (index < 0 || index >= characters.size()) {
+            throw new IllegalArgumentException("Invalid character index: " + index);
         }
         characters.set(index, true); // Unlock the character at the given index
         ProfileManager.saveProfile(this); // Save the profile after updating coins
@@ -96,8 +96,9 @@ public class Profile implements Serializable {
             throw new IllegalArgumentException("Stars list must contain exactly 3 boolean values.");
         }
 
-        // //
-        levelStarsCount.put(level, stars); // TODO, check if this can cause bugs
+        // Save a copy to avoid external changes
+        levelStarsCount.put(level, stars.clone());
+
         ProfileManager.saveProfile(this); // Save the profile after updating coins
     }
 

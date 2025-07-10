@@ -50,7 +50,7 @@ public class Game {
     public void setCoinsCollected(int pos){
         if(!this.coinsCollected[pos]){
             this.coinsCollected[pos]=true;
-            addstar();
+            addStar();
         }
     }
 
@@ -89,7 +89,7 @@ public class Game {
     /**
      * This method updates the star count
      */
-    public void addstar(){
+    public void addStar(){
         starCount++;
         if (starCount > 3) {
             throw new IllegalStateException("Star count cannot exceed 3. Current count: " + starCount);
@@ -258,7 +258,7 @@ public class Game {
             // Adds the coins
             ProfileManager.getLastProfile().sumCoins(getStarCount()*100); // 100 coins for each star
             ProfileManager.getLastProfile().sumCoins(10); //10 coins every time the creature reaches the candy (each victory)
-            View.getInstance().getCustomTabbedPane().shopPanel.updateCoins(ProfileManager.getLastProfile().getCoins());
+            View.getInstance().getCustomTabbedPane().getShopPanel().updateCoins(ProfileManager.getLastProfile().getCoins());
         });
     }
 }

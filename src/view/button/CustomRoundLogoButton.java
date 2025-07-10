@@ -11,7 +11,7 @@ import java.net.URL;
 public class CustomRoundLogoButton extends JButton {
 
     private BufferedImage settingsImage; // Field to hold the settings icon image
-    private Color color;
+    private final Color color;
 
 
     public CustomRoundLogoButton(String text,Color color) {

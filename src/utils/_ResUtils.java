@@ -7,6 +7,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -42,14 +43,22 @@ class _ResUtils {
         }
     }
 
-
     /**
      * Collects resources when running from a JAR
      */
     private static void collectResourcesFromJar(List<String> paths, String[] extensions) throws IOException {
         URL dirUrl = Resources.class.getResource("/");
+        if (dirUrl == null) {
+            System.err.println("Resources directory not found (null URL).");
+            return;
+        }
         String jarPath = dirUrl.getPath();
         int separator = jarPath.indexOf("!");
+        // If jarPath does not contain "!", separator will be -1
+        if (separator == -1) {
+            System.err.println("Invalid JAR path format: " + jarPath);
+            return;
+        }
         String jarFilePath = URLDecoder.decode(jarPath.substring(5, separator), StandardCharsets.UTF_8);
 
         System.out.println("Scanning JAR file: " + jarFilePath);

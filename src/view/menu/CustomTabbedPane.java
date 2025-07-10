@@ -18,7 +18,7 @@ public class CustomTabbedPane extends JPanel{
 
     private final StartMenuPanel startMenuPanel;
     private final LevelEditorPanel levelEditorPanel;
-    public final ShopPanel shopPanel; // FIXME perchè public???
+    private final ShopPanel shopPanel;
     private final BaseSettingsPanel baseSettingsPanel;
 
     // Arrays to store tab buttons and their underline indicators
@@ -160,4 +160,6 @@ public class CustomTabbedPane extends JPanel{
     public StartMenuPanel getStartMenuPanel() {
         return startMenuPanel;
     }
+
+    public ShopPanel getShopPanel(){return shopPanel;}
 }

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class BlocksImages {
     private static final String BLOCKS_PATH = "/imgs/game/blocks/";
-    private static final StringBuilder keyBuilder = new StringBuilder(BLOCKS_PATH);
+    private static final String[] SUPPORTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp"};
     private static final List<GameConstants.Block> staticBlocks = Arrays.asList(
             GameConstants.Block.WALL,
             GameConstants.Block.THORNS,
@@ -26,11 +26,9 @@ public class BlocksImages {
     );
     private final HashMap<GameConstants.Block, List<BufferedImage>> blockImages = new HashMap<>();
 
+    // Load existing image using one of the supported extensions
     private BlocksImages() {
-        // TODO trova un modo per poter usare tutte le estensioni di file immagine. Probabilmente dovrai
-        //  cambiare completamente il metodo
         ArrayList<BufferedImage> tmp_imgs = new ArrayList<>();
-        String key;
 
         // Remove the SPACE from iteration since it has no image
         List<GameConstants.Block> blocks = new ArrayList<>(List.of(GameConstants.Block.values()));
@@ -42,22 +40,21 @@ public class BlocksImages {
 
             // 1- PARSE THE KEY FOR THE BLOCK //
 
-            // NOTE keyBuilder is reset in parseKey() method
             // NOTE img cannot be null due to the way Resources.getBestImage() works
 
             // IF BLOCK IS STATIC
-            if (staticBlocks.contains(block)){
-                // file name is in the format: <blockname>.jpg. Example: "wall.jpg"
-                key = parseKey(block, null);
+            if (staticBlocks.contains(block)) {
+                String key = findExistingImagePath(block, null);
                 tmp_imgs.add(Resources.getBestImage(key, ViewConfig.TILE_SIZE, ViewConfig.TILE_SIZE));
 
             }
             // IF BLOCK IS DYNAMIC
-            else
-                for (GameConstants.Direction direction : GameConstants.Direction.values()){
-                    key = parseKey(block, direction);
+            else{
+                for (GameConstants.Direction direction : GameConstants.Direction.values()) {
+                    String key = findExistingImagePath(block, direction);
                     tmp_imgs.add(Resources.getBestImage(key, ViewConfig.TILE_SIZE, ViewConfig.TILE_SIZE));
                 }
+            }
 
             // 2- ADD THE IMAGES TO THE MAP //
             blockImages.put(block, new ArrayList<>(tmp_imgs));
@@ -115,6 +112,37 @@ public class BlocksImages {
 
     }
 
+    private static String buildBaseKey(GameConstants.Block block, GameConstants.Direction direction) {
+        if (staticBlocks.contains(block)) {
+            if (!block.equals(GameConstants.Block.SPACE)) {
+                // ex: "/imgs/game/blocks/wall"
+                return BLOCKS_PATH + block.name().toLowerCase();
+            }
+        } else {
+            assert direction != null;
+            // ex: "/imgs/game/blocks/creature/creature-l"
+            return BLOCKS_PATH + block.name().toLowerCase() + "/" + block.name().toLowerCase() + "-" + Character.toLowerCase(direction.name().charAt(0));
+        }
+        return null;
+    }
+
+    private static String findExistingImagePath(GameConstants.Block block, GameConstants.Direction direction) {
+        String baseKey = buildBaseKey(block, direction);
+        if (baseKey == null) {
+            throw new IllegalArgumentException("Invalid block or direction for image key");
+        }
+        for (String ext : SUPPORTED_EXTENSIONS) {
+            String candidate = baseKey + ext;
+            if (Resources.class.getResource(candidate) != null) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("Image not found for block " + block +
+                (direction != null ? " direction " + direction : "") +
+                ". Tried paths: " + Arrays.toString(Arrays.stream(SUPPORTED_EXTENSIONS)
+                .map(ext -> baseKey + ext).toArray()));
+    }
+
     // PUBLIC METHODS //
     /**
      * Returns all blocks image in a single array. For dynamic blocks (which have multiple images for each direction),
@@ -140,34 +168,6 @@ public class BlocksImages {
         }
 
         return allImgs;
-    }
-    // UTILS //
-    private static String parseKey(GameConstants.Block block, GameConstants.Direction direction) {
-        // IF BLOCK IS STATIC
-        if (staticBlocks.contains(block)) {
-            if (!block.equals(GameConstants.Block.SPACE)) {
-                // file name is in the format: <blockname>.jpg. Example: "wall.jpg"
-                keyBuilder.append(block.name().toLowerCase()).append(".jpg");
-            }
-        }
-        // IF BLOCK IS DYNAMIC
-        else {
-            assert direction != null : "Direction cannot be null for dynamic blocks";
-            keyBuilder.append(
-                    // dir name is in the format: <blockname>
-                    block.name().toLowerCase()).append("/")
-                    // file name is in the format: <blockname>-<direction>.jpg. Example: "creature-l.jpg"
-                    .append(block.name().toLowerCase()).append("-").append(Character.toLowerCase(direction.name()
-                    .charAt(0))).append(".jpg");
-        }
-
-        // RETURN THE KEY AS A STRING
-        String key = keyBuilder.toString();
-        // Reset the keyBuilder for the next call
-        keyBuilder.setLength(0);
-        keyBuilder.append(BLOCKS_PATH); // Reset to the initial path
-
-        return key;
     }
 
     public boolean isStaticBlock(GameConstants.Block block) {

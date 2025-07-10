@@ -71,6 +71,12 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
                 applyScalingBasedOnCurrentDimensions();
                 requestFocusInWindow(); // Ensure the panel has focus
             }
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                // When the panel becomes hidden, revert settings to the last saved state
+                SettingsManager.getInstance().revertToSavedSettings();
+//                System.out.println("BaseSettingsPanel: Panel hidden, settings reverted.");
+            }
         });
 
         // Initialize the UI with the current values from the SettingsManager
@@ -322,7 +328,6 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
             System.out.println("Settings cancelled.");
             // Revert current settings in SettingsManager to the last saved state
             SettingsManager.getInstance().revertToSavedSettings();
-
         });
 
         // Listener per il bottone "Save"

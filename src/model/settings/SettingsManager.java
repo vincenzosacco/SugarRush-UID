@@ -77,7 +77,7 @@ public class SettingsManager {
 
         this.currentMusicVolume = this.savedMusicVolume;
         this.currentSfxVolume = this.savedSfxVolume;
-        System.out.println("SettingsManager: Settings reverted to saved - Music: " + savedMusicVolume + ", SFX: " + savedSfxVolume);
+//        System.out.println("SettingsManager: Settings reverted to saved - Music: " + savedMusicVolume + ", SFX: " + savedSfxVolume);
 
         // Fire property changes only if values have actually changed to notify listeners (UI)
         if (oldMusicVolume != currentMusicVolume) {
