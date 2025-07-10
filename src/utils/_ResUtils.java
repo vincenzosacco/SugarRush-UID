@@ -7,7 +7,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -84,7 +83,7 @@ class _ResUtils {
     /**
      * Collects resources when running from filesystem
      */
-    private static void collectResourcesFromFilesystem(List<String> paths, String[] extensions) throws IOException {
+    private static void collectResourcesFromFilesystem(List<String> paths, String[] extensions) {
         // Look in standard resource directories
         String[] resourceDirs = {"/", "/images", "/resources", "/assets"};
 

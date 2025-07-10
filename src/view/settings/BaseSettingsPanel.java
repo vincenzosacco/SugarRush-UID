@@ -307,21 +307,15 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
             showLevelDialog(gameControlsPanel);
         });
 
-        musicVolumeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // Update SettingsManager
-                SettingsManager.getInstance().setMusicVolume(musicVolumeSlider.getValue());
-            }
+        musicVolumeSlider.addChangeListener(e -> {
+            // Update SettingsManager
+            SettingsManager.getInstance().setMusicVolume(musicVolumeSlider.getValue());
         });
 
 
-        sfxVolumeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // Update SettingsManager
-                SettingsManager.getInstance().setSfxVolume(sfxVolumeSlider.getValue());
-            }
+        sfxVolumeSlider.addChangeListener(e -> {
+            // Update SettingsManager
+            SettingsManager.getInstance().setSfxVolume(sfxVolumeSlider.getValue());
         });
 
         cancelButton.addActionListener(e -> {

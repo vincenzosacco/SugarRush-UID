@@ -56,7 +56,7 @@ public class GameAudioController implements PropertyChangeListener {
     // Methods to play SFX
     public void playSfx(String sfxIdentifier) {
         float volume = SettingsManager.getInstance().getSfxVolume();
-        String path = "";
+        String path;
         switch (sfxIdentifier) {
             case "wall":
                 path = WALL_SFX_PATH;

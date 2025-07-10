@@ -1,7 +1,6 @@
 package view.settings;
 
 import controller.ControllerObj;
-import model.settings.SettingsManager;
 import utils.audio.GameAudioController;
 import view.View;
 import view.ViewComp;
@@ -76,12 +75,9 @@ public class GameSettings extends BaseSettingsPanel implements ViewComp {
     }
 
     private void addCloseButtonListener() {
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GameAudioController.getInstance().stopBackgroundMusic();
-                setVisible(false);
-            }
+        closeButton.addActionListener(e -> {
+            GameAudioController.getInstance().stopBackgroundMusic();
+            setVisible(false);
         });
     }
 
