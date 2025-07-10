@@ -102,7 +102,10 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         });
 
         // Ensure buttons are positioned correctly after the component is first rendered
-        SwingUtilities.invokeLater(this::positionButtons);
+        SwingUtilities.invokeLater(() -> {
+            positionButtons();
+            refreshLevelButtons(); // Call refresh after buttons are positioned to set initial enabled state
+        });
 
         this.setFocusable(true);
     }
@@ -250,6 +253,21 @@ public class StartMenuPanel extends JPanel implements ViewComp {
         for (int i = 0; i < numLevel; i++) {
             Boolean[] stars = ProfileManager.getLastProfile().getLevelStarsCount(i + 1);
             levelButton[i].setStarsCollected(stars);
+            // Logic to enable/disable buttons
+            if (i == 0) { // Level 1 is always enabled
+                levelButton[i].setEnabled(true);
+            } else {
+                // Check if the previous level has at least one star
+                Boolean[] previousLevelStars = ProfileManager.getLastProfile().getLevelStarsCount(i);
+                boolean hasAnyStarInPreviousLevel = false;
+                for (Boolean star : previousLevelStars) {
+                    if (star) {
+                        hasAnyStarInPreviousLevel = true;
+                        break;
+                    }
+                }
+                levelButton[i].setEnabled(hasAnyStarInPreviousLevel);
+            }
             levelButton[i].repaint(); // Force repaint buttons
         }
         coinCounterLabel.setText(String.valueOf(ProfileManager.getLastProfile().getCoins()));
