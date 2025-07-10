@@ -1,6 +1,7 @@
 package view.impl.game;
 
 import controller.game.GameController;
+import controller.game.GameMenuController;
 import model.Model;
 import model.game.Game;
 import utils.audio.GameAudioController;
@@ -21,7 +22,7 @@ import static config.ViewConfig.*;
  */
 public class GamePanel extends AbsViewPanel {
 
-    private final GameMenuPanel gameMenuPanel;
+    private final GameMenu gameMenu;
     private final LoseDialog losePanel;
     private final WinDialog winPanel;
 
@@ -80,16 +81,16 @@ public class GamePanel extends AbsViewPanel {
         layeredPane.add(buttonContainerPanel, JLayeredPane.PALETTE_LAYER); // Added to a higher level of the game
 
         //Menu panels (overlays)
-        gameMenuPanel = new GameMenuPanel();
+        gameMenu = new GameMenu();
         losePanel = new LoseDialog();
         winPanel = new WinDialog();
 
         // Add menu panels to the MODAL_LAYER layer (the top one, for overlay)
-        layeredPane.add(gameMenuPanel, JLayeredPane.MODAL_LAYER);
+        layeredPane.add(gameMenu, JLayeredPane.MODAL_LAYER);
         layeredPane.add(losePanel, JLayeredPane.MODAL_LAYER);
         layeredPane.add(winPanel, JLayeredPane.MODAL_LAYER);
 
-        gameMenuPanel.setVisible(false);
+        gameMenu.setVisible(false);
         losePanel.setVisible(false);
         winPanel.setVisible(false);
 
@@ -114,7 +115,7 @@ public class GamePanel extends AbsViewPanel {
                 buttonContainerPanel.revalidate();
 
                 // Update the position of the menu panels (centered)
-                applyPanelBounds(gameMenuPanel);
+                applyPanelBounds(gameMenu);
                 applyPanelBounds(losePanel);
                 applyPanelBounds(winPanel);
 
@@ -157,14 +158,13 @@ public class GamePanel extends AbsViewPanel {
     }
 
     // SETTINGS
-    public GameMenuPanel toggleMenu(){
-        int currentLevel = Model.getInstance().getGame().getCurrLevel();
-        gameMenuPanel.setCurrentLevel(currentLevel); // Update the level in the settings panel
-        gameMenuPanel.updateContent(); // Update texts/coins
+    public GameMenu toggleMenu(){
+//        int currentLevel = Model.getInstance().getGame().getCurrLevel();
+//        gameMenu.setCurrentLevel(currentLevel); // Update the level in the settings panel
+//        gameMenu.updateContent(); // Update texts/coins
 
-        gameMenuPanel.setOpen(!gameMenuPanel.isOpen()); // Invert the opening state
-        gameMenuPanel.setVisible(gameMenuPanel.isOpen()); // Make visible/invisible
-        if(gameMenuPanel.isOpen()){
+        gameMenu.setVisible(!gameMenu.isVisible()); // Make visible/invisible
+        if(gameMenu.isVisible()){
             pauseButton.setEnabled(false);
             GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music when menu is open
         }
@@ -174,7 +174,7 @@ public class GamePanel extends AbsViewPanel {
 
         this.revalidate();
         this.repaint();
-        return gameMenuPanel;
+        return gameMenu;
     }
 
     //END LEVEL
@@ -213,9 +213,9 @@ public class GamePanel extends AbsViewPanel {
     }
 
     //------------------------------------- CONTROLLER RELATED METHODS -------------------------------------------------------
-    private final GameController controller = new GameController();
     @Override
     public void bindController() {
+        GameController controller = new GameController();
         this.addKeyListener(controller);
 
         this.addComponentListener(new ComponentAdapter() {
@@ -232,30 +232,34 @@ public class GamePanel extends AbsViewPanel {
                 GameAudioController.getInstance().stopBackgroundMusic();
             }
         });
+
+        // PAUSE BUTTON
+        pauseButton.addActionListener(controller::onPause);
+
     }
 
-    public GameController getController() {
-        return controller;
+    /* Simulate a click on the Pause button */
+    public void clickPause() {
+        pauseButton.doClick();
     }
 
     //------------------------------------- SWINGs OVERRIDE METHODS -------------------------------------------------------
     @Override
     public void addNotify() { // this is called when a container adds this panel
-        super.addNotify();
+        super.addNotify(); //<-- requests focus here
 
         // Reset the elapsed time
         setElapsedTime(Game.getInstance().getElapsedTime());
 
         // Reset components
         gameContentDrawingPanel.setVisible(true);
-        gameMenuPanel.setVisible(false);
+        gameMenu.setVisible(false);
         losePanel.setVisible(false);
         winPanel.setVisible(false);
         pauseButton.setEnabled(true); // Enable the pause buttons when the game starts
         // Repaint the background
         repaintBackground();
-
-        // Request focus when the panel is added to the container
-        requestFocusInWindow();
     }
+
+
 }

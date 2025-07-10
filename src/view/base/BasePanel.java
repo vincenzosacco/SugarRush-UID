@@ -6,6 +6,7 @@ import java.awt.event.ComponentEvent;
 
 public abstract class BasePanel extends JPanel {
     public BasePanel() {
+        super();
         this.setFocusable(true);
 //        this.addComponentListener(new ComponentAdapter() {
 //            @Override

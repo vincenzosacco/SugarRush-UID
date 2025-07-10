@@ -1,6 +1,9 @@
 package view.impl.home;
 
 import utils.Resources;
+import utils.audio.AudioManager;
+import utils.audio.GameAudioController;
+import view.base.AbsViewPanel;
 import view.impl.home.editor.LevelEditorPanel;
 import view.impl.home.settings.BaseSettingsPanel;
 import view.impl.home.shop.ShopPanel;
@@ -8,11 +11,13 @@ import view.impl.home.levelsMap.LevelsMap;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import static config.ViewConfig.BOARD_HEIGHT;
 import static config.ViewConfig.BOARD_WIDTH;
 
-public class HomeContainer extends JPanel {
+public class HomeContainer extends AbsViewPanel {
     // CardLayout to switch between views (like tabs)
     private final CardLayout cardLayout;
     private final JPanel contentPanel;
@@ -119,6 +124,7 @@ public class HomeContainer extends JPanel {
     }
 
 
+
     // Helper method to apply consistent styling to tab buttons
     private void styleTabButton(JButton button, String tooltip) {
         button.setContentAreaFilled(false);   // No background fill
@@ -160,5 +166,29 @@ public class HomeContainer extends JPanel {
     public LevelsMap getLevelsMap() {
         return levelsMap;
     }
+
+    //--------------------------------------- SWING METHODS ---------------------------------------//
+
+
+    //--------------------------------------- CONTROLLER METHODS ---------------------------------------//
+    @Override
+    protected void bindController() {
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                super.componentShown(e);
+                GameAudioController.getInstance().playMenuMusic();
+                System.out.println("HomeContainer: componentShown");
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e){
+                super.componentHidden(e);
+                GameAudioController.getInstance().stopBackgroundMusic();
+            }
+        });
+    }
+
+
 
 }

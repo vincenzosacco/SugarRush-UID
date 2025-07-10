@@ -8,6 +8,8 @@ import view.impl.game.GamePanel;
 
 import javax.swing.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
@@ -49,7 +51,11 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
                 case KeyEvent.VK_DOWN -> direction = DOWN;
                 case KeyEvent.VK_LEFT -> direction = LEFT;
                 case KeyEvent.VK_RIGHT -> direction = RIGHT;
-                case KeyEvent.VK_ESCAPE -> onPause();
+                case KeyEvent.VK_ESCAPE -> View.getInstance().getGamePanel().clickPause();
+                /* Cannot call directly onPause() because it takes an ActionEvent as parameter.
+                 Simulate a click on the pause button instead of writing another code behaviour of 'PAUSE'
+                 maintain a unique definition of 'PAUSE'.
+                 This is good to avoid bugs or different behavior between 'ESC' and click PauseButton.*/
             }
 
             if (direction != null) {
@@ -81,15 +87,23 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
     }
 
     // EVENTS HANDLING //
+    /*
+        method(ActionEvent e) is an explicit way to indicate that a method is intended to be
+        added as an actionListener to a component.
+     */
 
-    void onPause() {
+    public void onPause(ActionEvent e){
+        if (e==null){
+            throw new IllegalArgumentException("ActionEvent cannot be null. This method is intended to be called from a component's actionListener.");
+        }
+
         // GameLoop is paused when the game is paused. See GameLoop.run()
         Game.getInstance().togglePause();
         View.getInstance().getGamePanel().toggleMenu();
-
     }
 
-    void onExit(Boolean isWin) {
+
+    public void onExit(Boolean isWin) {
         // GAMELOOP //
         GameLoop gl = GameLoop.getInstance();
 

@@ -1,10 +1,11 @@
 package view.base;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
-public abstract class BaseDialog extends BasePanel {
+public abstract class BaseDialog extends BasePanel  {
     // Background image for the panel
     private BufferedImage backgroundImage;
 
@@ -12,11 +13,17 @@ public abstract class BaseDialog extends BasePanel {
         // Use BorderLayout and transparency
         setLayout(new BorderLayout());
         setOpaque(false);
-
-        backgroundImage = loadBackgroundImage();
     }
 
+    /**
+     * Load the background image for the dialog.
+     * @apiNote This method is called in {@link #paintComponent(Graphics) paintComponent}
+     * @return The loaded image or null if an error occurred.
+     */
     protected abstract BufferedImage loadBackgroundImage();
+
+
+    //------------------------------------ SWING OVERRIDES --------------------------------------------
 
     private int lastWidth = 0;
     private int lastHeight = 0;

@@ -292,6 +292,6 @@ public class LevelInfoDialog extends BaseDialog {
 //---------------------------------------- ABSTRACT PARENT OVERRIDE --------------------------------------
     @Override
     protected BufferedImage loadBackgroundImage() {
-        return Resources.getBestImage("/imgs/panels/levels/level-info-dialog-BG.jpg", 100, 100);
+        return Resources.getBestImage("/imgs/panels/levels/level-info-dialog-BG.jpg", getWidth(), getHeight());
     }
 }

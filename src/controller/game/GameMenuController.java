@@ -2,41 +2,53 @@ package controller.game;
 
 import model.game.Game;
 import view.View;
-import view.impl.game.GameMenuPanel;
+import view.impl.game.GameMenu;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameMenuController  {
-    private final GameMenuPanel view;
-
-    public GameMenuController(GameMenuPanel view) {
-        this.view = view;
-    }
-
-    /**
-     * Define what happens when continue buttons is pressed
+    /* Using a static inner class instead of method references to avoid issues with wrong calls
+    to the onResume method. In this way, nobody can call "onResume()" directly, you can just create a
+    new onResume object and pass it as ActionListener to the button.
+    !This is explicit, declarative and safer.!
+    (By the way, this "class approach" isn't different from "method approach" in terms of semantic and performance .
      */
-    public void onResume(){
-        View.getInstance().getGamePanel().getController().onPause();
+    public static class onResume implements ActionListener{
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+//            View.getInstance().getGamePanel().getController().onPause();
+        }
     }
 
-    public void onRestart(){
-        GameLoop.getInstance().shutdown();
-        Game.getInstance().restart();
+    public static class onRestart implements ActionListener{
 
-        View.getInstance().getGamePanel().toggleMenu();
-        View.getInstance().getGamePanel().repaintBackground();
-        View.getInstance().showGame();
-        // Request focus to the game panel to capture user input
-        View.getInstance().getGamePanel().requestFocusInWindow();
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            GameLoop.getInstance().shutdown();
+            Game.getInstance().restart();
+
+            View.getInstance().getGamePanel().toggleMenu();
+            View.getInstance().getGamePanel().repaintBackground();
+            View.getInstance().showGame();
+        }
     }
 
-    public void onExit(){
-        View.getInstance().getGamePanel().getController().onExit(null);
-        View.getInstance().getGamePanel().toggleMenu();
-        View.getInstance().showHome();
+    public static class onExit implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+//            View.getInstance().getGamePanel().getController().onExit(null);
+            View.getInstance().getGamePanel().toggleMenu();
+            View.getInstance().showHome();
+        }
     }
 
-    public void onSettings(){
-//        View.getInstance().getHome().showPanel(HomeContainer.PanelName.SETTINGS);
+    public static class onPause implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+//            View.getInstance().getGamePanel().getController().onPause();
+        }
     }
+
 
 }

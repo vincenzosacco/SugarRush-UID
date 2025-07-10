@@ -161,7 +161,7 @@ public class Game extends GameBoard {
                 addstar(); // if the elapsed time is less than 60 seconds, add a star
             }
         } else {
-            GameAudioController.getInstance().playSfx("lose");
+//            GameAudioController.getInstance().playSfx("lose");
         }
 
         pcs.firePropertyChange(new PropertyChangeEvent(this,

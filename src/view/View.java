@@ -1,6 +1,7 @@
 
 package view;
 
+import utils.audio.GameAudioController;
 import view.impl.game.GamePanel;
 import view.impl.home.HomeContainer;
 
@@ -75,12 +76,14 @@ public class View {
         Window.revalidate();
         Window.pack();
         Window.setLocationRelativeTo(null); // center on screen
+        GameAudioController.getInstance().playGameMusic();
     }
     public void showHome(){
         Window.revalidate();
         Window.setContentPane(home);
         Window.pack();
         Window.setLocationRelativeTo(null); // center on screen
+        GameAudioController.getInstance().playMenuMusic();
     }
 
     //GETTERS
