@@ -61,7 +61,7 @@ public class Creature extends Entity {
                 GameAudioController.getInstance().playSfx("bite");
                 View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
 
-                Model.getInstance().getGame().addstar();
+                Model.getInstance().getGame().setStarsCollected(2);
                 Model.getInstance().getGame().end(true);
             }
             case CANDY -> {
@@ -69,7 +69,7 @@ public class Creature extends Entity {
                 View.getInstance().getGamePanel().repaintBackground(); // repaint the static background
 
                 addCandy();
-                Model.getInstance().getGame().addstar();
+                Model.getInstance().getGame().setStarsCollected(0);
 
             }
             case SPACE -> {/*do nothing*/}

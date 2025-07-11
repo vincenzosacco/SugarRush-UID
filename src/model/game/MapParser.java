@@ -36,12 +36,16 @@ public class MapParser {
     public final static String MAP_4 = "/maps/map4.txt";
     public final static String MAP_5 = "/maps/map5.txt";
     public final static String MAP_6 = "/maps/map6.txt";
+
+    private record MapObj(String[] mapLines, int timeLimit ){}
+
     /**
      * Read a .txt file a convert each line to a String element of the returned Array.
      * @return a String[] containing lines
      */
-    private static String[] loadMapResource(String mapResourcePath) {
+    private static MapObj loadMapResource(String mapResourcePath) {
         List<String> mapLines = new ArrayList<>();
+        int timeLimit = 0; // Default time limit
 
         try (InputStream inputStream = Resources.getResourceAsStream(mapResourcePath)) { // this closes automatically
             try {
@@ -59,9 +63,21 @@ public class MapParser {
                             if (line.startsWith("coins=") || line.startsWith("textRequest=")) {
                                 break; // fine della sezione mappa
                             }
+                            if (line.startsWith("time=")) {
+                                // Set the time limit from the map file
+                                try {
+                                    timeLimit = Integer.parseInt(line.substring("time=".length()).trim());
+                                } catch (NumberFormatException e) {
+                                    System.err.println("Invalid time format in map file: " + line);
+                                    timeLimit = 0; // Default to 0 or handle as an error
+                                }
+                            }
+
+//                                continue; // Don't add this line to mapLines
                             // Here you add the lines that are *actually* part of the game.
                             // If a blank line within the game section is to represent a blank line in the grid,
                             // then `mapLines.add(line)` is correct for those.
+
                             mapLines.add(line);
                         }
                     }
@@ -73,8 +89,7 @@ public class MapParser {
             System.err.println("Error closing InputStream: " + e.getMessage());
         }
 
-        return mapLines.toArray(new String[0]);
-
+        return new MapObj(mapLines.toArray(new String[0]), timeLimit);
     }
 
     /**
@@ -92,7 +107,9 @@ public class MapParser {
         // assert matrix is cleared
         assert mat.isEmpty() : "Game matrix should be empty before loading a new levelsMap.";
 
-        String[] tileMap = loadMapResource(map);
+        MapObj mapObj = loadMapResource(map);
+        String[] tileMap = mapObj.mapLines;
+        gameBoard.timeLimit = mapObj.timeLimit;
         assert tileMap.length > 0 : "Game file '" + map + "' is empty or not found.";
 
 

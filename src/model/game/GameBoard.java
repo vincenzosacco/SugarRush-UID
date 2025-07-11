@@ -69,4 +69,7 @@ public class GameBoard {
         matrix.clear();
         entities.clear();
     }
+
+   protected int timeLimit = 0; // Default time limit
+
 }
