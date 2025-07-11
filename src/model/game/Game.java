@@ -1,271 +1,1 @@
-package model.game;
-
-import controller.GameLoop;
-import model.game.entities.Creature;
-import model.game.entities.evil.Projectile;
-import model.game.utils.Cell;
-import model.profile.ProfileManager;
-import view.View;
-
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static config.ModelConfig.COL_COUNT;
-import static config.ModelConfig.ROW_COUNT;
-
-public class Game {
-    /**
-     * @see GameMatrix
-     */
-    // package visibility needed for MapParser
-    final GameMatrix gameMat = new GameMatrix();
-    final ArrayList<Entity> entities = new ArrayList<>();
-
-    // count star
-    private int starCount = 0;
-
-    /**
-     * <p>
-     * Contains a read-only view of the game's game matrix.
-     * This variable is a two-dimensional, unmodifiable structure backed by the internal {@code GameMatrix},
-     * where each element represents a {@code Block} type.
-     * The {@code Block} represents game-specific elements like walls, empty spaces, the creature, and sugar pieces.
-     * </p>
-     *
-     * @implNote The list is immutable, ensuring external code cannot modify the game's game. This is essential to maintain
-     * the integrity of the game state during gameplay. Changes to the game are managed internally within the
-     * {@code Game} class logic.
-     * @see GameConstants.Block
-     * @see GameMatrix#makeReadOnly()
-     */
-    private final List<List<GameConstants.Block>> gameMatRO = gameMat.makeReadOnly();
-
-    // experimental approach
-    private final List<Entity> entitiesRO = Collections.unmodifiableList(entities);
-    // Coins of the current level
-    private Boolean[] coinsCollected;
-
-    public void setCoinsCollected(int pos){
-        if(!this.coinsCollected[pos]){
-            this.coinsCollected[pos]=true;
-            addStar();
-        }
-    }
-
-    private int currLevel;
-
-    public int getCurrLevel() {
-        return currLevel;
-    }
-
-    public Game() {
-        // LOAD MAP FROM RESOURCE
-        //default
-        currLevel=1;
-        coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
-    }
-    //set the current map of the level
-    public void setLevel(int index){
-        currLevel=index;
-        coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
-        this.starCount=0;
-
-        switch (index) {
-            case 1: MapParser.loadMap(MapParser.MAP_1, this); break;
-            case 2: MapParser.loadMap(MapParser.MAP_2, this); break;
-            case 3: MapParser.loadMap(MapParser.MAP_3, this); break;
-            case 4: MapParser.loadMap(MapParser.MAP_4, this); break;
-            case 5: MapParser.loadMap(MapParser.MAP_5, this); break;
-            case 6: MapParser.loadMap(MapParser.MAP_6, this); break;
-            default:
-                System.err.println("Level not supported: " + index + ". Loading MAP_1 as fallback.");
-                MapParser.loadMap(MapParser.MAP_1, this);
-                break;
-        }
-    }
-
-    /**
-     * This method updates the star count
-     */
-    public void addStar(){
-        starCount++;
-        if (starCount > 3) {
-            throw new IllegalStateException("Star count cannot exceed 3. Current count: " + starCount);
-        }
-
-    }
-
-    public int getStarCount(){
-        return this.starCount;
-    }
-
-    // MODEL //
-
-    /**
-     * Retrieves the current state of the game as a two-dimensional, read-only list of blocks.
-     * Each block represents a specific element within the game's game, such as walls, spaces,
-     * the creature, or collectible items. Access is synchronized to ensure thread-safe state retrieval.
-     *
-     * @return a two-dimensional unmodifiable list where each element is a {@code Constants.Block}
-     * representing the current state of the game game.
-     * @see GameConstants.Block
-     */
-    public List<List<GameConstants.Block>> getState() {
-        return gameMatRO;
-    }
-
-    public List<Entity> getEntities() {
-        return entitiesRO;
-    }
-
-    // Method to add the Projectile
-    public void addEntity(Entity e){
-        entities.add(e);
-    }
-
-    /**
-     * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.
-     * <p>
-     * Updates the current state of the game by performing several critical operations
-     * in sequential order. This method represents the core logic for maintaining and
-     * refreshing the game game and blocks to reflect the latest game state.
-     * </p>
-     * The operations include:
-     * <p>
-     * 2. Executing actions for all active game blocks. Each entity's specific action is
-     * performed via its {@code performAction} method.
-     * </p>
-     * <p>
-     * 3. Resolving any interactions or collisions between blocks and the game environment.
-     * </p>
-     * <p>
-     * 4. Updating the game matrix with the new positions and block types of all blocks.
-     * </p>
-     * This method is central to the game's functionality and should be invoked regularly
-     * to keep the game running smoothly. Modifications to this method should ensure the
-     * preservation of each step's intended functionality.
-     */
-    public void updateState() {
-        List<Entity> currentEntities = new ArrayList<>(entities);
-        for (Entity ent : currentEntities) {
-            if (ent.shouldPerform()) {
-                // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
-                Cell oldCoord = ent.getCoord();
-                gameMat.setCell(oldCoord, GameConstants.Block.SPACE);
-
-                // 1- COMPUTE ENTITIES ACTION  //
-                Cell toMove = ent.computeAction(); // tell the entity where he wants to move
-
-                // If the projectile touches the border, it will be deleted
-                if(ent instanceof Projectile && toMove==null){
-                    gameMat.setCell(ent.getCoord(), GameConstants.Block.SPACE);
-                    entities.remove(ent);
-                }
-                else {
-                    // 2- MANAGE COLLISIONS //
-                    boolean canPerform = ent.manageCollision(gameMat.getCell(toMove), toMove);
-
-                    // 3- PERFORM ACTION //
-                    if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates
-
-                    // APPLY NEW COORDS IN THE GAME MATRIX //
-                    Cell newCoord = ent.getCoord();
-                    gameMat.setCell(newCoord, ent.blockType());
-                    // To delete the projectile
-                    if (!canPerform && ent instanceof Projectile) {
-                        // Free the cell and remove the projectile
-                        gameMat.setCell(ent.getCoord(), GameConstants.Block.SPACE);
-                        entities.remove(ent);
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**@return the block at the specified cell in the game matrix*/
-    public GameConstants.Block blockAt(Cell cell) {
-        if (cell.getRow() < 0 || cell.getRow() >= ROW_COUNT ||
-                cell.getCol() < 0 || cell.getCol() >= COL_COUNT) {
-            return GameConstants.Block.SPACE;
-        }
-        return gameMat.getCell(cell);
-    }
-
-
-    // GAME ACTIONS //
-    private boolean isStarted = false;
-    public boolean isStarted() {
-        return isStarted;
-    }
-    public void start(){
-        if (!isStarted) isStarted = true;
-    }
-
-
-    /** Sets the direction of the creature. On the next {@link #updateState()} call,
-     * the creature will move in the specified direction.
-     * @param direction the direction to set for the creature
-     */
-    public void setCreatureDirection(GameConstants.Direction direction) {
-        Creature creature = null;
-        for (Entity entity : entities) {
-            if (entity instanceof Creature) {
-                creature = (Creature) entity;
-            }
-        }
-        assert creature != null : "Creature should not be null";
-
-        if (! creature.isMoving()) {
-            creature.setDirection(direction);
-        }
-    }
-
-    public void killCreature() {
-        SwingUtilities.invokeLater(() -> {
-            // Reset if lost
-            this.coinsCollected=ProfileManager.getLastProfile().getLevelStarsCount(currLevel);
-            starCount=0;
-
-            GameLoop.getInstance().pauseGameTimer();
-            View.getInstance().getGamePanel().endGame();
-            View.getInstance().getGamePanel().loseLevel();
-        });
-    }
-
-
-    public void clearGameMatrix() {
-        // Clear the game matrix
-        gameMat.clear();
-        for (int r = 0; r < ROW_COUNT; r++) {
-            ArrayList<GameConstants.Block> row = new ArrayList<>(COL_COUNT);
-            for (int c = 0; c < COL_COUNT; c++) {
-                row.add(GameConstants.Block.SPACE);
-            }
-            gameMat.add(row);
-        }
-        // Clear all entities
-        entities.clear();
-    }
-
-
-    public void win(){
-        SwingUtilities.invokeLater(() -> {
-            GameLoop.getInstance().pauseGameTimer();
-
-            // Set the coins taken in this level and save them
-            GameLoop.getInstance().controlTime();
-            ProfileManager.getLastProfile().setLevelStarsCount(this.currLevel,this.coinsCollected);
-
-            View.getInstance().getGamePanel().endGame();
-            View.getInstance().getGamePanel().winLevel();
-
-            // Adds the coins
-            ProfileManager.getLastProfile().sumCoins(getStarCount()*100); // 100 coins for each star
-            ProfileManager.getLastProfile().sumCoins(10); //10 coins every time the creature reaches the candy (each victory)
-            View.getInstance().getCustomTabbedPane().getShopPanel().updateCoins(ProfileManager.getLastProfile().getCoins());
-        });
-    }
-}
+package model.game;import controller.game.GameController;import model.game.entities.Creature;import model.game.entities.evil.Projectile;import model.game.utils.Cell;import persistance.profile.ProfileManager;import java.beans.PropertyChangeEvent;import java.beans.PropertyChangeSupport;import java.util.ArrayList;import java.util.List;import static config.ModelConfig.NUM_LEVELS;public class Game extends GameBoard {    // SINGLETON because the application has only one game instance at a time.    private static Game instance = null;    private Game() {        super();    }    public static Game getInstance() {        if (instance == null) {            instance = new Game();        }        return instance;    }    // --------------------------------------- GAMELOOP -------------------------------------------------- //    private final Object updateLock = new Object();    /**     * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.     * <p>     * Updates the current state of the game by performing several critical operations     * in sequential order. This method represents the core logic for maintaining and     * refreshing the game game and blocks to reflect the latest game state.     * </p>     * The operations include:     * <p>     * 2. Executing actions for all active game blocks. Each entity's specific action is     * performed via its {@code performAction} method.     * </p>     * <p>     * 3. Resolving any interactions or collisions between blocks and the game environment.     * </p>     * <p>     * 4. Updating the game matrix with the new positions and block types of all blocks.     * </p>     * This method is central to the game's functionality and should be invoked regularly     * to keep the game running smoothly. Modifications to this method should ensure the     * preservation of each step's intended functionality.     */    public void updateState() {        synchronized (updateLock) {            // ASSERTIONS //            assert !entities.isEmpty() : "Entities list should not be empty when updating state.";            assert !matrix.isEmpty() : "Game matrix should not be null when updating state.";            // UPDATE ENTITIES //            // Take a snapshot of the entities list to avoid concurrent modification issues            List<Entity> snapshot = new ArrayList<>(entities);            for (Entity ent : snapshot) {                if (ent.shouldPerform()) {                    // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//                    Cell oldCoord = ent.getCoord();                    matrix.setCell(oldCoord, GameConstants.Block.SPACE);                    // 1- COMPUTE ENTITIES ACTION  //                    Cell toMove = ent.computeAction(); // tell the entity where he wants to move                    if (ent instanceof Projectile && toMove == null) {                        // Entity wants to move out of bounds, remove it                        matrix.setCell(oldCoord, GameConstants.Block.SPACE);                        entities.remove(ent);                        continue;                    }                    // 2- MANAGE COLLISIONS //                    boolean canPerform = ent.manageCollision(matrix.getCell(toMove), toMove);                    // 3- PERFORM ACTION //                    if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates                    // 4 -APPLY NEW COORDS IN THE GAME MATRIX //                    Cell newCoord = ent.getCoord();                    matrix.setCell(newCoord, ent.blockType());                    // To delete the projectile                    if (!canPerform && ent instanceof Projectile) {                        // Free the cell and remove the projectile                        matrix.setCell(ent.getCoord(), GameConstants.Block.SPACE);                        entities.remove(ent);                    }                }            }        }    }    public void addEntity(Entity e) {        synchronized (updateLock) {            entities.add(e);        }    }//    public void removeEntity(Entity e, Cell cell) {//        synchronized (updateLock) {//            assert entities.contains(e) : "Entity to remove must be in the entities list.";//            entities.remove(e);//            matrix.setCell(cell, GameConstants.Block.SPACE);//        }//    }    //-------------------------------------- GAME STATE -----------------------------------------------//    @Override    void clear() {        super.clear(); // clear matrix and entities        // Reset all stuffs related to the game state        _Timer.stop(); // Stop the timer        starCount = 0; // Reset star count        starsCollected = ProfileManager.getLastProfile().getLevelStarsCount(currLevel);    }    public void start(){        assert currLevel > 0 && currLevel <= NUM_LEVELS : "Current level must be between 1 and " + NUM_LEVELS +                ". Actual value: " + currLevel + ".";        assert !entities.isEmpty() : "Entities list should not be empty when starting the game.";        _Timer.start();    }    public void pause(){        _Timer.pause();    }    public void resume(){        _Timer.resume();    }    public boolean isRunning() {        return _Timer.isRunning();    }    /** Sets the direction of the creature. On the next {@link #updateState()} call,     * the creature will move in the specified direction.     * @param direction the direction to set for the creature     */    public void setCreatureDirection(GameConstants.Direction direction) {        Creature creature = null;        for (Entity entity : entities) {            if (entity instanceof Creature) {                creature = (Creature) entity;            }        }        assert creature != null : "Creature should not be null";        // IF the creature is already moving, we do not change its direction        if (! creature.isMoving()) {            creature.setDirection(direction);        }    }    //------------------------------ GAME EVENTS -----------------------------------------------//    /* Game events such as win, lose, etc. are handled using the PropertyChangeListener interface     * (which can be seen has java modern Observer pattern) in the GameController.     * This allows for decoupling of the game logic from the UI, enabling a more modular design.     * The GameController listens for property changes and updates the UI accordingly.     *     * For example, when the game is won, the GameController can listen for a "win" event     * and then update the UI to show a win message or transition to the next level.     */    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);    public void addPropertyChangeListener(GameController gameController) {        pcs.addPropertyChangeListener(gameController);    }    /**     * Enum representing game events that can be observed.     */    public enum Event {//        WIN,LOSE,        PLAY    }    /**     * Ends the game by firing a property change event {@link Event#PLAY}, passing {@code isWin} as new value.     * @param isWin whether the game was won or not. If {@code null}, the event will be fired regardless of the win status (just EXIT).     */    public void end(Boolean isWin){        assert pcs.getPropertyChangeListeners().length != 0 : "At least one listener is required";        // Pause game        pause();        // Add star if "in time win"        if (isWin!= null && isWin) {            // CHECK ADD STAR //            controlTime(); // Check if the time taken to complete the level allows you to get a star            ProfileManager.getLastProfile().setLevelStarsCount(currLevel, starsCollected);        }        // Notify listeners (GameController) about the game end event        pcs.firePropertyChange(new PropertyChangeEvent(this,                GameController.PropertyName.EXIT.toString(),                Event.PLAY, isWin));    }    public void restart() {        setLevel(currLevel); // Reset the level to the current one        assert pcs != null : "PropertyChangeSupport should not be null when restarting the game.";        pcs.firePropertyChange(new PropertyChangeEvent(this,                GameController.PropertyName.RESTART.toString(),                null, null)); // Notify listeners that the game is restarting    }    //------------------------------ GETTERS AND SETTERS -----------------------------------------------//    // LEVELS //    private int currLevel = 1;    public int getCurrLevel() {        return currLevel;    }    public void setLevel(int index){        currLevel=index;        starsCollected = ProfileManager.getLastProfile().getLevelStarsCount(currLevel);        String mapPath = null;        switch (index) {            case 1 -> mapPath = MapParser.MAP_1;            case 2 -> mapPath = MapParser.MAP_2;            case 3 -> mapPath = MapParser.MAP_3;            case 4 -> mapPath = MapParser.MAP_4;            case 5 -> mapPath = MapParser.MAP_5;            case 6 -> mapPath = MapParser.MAP_6;            default ->{                System.err.println("Level not supported: " + index + ". Loading MAP_1 as fallback.");                MapParser.loadMap(MapParser.MAP_1, this);            }        }        assert mapPath != null : "Map path should not be null for level " + index;        MapParser.loadMap(mapPath, this);    }    // STARS //    private int starCount = 0;    private Boolean[] starsCollected = new Boolean[3];    /**     * This method updates the star count     */    private void addStar(){        starCount++;        if (starCount > 3) {            throw new IllegalStateException("Star count cannot exceed 3. Current count: " + starCount);        }    }    public int getStarCount(){        return starCount;    }    public void setStarsCollected(int pos){        if(!this.starsCollected[pos]){            this.starsCollected[pos]=true;            addStar();        }    }    // ELAPSED TIME //    public long getElapsedTime() {        return _Timer.elapsedTime;    }    // Check if the time taken to complete the level allows you to get a star    private void controlTime(){        // if time is less than the specified time limit, add a star if it's possible        if (getElapsedTime() < timeLimit && timeLimit > 0) { // Ensure timeLimit is positive            setStarsCollected(1); // Pos=1 --> Time Trial Star        }    }}

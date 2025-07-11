@@ -2,6 +2,7 @@ package model.game.entities.evil;
 
 import config.ModelConfig;
 import model.Model;
+import model.game.Game;
 import model.game.GameConstants;
 import model.game.utils.Cell;
 import model.game.Entity;
@@ -19,6 +20,14 @@ public class Projectile extends Entity {
         this.direction = dir;
         setActionDelay(5); // Moves every 5 frames
     }
+
+    @Override
+    protected boolean shouldPerform() {
+        // Just to avoid unnecessary computations
+        if (this.direction == Direction.NONE) return false;
+        return super.shouldPerform();
+    }
+
 
     // The block type representing this projectile in the game matrix
     @Override
@@ -62,20 +71,25 @@ public class Projectile extends Entity {
         return newCoord;
     }
 
+
     // Manages interactions when the projectile tries to move into a new cell.
     @Override
     protected boolean manageCollision(GameConstants.Block block, Cell cell) {
-        if (block == GameConstants.Block.SPACE|| block==GameConstants.Block.ENEMY1 ||block==GameConstants.Block.PROJECTILE) {
-            // The projectile can move through empty space or over enemy1
+        if (block == GameConstants.Block.SPACE|| block==GameConstants.Block.ENEMY1 ||
+                block==GameConstants.Block.PROJECTILE) {
             return true;
-        } else if (block == GameConstants.Block.CREATURE) {
+        }
+        else if (block == GameConstants.Block.CREATURE) {
             // If the projectile hits the creature, kill it and stop
-            Model.getInstance().getGame().killCreature();
+            Model.getInstance().getGame().end(false);
             GameAudioController.getInstance().playSfx("hitShot");
             return false;
         }
 
+
         // Any other block (wall, obstacle, etc.) blocks the projectile
+        GameAudioController.getInstance().playSfx("hitWall");
+        this.direction = Direction.NONE; // Stop the projectile
         return false;
     }
 

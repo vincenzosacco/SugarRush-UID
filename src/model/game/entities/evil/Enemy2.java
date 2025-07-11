@@ -20,7 +20,7 @@ public class Enemy2 extends Enemy {
         this.direction = direction; // Shooting direction
     }
 
-     // The type of block this entity represents in the game matrix
+    // The type of block this entity represents in the game matrix
     @Override
     public GameConstants.Block blockType() {
         return GameConstants.Block.ENEMY2;
@@ -72,7 +72,7 @@ public class Enemy2 extends Enemy {
         // If the creature is directly in the next cell, it is killed immediately.
         GameConstants.Block block = Model.getInstance().getGame().blockAt(projCoord);
         if (block == GameConstants.Block.CREATURE) {
-            Model.getInstance().getGame().killCreature(); // Kill
+            Model.getInstance().getGame().end(false); // Kill
             GameAudioController.getInstance().playSfx("hitShot");
         }
         if(block != GameConstants.Block.ENEMY2 && block != GameConstants.Block.THORNS && block != GameConstants.Block.WALL) {

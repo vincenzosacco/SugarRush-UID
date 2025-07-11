@@ -37,19 +37,15 @@ public class MapParser {
     public final static String MAP_5 = "/maps/map5.txt";
     public final static String MAP_6 = "/maps/map6.txt";
 
-    // To store the time limit from the map file
-    private static int timeLimit=0;
-
-    public static int getTimeLimit() {
-        return timeLimit;
-    }
+    private record MapObj(String[] mapLines, int timeLimit ){}
 
     /**
      * Read a .txt file a convert each line to a String element of the returned Array.
      * @return a String[] containing lines
      */
-    private static String[] readMapResource(String mapResourcePath) {
+    private static MapObj loadMapResource(String mapResourcePath) {
         List<String> mapLines = new ArrayList<>();
+        int timeLimit = 0; // Default time limit
 
         try (InputStream inputStream = Resources.getResourceAsStream(mapResourcePath)) { // this closes automatically
             try {
@@ -64,21 +60,24 @@ public class MapParser {
                             // The actual content of the game starts on the next line.
                             continue; // Move to next line immediately
                         } else if (readingMap) {
+                            if (line.startsWith("coins=") || line.startsWith("textRequest=")) {
+                                break; // fine della sezione mappa
+                            }
                             if (line.startsWith("time=")) {
                                 // Set the time limit from the map file
-                                try{
-                                    timeLimit=Integer.parseInt(line.substring("time=".length()).trim());
-                                }catch (NumberFormatException e){
+                                try {
+                                    timeLimit = Integer.parseInt(line.substring("time=".length()).trim());
+                                } catch (NumberFormatException e) {
                                     System.err.println("Invalid time format in map file: " + line);
                                     timeLimit = 0; // Default to 0 or handle as an error
                                 }
-                                continue; // Don't add this line to mapLines
-                            }else if (line.startsWith("textRequest=")) {
-                                break; // end map
                             }
-                                // Here you add the lines that are *actually* part of the game.
+
+//                                continue; // Don't add this line to mapLines
+                            // Here you add the lines that are *actually* part of the game.
                             // If a blank line within the game section is to represent a blank line in the grid,
                             // then `mapLines.add(line)` is correct for those.
+
                             mapLines.add(line);
                         }
                     }
@@ -90,26 +89,28 @@ public class MapParser {
             System.err.println("Error closing InputStream: " + e.getMessage());
         }
 
-        return mapLines.toArray(new String[0]);
-
+        return new MapObj(mapLines.toArray(new String[0]), timeLimit);
     }
 
     /**
-     * Parses a given game file and updates the game board elements in the SugarPanel object based on the game configuration.
-     * The method translates the textual representation of the game into game board blocks such as walls, spaces,
-     * the creature, and the sugar piece. The game file is read, and each character is converted into a block or an object
-     * placed in the corresponding position on the board.
-     *
-     * @param map the path to the game resource file to be loaded
-     * @throws IllegalArgumentException if the game file contains invalid characters or is malformed
+     * Parses a given map file and updates the game board elements in the {@link Game} based on the map configuration.
+     * The method translates the textual representation of the map into game board blocks such as walls, spaces,
+     * the creature, ect.
+     * @param map the path to the map resource file to be loaded
+     * @throws IllegalArgumentException if the map file contains invalid characters or is malformed
      * @apiNote
      */
-    public static void loadMap(String map, Game game ){
-        GameMatrix mat = game.gameMat;
+    static void loadMap(String map, GameBoard gameBoard ){
+        gameBoard.clear(); // clear matrix and entities
+        _GameMatrix mat = gameBoard.matrix;
 
-        mat.clear();
+        // assert matrix is cleared
+        assert mat.isEmpty() : "Game matrix should be empty before loading a new levelsMap.";
 
-        String[] tileMap = readMapResource(map);
+        MapObj mapObj = loadMapResource(map);
+        String[] tileMap = mapObj.mapLines;
+        gameBoard.timeLimit = mapObj.timeLimit;
+        assert tileMap.length > 0 : "Game file '" + map + "' is empty or not found.";
 
 
         for (int row = 0; row < ROW_COUNT; row++) {
@@ -124,31 +125,33 @@ public class MapParser {
                     case 'x'-> mat.get(row).add(Block.WALL);
                     case 'c' ->{
                         mat.get(row).add(Block.CREATURE);
-                        game.entities.add(new Creature(row, col));
+                        gameBoard.entities.add(new Creature(row, col));
                     }
                     case 's'-> mat.get(row).add(Block.SUGAR);
                     case 'S' -> mat.get(row).add(Block.CANDY);
                     case 'e' -> {
                         mat.get(row).add(Block.ENEMY1);
-                        game.entities.add(new Enemy1(row,col));
+                        gameBoard.entities.add(new Enemy1(row,col));
                     }
+                    case 't' -> mat.get(row).add(Block.THORNS);
                     case 'r' -> {
                         mat.get(row).add(Block.ENEMY2);
-                        game.entities.add(new Enemy2(row, col, GameConstants.Direction.RIGHT));
+                        gameBoard.entities.add(new Enemy2(row, col, GameConstants.Direction.RIGHT));
                     }
                     case 'l' -> {
                         mat.get(row).add(Block.ENEMY2);
-                        game.entities.add(new Enemy2(row, col, GameConstants.Direction.LEFT));
+                        gameBoard.entities.add(new Enemy2(row, col, GameConstants.Direction.LEFT));
                     }
                     case 'u' -> {
                         mat.get(row).add(Block.ENEMY2);
-                        game.entities.add(new Enemy2(row, col,GameConstants.Direction.UP));
+                        gameBoard.entities.add(new Enemy2(row, col,GameConstants.Direction.UP));
                     }
                     case 'd' -> {
                         mat.get(row).add(Block.ENEMY2);
-                        game.entities.add(new Enemy2(row, col, GameConstants.Direction.DOWN));
+                        gameBoard.entities.add(new Enemy2(row, col, GameConstants.Direction.DOWN));
                     }
-                    case 't' -> mat.get(row).add(Block.THORNS);
+
+
                     case ' '-> mat.get(row).add(Block.SPACE);
                     default -> throw new IllegalArgumentException("Invalid char in game file '" + map + "': "
                             + tileMapChar+ " at row: " + row + " col: " + col);

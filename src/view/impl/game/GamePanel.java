@@ -1,0 +1,255 @@
+package view.impl.game;
+
+import controller.game.GameController;
+import model.game.Game;
+import utils.audio.GameAudioController;
+import view.base.BasePanel;
+import view.impl._common.buttons.CustomRoundLogoButton;
+import view.impl._common.panels.TimerPanel;
+import view.impl.game.dialogs.LoseDialog;
+import view.impl.game.dialogs.WinDialog;
+import view.impl.game.dialogs._EndLevelDialog;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
+import static config.ViewConfig.*;
+
+/**
+ * Main game panel (Contains graphics, UI, menus, pause/win logic)
+ */
+public class GamePanel extends BasePanel {
+
+    private final GameMenu gameMenu;
+
+    private final LoseDialog losePanel;
+    private final WinDialog winPanel;
+
+    private final CustomRoundLogoButton pauseButton;
+
+    private final JLayeredPane layeredPane;
+
+    private final _GameContent gameContentDrawingPanel=new _GameContent();
+
+    public void setEnablePauseButton(boolean enable) {
+        pauseButton.setEnabled(enable);
+    }
+
+
+    public GamePanel() {
+        setLayout(new GridLayout(1,1));
+        setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        setBackground(GAME_BG);
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        this.add(layeredPane);
+
+        // Timer label
+        timerPanel.setBounds(20, 0, 150, 30); // Positioning the timer count label
+        layeredPane.add(timerPanel);
+
+        gameContentDrawingPanel.setOpaque(true); //Opaque to cover the background underneath
+        gameContentDrawingPanel.setBackground(GAME_BG);
+        layeredPane.add(gameContentDrawingPanel, JLayeredPane.DEFAULT_LAYER); // Added to the lowest level
+
+        pauseButton=new CustomRoundLogoButton("pause",Color.WHITE);
+        pauseButton.setEnabled(true);
+        int minSizePanel=Math.min(BOARD_WIDTH,BOARD_HEIGHT);
+        int buttonSize=Math.max(30,minSizePanel/15);
+        pauseButton.setPreferredSize(new Dimension(buttonSize, buttonSize));
+        pauseButton.setMinimumSize(new Dimension(buttonSize, buttonSize));
+        pauseButton.setMaximumSize(new Dimension(buttonSize, buttonSize));
+
+
+        // Container panel for the pause buttons and aligned to the RIGHT
+        JPanel buttonContainerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10)); //with padding
+        buttonContainerPanel.setOpaque(false);
+        buttonContainerPanel.add(pauseButton);
+        layeredPane.add(buttonContainerPanel, JLayeredPane.PALETTE_LAYER); // Added to a higher level of the game
+
+        //Menu panels (overlays)
+        int levelIndex = Game.getInstance().getCurrLevel();
+        gameMenu = new GameMenu(levelIndex);
+        gameMenu.setupKeyBindings(); // ESC -> close menu
+
+        losePanel = new LoseDialog(levelIndex);
+        winPanel = new WinDialog(levelIndex);
+
+        // Add menu panels to the MODAL_LAYER layer (the top one, for overlay)
+        layeredPane.add(gameMenu, JLayeredPane.MODAL_LAYER);
+        layeredPane.add(losePanel, JLayeredPane.MODAL_LAYER);
+        layeredPane.add(winPanel, JLayeredPane.MODAL_LAYER);
+
+        gameMenu.setVisible(false);
+        losePanel.setVisible(false);
+        winPanel.setVisible(false);
+
+        //Add a ComponentListener to the main GamePanel to handle resizing
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // When the GamePanel is resized, it also resizes the layeredPane
+                layeredPane.setBounds(0, 0, getWidth(), getHeight());
+
+                // Resize and position the game drawing panel
+                gameContentDrawingPanel.setBounds(0, 0, getWidth(), getHeight());
+
+                // Resize and reposition the panel containing the pause buttons
+                int currentButtonSize = Math.min(getWidth(), getHeight());
+                currentButtonSize = Math.max(30, currentButtonSize/15);
+                pauseButton.setPreferredSize(new Dimension(currentButtonSize, currentButtonSize));
+                pauseButton.setMinimumSize(new Dimension(currentButtonSize, currentButtonSize));
+                pauseButton.setMaximumSize(new Dimension(currentButtonSize, currentButtonSize));
+                // The height of the buttons container should fit the size of the buttons plus the padding
+                buttonContainerPanel.setBounds(0, 0, getWidth(), currentButtonSize + 20);
+                buttonContainerPanel.revalidate();
+
+                // Update the position of the menu panels (centered)
+                applyPanelBounds(gameMenu);
+                applyPanelBounds(losePanel);
+                applyPanelBounds(winPanel);
+
+                layeredPane.revalidate();
+                layeredPane.repaint();
+            }
+        });
+
+        // KEY BINDINGS
+        setupKeyBindings();
+    }
+
+    private void setupKeyBindings(){
+    //--Make press "ESC" to virtual click on the pause button //
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = this.getActionMap();
+
+        // Create an InputStroke for the ESCAPE key
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke("ESCAPE");
+        // Put the KeyStroke and an identifier (e.g., "pressClose") into the InputMap
+        inputMap.put(escapeKeyStroke, "pressClose");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressClose", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the closeButton
+                pauseButton.doClick();
+            }
+        });
+
+    }
+
+    // Method to calculate and apply centered bounds to menu panels
+    private void applyPanelBounds(JPanel panel) {
+        if (panel == null) return;
+
+        int parentWidth = getWidth();
+        int parentHeight = getHeight();
+
+        int panelWidth = parentWidth / 2;
+        int panelHeight = parentHeight / 2;
+
+        // Set a minimum
+        panelWidth = Math.max(panelWidth, 300);
+        panelHeight = Math.max(panelHeight, 200);
+
+        // Coordinates to center the panel
+        int panelX = (parentWidth - panelWidth) / 2;
+        int panelY = (parentHeight - panelHeight) / 2;
+
+        panel.setBounds(panelX, panelY, panelWidth, panelHeight);
+        panel.revalidate();
+    }
+
+    private final TimerPanel timerPanel = new TimerPanel();
+
+    /**
+     * Sets the elapsed time in milliseconds on the timer label.
+     * This method formats the time in "ss:cc" to display seconds and tenths of seconds.
+     * @param centSec the elapsed time in milliseconds
+     */
+    public synchronized void setElapsedTime(long centSec) {
+        timerPanel.setTime(centSec);
+    }
+
+    public void repaintBackground() {
+        gameContentDrawingPanel.staticBackground = null; // Force background to redraw on next paintComponent
+        this.repaint(); // Requires the panel to redraw itself
+    }
+
+    // SETTINGS
+    public void closeMenu() {
+        gameMenu.setVisible(false); // Hide the menu
+        pauseButton.setEnabled(true); // Enable the pause button when the menu is closed
+        GameAudioController.getInstance().playGameMusic(); // Resume game music when the menu is closed
+    }
+
+    public void openMenu() {
+        gameMenu.setVisible(true); // Show the menu
+        pauseButton.setEnabled(false); // Disable the pause button when the menu is open
+        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music when the menu is open
+    }
+
+    /**
+     * Ends the currentlevel and shows the appropriate dialog (win or lose).
+     * @param isWin true if the player won the level, false if lost
+     * */
+    public void endLevel(boolean isWin) {
+        _EndLevelDialog dialog = isWin ? winPanel : losePanel;
+        dialog.updateLevel(Game.getInstance().getCurrLevel());
+        dialog.updateElapsedTime(Game.getInstance().getElapsedTime());
+        dialog.setVisible(true);
+
+        pauseButton.setEnabled(false); // Disable the pause button when the level ends
+        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music when the level ends
+    }
+
+    //------------------------------------- CONTROLLER RELATED METHODS -------------------------------------------------------
+    @Override
+    public void bindControllers() {
+        GameController controller = new GameController(this);
+        this.addKeyListener(controller);
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                // MUSIC STARTS when the game panel is shown
+                GameAudioController.getInstance().stopBackgroundMusic();
+                GameAudioController.getInstance().playGameMusic();
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                // MUSIC STOPS when the game panel is hidden
+                GameAudioController.getInstance().stopBackgroundMusic();
+            }
+        });
+
+        // PAUSE BUTTON
+        pauseButton.addActionListener(controller::onPause);
+
+    }
+
+
+    //------------------------------------- SWINGs OVERRIDE METHODS -------------------------------------------------------
+    @Override
+    public void addNotify() { // this is called when a container adds this panel
+        super.addNotify(); //<-- requests focus here
+
+        // Reset the elapsed time
+//        setElapsedTime(Game.getInstance().getElapsedTime());
+
+        // Reset components
+        gameContentDrawingPanel.setVisible(true);
+        gameMenu.setVisible(false);
+        losePanel.setVisible(false);
+        winPanel.setVisible(false);
+        pauseButton.setEnabled(true); // Enable the pause buttons when the game starts
+        // Repaint the background
+        repaintBackground();
+    }
+
+}

@@ -3,8 +3,8 @@ package model.game.entities.evil;
 import config.ModelConfig;
 import model.Model;
 import model.game.GameConstants;
-import model.game.utils.Cell;
 import model.game.GameConstants.Direction;
+import model.game.utils.Cell;
 import utils.audio.GameAudioController;
 
 /**
@@ -67,7 +67,7 @@ public class Enemy1 extends Enemy {
             return true;
         }
         else if (block == GameConstants.Block.CREATURE){
-            Model.getInstance().getGame().killCreature();
+            Model.getInstance().getGame().end(false);
             GameAudioController.getInstance().playSfx("killBee");
             return true;
         }
