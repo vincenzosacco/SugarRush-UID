@@ -91,7 +91,13 @@ class _GameContent extends JPanel {
             int y = row * TILE_SIZE;
 
             GameConstants.Block blockType = entity.blockType();
-            Image image = BlocksImages.getInstance().getDynamicBlockImg(blockType, entity.getDirection());
+            Image image;
+            if (blockType == GameConstants.Block.CREATURE) {
+                image = BlocksImages.getInstance().getPlayerCharacterImg(entity.getDirection());
+            } else {
+                image = BlocksImages.getInstance().getDynamicBlockImg(blockType, entity.getDirection());
+            }
+
 
             Objects.requireNonNull(image, "The image cannot be null");
             g2d.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);

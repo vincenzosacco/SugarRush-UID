@@ -2,6 +2,7 @@ package view.game;
 
 import config.ViewConfig;
 import model.game.GameConstants;
+import model.profile.ProfileManager;
 import utils.Resources;
 
 import java.awt.image.BufferedImage;
@@ -35,28 +36,23 @@ public class BlocksImages {
         blocks.remove(GameConstants.Block.SPACE);
 
         for (GameConstants.Block block : blocks) {
-
             if (block.equals(GameConstants.Block.SPACE)) continue;
 
-            // 1- PARSE THE KEY FOR THE BLOCK //
-
-            // NOTE img cannot be null due to the way Resources.getBestImage() works
-
-            // IF BLOCK IS STATIC
             if (staticBlocks.contains(block)) {
                 String key = findExistingImagePath(block, null);
                 tmp_imgs.add(Resources.getBestImage(key, ViewConfig.TILE_SIZE, ViewConfig.TILE_SIZE));
-
+            }else if (block == GameConstants.Block.CREATURE) {
+                for (GameConstants.Direction direction : GameConstants.Direction.values()) {
+                    tmp_imgs.add(getPlayerCharacterImg(direction));
+                }
             }
-            // IF BLOCK IS DYNAMIC
-            else{
+            else {
                 for (GameConstants.Direction direction : GameConstants.Direction.values()) {
                     String key = findExistingImagePath(block, direction);
                     tmp_imgs.add(Resources.getBestImage(key, ViewConfig.TILE_SIZE, ViewConfig.TILE_SIZE));
                 }
             }
 
-            // 2- ADD THE IMAGES TO THE MAP //
             blockImages.put(block, new ArrayList<>(tmp_imgs));
             tmp_imgs.clear();
         }
@@ -163,12 +159,33 @@ public class BlocksImages {
             if (staticBlocks.contains(block)) {
                 allImgs[index++] = getStaticBlockImg(block);
             } else {
-                allImgs[index++] = getDynamicBlockImg(block, GameConstants.Direction.RIGHT);
+                if (block == GameConstants.Block.CREATURE) {
+                    allImgs[index++] = getPlayerCharacterImg(GameConstants.Direction.NONE);
+                } else {
+                    allImgs[index++] = getDynamicBlockImg(block, GameConstants.Direction.NONE);
+                }
             }
         }
 
         return allImgs;
     }
+
+    // Get the current character image
+    public BufferedImage getPlayerCharacterImg(GameConstants.Direction direction) {
+        int characterIndex = ProfileManager.getLastProfile().getCurrentCharacterIndex();
+        String folderName = "creature" + characterIndex;
+
+        String basePath = "/imgs/game/blocks/creature/" + folderName + "/" + folderName + "-" + Character.toLowerCase(direction.name().charAt(0));
+
+        for (String ext : SUPPORTED_EXTENSIONS) {
+            String fullPath = basePath + ext;
+            if (Resources.class.getResource(fullPath) != null) {
+                return Resources.getBestImage(fullPath, ViewConfig.TILE_SIZE, ViewConfig.TILE_SIZE);
+            }
+        }
+        throw new RuntimeException("Image not found for character " + characterIndex + " direction " + direction);
+    }
+
 
     public boolean isStaticBlock(GameConstants.Block block) {
         if (block == null) {
