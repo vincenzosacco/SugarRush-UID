@@ -17,7 +17,7 @@ public class Projectile extends Entity {
     public Projectile(Cell coord, Direction dir) {
         super(coord);
         this.direction = dir;
-        setActionDelay(7); // Moves every 7 frames
+        setActionDelay(5); // Moves every 5 frames
     }
 
     // The block type representing this projectile in the game matrix
