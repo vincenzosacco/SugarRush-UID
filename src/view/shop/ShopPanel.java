@@ -20,7 +20,7 @@ public class ShopPanel extends JPanel implements ViewComp {
     private int coins;
     private JLabel coinCounterLabel;
 
-    private final ImageIcon backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/panels/levels/shopBG.png")));;
+    private final ImageIcon backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/imgs/panels/levels/shopBG.png")));
 
     public ShopPanel() {refreshCreatures();}
 
