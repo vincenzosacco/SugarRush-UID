@@ -11,6 +11,8 @@ import view.impl.tutorial.Tutorial;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -163,6 +165,13 @@ public class LevelsMap extends BasePanel {
 
     @Override
     protected void bindControllers() {
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e){
+                // Refresh level buttons when the panel is shown
+                refreshLevelButtons();
+            }
+        });
     }
 
 
@@ -249,5 +258,8 @@ public class LevelsMap extends BasePanel {
         }
     }
 
-
+    @Override
+    public void addNotify(){
+        refreshLevelButtons();
+    }
 }
