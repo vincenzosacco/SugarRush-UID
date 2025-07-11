@@ -5,6 +5,7 @@ import model.game.Game;
 import utils.audio.GameAudioController;
 import view.base.BasePanel;
 import view.impl._common.buttons.CustomRoundLogoButton;
+import view.impl._common.panels.TimerPanel;
 import view.impl.game.dialogs.LoseDialog;
 import view.impl.game.dialogs.WinDialog;
 import view.impl.game.dialogs._EndLevelDialog;
@@ -48,16 +49,8 @@ public class GamePanel extends BasePanel {
         this.add(layeredPane);
 
         // Timer label
-        JLabel timerLabel = new JLabel("Time: ");
-        timerLabel.setForeground(Color.BLACK);
-        Font timerFont = new Font("Arial", Font.BOLD, 20);
-        timerLabel.setFont(timerFont);
-        timerLabel.setBounds(10, 5, 100, 30); // Positioning the timer label
-        layeredPane.add(timerLabel); // Add the timer label to the panel
-        timerCountLabel.setBounds(80, 5, 100, 30); // Positioning the timer count label
-        timerCountLabel.setFont(timerFont);
-        timerCountLabel.setForeground(Color.BLACK);
-        layeredPane.add(timerCountLabel);
+        timerPanel.setBounds(20, 0, 150, 30); // Positioning the timer count label
+        layeredPane.add(timerPanel);
 
         gameContentDrawingPanel.setOpaque(true); //Opaque to cover the background underneath
         gameContentDrawingPanel.setBackground(GAME_BG);
@@ -171,7 +164,7 @@ public class GamePanel extends BasePanel {
         panel.revalidate();
     }
 
-    private final JLabel timerCountLabel = new JLabel("0");
+    private final TimerPanel timerPanel = new TimerPanel();
 
     /**
      * Sets the elapsed time in milliseconds on the timer label.
@@ -179,9 +172,7 @@ public class GamePanel extends BasePanel {
      * @param centSec the elapsed time in milliseconds
      */
     public synchronized void setElapsedTime(long centSec) {
-        // Format in "ss:cc" format
-        String formattedTime = String.format("%02d:%02d", (centSec / 100) % 60, centSec % 100);
-        timerCountLabel.setText(formattedTime);
+        timerPanel.setTime(centSec);
     }
 
     public void repaintBackground() {
