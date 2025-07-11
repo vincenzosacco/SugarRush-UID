@@ -1,26 +1,26 @@
 map=
-xxxxxxxxxxxxxxxxxxx
-xc       x   x    x
+xxxxdxxxtxxxxxxxxxx
+x              xxxx
 x                xx
-xx      x u  x xxxx
-xxxxxxxxxxxxtx    x
-x            x    x
-x      xxxx  x    x
-x      x     x    t
-x                 t
-x          xxxxxxxx
-xxe               x
-x                Sx
+xxxxxxxxx      xSxx
+x             xxxxx
+xxx               l
+x         x       x
 x                 x
-t                 x
-xxxxxxxxxxxxxxxx  x
-x         e       x
 x                 x
-x    x            x
-xxx  x            x
-xs   x            x
+x       cx        x
+xxxxxxxxxxxxxxxxx x
+xsxx            x x
+x xx xxxx       x x
+x    x       e    x
+xe  x     xx      x
+xxxxx      x      x
+x    x     x      x
+x          x      x
+x   x             x
+r                 x
 xxxxxxxxxxxxxxxxxxx
 
-time=10
+time=7
 
-textRequest=Eat the candy,Win the game in 10 seconds,Eat the special candy for the first time
+textRequest=Eat the candy,Win the game in 7 seconds,Eat the special candy for the first time

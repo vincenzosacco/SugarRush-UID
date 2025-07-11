@@ -75,9 +75,11 @@ public class Enemy2 extends Enemy {
             Model.getInstance().getGame().killCreature(); // Kill
             GameAudioController.getInstance().playSfx("hitShot");
         }
-        // Create and add the new projectile to the game
-        Projectile proj = new Projectile(projCoord, direction);
-        Model.getInstance().getGame().addEntity(proj);
+        if(block != GameConstants.Block.ENEMY2 && block != GameConstants.Block.THORNS && block != GameConstants.Block.WALL) {
+            // Create and add the new projectile to the game
+            Projectile proj = new Projectile(projCoord, direction);
+            Model.getInstance().getGame().addEntity(proj);
+        }
     }
 
     // Enemy2 never moves, so collisions are irrelevant.

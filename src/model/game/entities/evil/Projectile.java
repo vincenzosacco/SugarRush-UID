@@ -65,7 +65,7 @@ public class Projectile extends Entity {
     // Manages interactions when the projectile tries to move into a new cell.
     @Override
     protected boolean manageCollision(GameConstants.Block block, Cell cell) {
-        if (block == GameConstants.Block.SPACE|| block==GameConstants.Block.ENEMY1) {
+        if (block == GameConstants.Block.SPACE|| block==GameConstants.Block.ENEMY1 ||block==GameConstants.Block.PROJECTILE) {
             // The projectile can move through empty space or over enemy1
             return true;
         } else if (block == GameConstants.Block.CREATURE) {

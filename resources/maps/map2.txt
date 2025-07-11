@@ -21,6 +21,6 @@ xxxxxxxxxxx xxxxxxx
 xs                t
 xxxxxxxxxxxxxxxxxxx
 
-time=10
+time=7
 
-textRequest=Eat the candy,Win the game in 10 seconds,Eat the special candy for the first time
+textRequest=Eat the candy,Win the game in 7 seconds,Eat the special candy for the first time
