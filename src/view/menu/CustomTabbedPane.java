@@ -17,17 +17,17 @@ public class CustomTabbedPane extends JPanel{
     private final JPanel contentPanel;
 
     private final StartMenuPanel startMenuPanel;
-    private final LevelEditorPanel levelEditorPanel;
+//    private final LevelEditorPanel levelEditorPanel;
     private final ShopPanel shopPanel;
     private final BaseSettingsPanel baseSettingsPanel;
 
     // Arrays to store tab buttons and their underline indicators
-    JButton[] buttons = new JButton[4];
-    JPanel[] underlinePanels = new JPanel[4];
+    JButton[] buttons = new JButton[3];
+    JPanel[] underlinePanels = new JPanel[3];
 
     public CustomTabbedPane(){
         this.startMenuPanel=new StartMenuPanel();
-        this.levelEditorPanel= new LevelEditorPanel();
+//        this.levelEditorPanel= new LevelEditorPanel();
         this.baseSettingsPanel = new BaseSettingsPanel();
         this.shopPanel= new ShopPanel();
 
@@ -50,8 +50,8 @@ public class CustomTabbedPane extends JPanel{
 
         // Level Editor button
         ImageIcon levelEditorIcon = new ImageIcon(Resources.getImage("/imgs/icons/level_editor.jpg"));
-        JButton levelEditorButton = new JButton(levelEditorIcon);
-        styleTabButton(levelEditorButton, "Level Editor");
+//        JButton levelEditorButton = new JButton(levelEditorIcon);
+//        styleTabButton(levelEditorButton, "Level Editor");
 
         // Shop button
         ImageIcon shopIcon = new ImageIcon(Resources.getImage("/imgs/icons/shop.jpg"));
@@ -66,15 +66,15 @@ public class CustomTabbedPane extends JPanel{
 
         // Add buttons to tabPanel with underline wrappers
         tabPanel.add(createTabWithUnderline(mapButton, 0));
-        tabPanel.add(createTabWithUnderline(levelEditorButton, 1));
+//        tabPanel.add(createTabWithUnderline(levelEditorButton, 1));
         tabPanel.add(createTabWithUnderline(shopButton, 2));
-        tabPanel.add(createTabWithUnderline(settingsButton, 3));
+        tabPanel.add(createTabWithUnderline(settingsButton, 1));
 
 
 
         // Add panels to CardLayout container with unique keys
         contentPanel.add(startMenuPanel, "Start");
-        contentPanel.add(levelEditorPanel, "Editor");
+//        contentPanel.add(levelEditorPanel, "Editor");
         contentPanel.add(shopPanel, "Shop");
         contentPanel.add(baseSettingsPanel, "Settings");
 
@@ -92,12 +92,12 @@ public class CustomTabbedPane extends JPanel{
             contentPanel.revalidate();
             contentPanel.repaint();
         });
-        levelEditorButton.addActionListener(e -> {
-            cardLayout.show(contentPanel, "Editor");
-            updateTabSelection(1);
-            contentPanel.revalidate();
-            contentPanel.repaint();
-        });
+//        levelEditorButton.addActionListener(e -> {
+//            cardLayout.show(contentPanel, "Editor");
+//            updateTabSelection(1);
+//            contentPanel.revalidate();
+//            contentPanel.repaint();
+//        });
         shopButton.addActionListener(e -> {
             cardLayout.show(contentPanel, "Shop");
             updateTabSelection(2);
