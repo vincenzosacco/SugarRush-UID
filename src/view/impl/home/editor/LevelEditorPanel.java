@@ -3,7 +3,6 @@ package view.impl.home.editor;
 import config.ViewConfig;
 import controller.editor.LevelEditorController;
 import model.editor.LevelEditor;
-import view.base.AbsViewPanel;
 import view.base.BasePanel;
 import view.impl.game.BlocksImages;
 

@@ -2,7 +2,6 @@ package controller.game;
 
 import model.game.Game;
 import view.View;
-import view.impl.game.GameMenu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -1,13 +1,10 @@
 package view.impl.home.shop;
 
-import utils.Resources;
-import view.View;
 import view.impl._common.buttons.CustomButton;
 import view.impl._common.panels.CoinCountPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class _CreatureLine extends JPanel {
     /** Button to buy/select the creature */

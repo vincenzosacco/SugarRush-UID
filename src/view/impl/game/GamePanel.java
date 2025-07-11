@@ -3,7 +3,6 @@ package view.impl.game;
 import controller.game.GameController;
 import model.Model;
 import model.game.Game;
-import utils.Resources;
 import utils.audio.GameAudioController;
 import view.base.BasePanel;
 import view.impl._common.buttons.CustomRoundLogoButton;
@@ -15,7 +14,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.io.InputStream;
 
 import static config.ViewConfig.*;
 

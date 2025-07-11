@@ -45,6 +45,8 @@ public class LevelButton extends JButton {
         setFocusPainted(false);        // No focus border
         setBorderPainted(false);       // No painted border
         setCursor(new Cursor(Cursor.HAND_CURSOR)); // Hand cursor on hover
+
+        SwingUtilities.invokeLater(this::bindController);
     }
 
 
@@ -122,11 +124,6 @@ public class LevelButton extends JButton {
         return Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) <= radius * radius;
     }
 
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        bindController();
-    }
     // ------------------------------------- CONTROLLER METHODS -----------------------------------------------------
     /** called by addNotify */
     private void bindController() {

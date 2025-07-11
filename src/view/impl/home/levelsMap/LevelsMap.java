@@ -4,9 +4,9 @@ import config.ModelConfig;
 import persistance.profile.ProfileManager;
 import utils.Resources;
 import view.base.BasePanel;
-import view.impl._common.panels.CoinCountPanel;
 import view.impl._common.buttons.CustomButton;
 import view.impl._common.buttons.LevelButton;
+import view.impl._common.panels.CoinCountPanel;
 import view.impl.home.levelsMap.tutorial.Tutorial;
 
 import javax.swing.*;
@@ -130,6 +130,42 @@ public class LevelsMap extends BasePanel {
             coinPanel.setBounds(coinPanelX, coinPanelY, coinPanelWidth, coinPanelHeight);
         }
     }
+
+    /**
+     * Update icons and counter when panel becomes visible.
+     */
+    public void refreshLevelButtons() {
+        for (int i = 0; i < numLevels; i++) {
+            Boolean[] stars = ProfileManager.getLastProfile().getLevelStarsCount(i + 1);
+            levelButtons[i].setStarsCollected(stars);
+            levelButtons[i].repaint(); // Force repaint buttons
+        }
+//        coinPanel.setText(String.valueOf(ProfileManager.getLastProfile().getCoins()));
+        repaint(); // Also repaint the panel and background
+    }
+
+// ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
+
+    // Override paintComponent to draw the scaled background image behind the buttons
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage == null) {
+            backgroundImage = Resources.getBestImage("/imgs/panels/levels/levelMenu.jpg", getWidth(), getHeight());
+        }
+        // Draw the background image stretched to fill the entire panel
+        g.drawImage(backgroundImage, 0, 0, this);
+
+        positionButtons();
+    }
+
+//------------------------------------------CONTROLLER RELATED METHODS---------------------------------------------
+
+    @Override
+    protected void bindControllers() {
+    }
+
+
     // Opens a dialog window containing the tutorial
     private void showTutorialDialog() {
         Window parentWindow = SwingUtilities.getWindowAncestor(this);
@@ -189,7 +225,7 @@ public class LevelsMap extends BasePanel {
         dialog.setResizable(false);   // Disable resizing by the user
 
         // Add the level panel to the dialog and adjust dialog size
-        dialog.getContentPane().add(levelInfoDialog);
+        dialog.setContentPane(levelInfoDialog);
         dialog.pack(); // Automatically size dialog to fit its contents
 
         // Attempt to apply rounded corners to the dialog (if the platform supports it)
@@ -206,38 +242,12 @@ public class LevelsMap extends BasePanel {
         dialog.setVisible(true);
     }
 
-    /**
-     * Update icons and counter when panel becomes visible.
-     */
-    public void refreshLevelButtons() {
-        for (int i = 0; i < numLevels; i++) {
-            Boolean[] stars = ProfileManager.getLastProfile().getLevelStarsCount(i + 1);
-            levelButtons[i].setStarsCollected(stars);
-            levelButtons[i].repaint(); // Force repaint buttons
+
+    public void hideInfoDialog() {
+        if (levelInfoDialog.isVisible()) {
+            levelInfoDialog.setVisible(false);
         }
-//        coinPanel.setText(String.valueOf(ProfileManager.getLastProfile().getCoins()));
-        repaint(); // Also repaint the panel and background
     }
 
-// ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
-
-    // Override paintComponent to draw the scaled background image behind the buttons
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (backgroundImage == null) {
-            backgroundImage = Resources.getBestImage("/imgs/panels/levels/levelMenu.jpg", getWidth(), getHeight());
-        }
-        // Draw the background image stretched to fill the entire panel
-        g.drawImage(backgroundImage, 0, 0, this);
-
-        positionButtons();
-    }
-
-//------------------------------------------CONTROLLER RELATED METHODS---------------------------------------------
-
-    @Override
-    protected void bindControllers() {
-    }
 
 }

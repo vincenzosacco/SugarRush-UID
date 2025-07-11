@@ -7,7 +7,9 @@ import view.impl._common.panels.CoinCountPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;;
+import java.util.List;
+
+;
 
 public class ShopPanel extends BasePanel {
 

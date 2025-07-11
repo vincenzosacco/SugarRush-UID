@@ -1,9 +1,9 @@
 package view.impl.game;
 
 import model.Model;
-import model.game.GameConstants;
 import model.game.Entity;
 import model.game.Game;
+import model.game.GameConstants;
 
 import javax.swing.*;
 import java.awt.*;

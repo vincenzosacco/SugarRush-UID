@@ -1,12 +1,13 @@
 package view.impl.game;
 
 import controller.game.GameMenuController;
-import view.impl._common.buttons.*;
+import view.impl._common.buttons.CustomButton;
+import view.impl._common.buttons.CustomLogoButton;
+import view.impl._common.buttons.CustomRoundLogoButton;
 import view.impl.home.levelsMap.LevelInfoDialog;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.InputStream;
 
 /**
  * Panel for game settings

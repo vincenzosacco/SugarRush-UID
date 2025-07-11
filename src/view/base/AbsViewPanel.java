@@ -2,8 +2,6 @@
 package view.base;
 
 import javax.swing.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 /**
  * Represent a view component in the MVC architecture.

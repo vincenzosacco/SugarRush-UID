@@ -3,7 +3,7 @@ package model.game;
 import controller.game.GameLoop;
 import view.View;
 
-import javax.swing.Timer;
+import javax.swing.*;
 
 class _Timer {
     static int elapsedTime = 0;

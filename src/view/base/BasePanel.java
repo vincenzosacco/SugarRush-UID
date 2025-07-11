@@ -1,8 +1,6 @@
 package view.base;
 
 import javax.swing.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 public abstract class BasePanel extends JPanel {
     public BasePanel() {
@@ -15,6 +13,8 @@ public abstract class BasePanel extends JPanel {
 //                requestFocusInWindow(); // Request focus when the panel is shown
 //            }
 //        });
+        SwingUtilities.invokeLater(this::bindControllers);
+
     }
 
     /**
@@ -24,7 +24,6 @@ public abstract class BasePanel extends JPanel {
     public void addNotify() {
         super.addNotify();
         requestFocusInWindow();
-        bindControllers();
     }
 
     /** Add listeners.

@@ -2,8 +2,8 @@ package model.game.entities.evil;
 
 import model.Model;
 import model.game.GameConstants;
-import model.game.utils.Cell;
 import model.game.GameConstants.Direction;
+import model.game.utils.Cell;
 import utils.audio.GameAudioController;
 
 /**

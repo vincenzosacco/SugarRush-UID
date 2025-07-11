@@ -260,39 +260,39 @@ public class BaseSettingsPanel extends JPanel implements PropertyChangeListener 
     }
 
     public void showLevelDialog(GameControlsPanel gameControlsPanel) {
-        // Retrieve the top-level window (e.g., JFrame) that contains this panel
-        Window parentWindow = SwingUtilities.getWindowAncestor(this);
-
-        // Get the dimensions of the parent window to calculate proportional dialog size
-        Dimension parentSize = parentWindow.getSize();
-        int newWidth = parentSize.width / 2;
-        int newHeight = parentSize.height / 2;
-
-        // Set the preferred size of the level panel to be displayed in the dialog
-        gameControlsPanel.setPreferredSize(new Dimension(newWidth, newHeight));
-
-        // Create a modal dialog (blocks interaction with other windows while open)
-        JDialog dialog = new JDialog(parentWindow);
-        dialog.setUndecorated(true);  // Remove window borders and title bar
-        dialog.setModal(true);        // Make dialog modal
-        dialog.setResizable(false);   // Disable resizing by the user
-
-        // Add the level panel to the dialog and adjust dialog size
-        dialog.getContentPane().add(gameControlsPanel);
-        dialog.pack(); // Automatically size dialog to fit its contents
-
-        // Attempt to apply rounded corners to the dialog (if the platform supports it)
-        try {
-            dialog.setShape(new RoundRectangle2D.Double(0, 0, dialog.getWidth(), dialog.getHeight(), 30, 30));
-        } catch (UnsupportedOperationException ex) {
-            System.out.println("Rounded corners not supported on this platform");
-        }
-
-        // Center the dialog relative to the parent window
-        dialog.setLocationRelativeTo(parentWindow);
-
-        // Display the dialog
-        dialog.setVisible(true);
+//        // Retrieve the top-level window (e.g., JFrame) that contains this panel
+//        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+//
+//        // Get the dimensions of the parent window to calculate proportional dialog size
+//        Dimension parentSize = parentWindow.getSize();
+//        int newWidth = parentSize.width / 2;
+//        int newHeight = parentSize.height / 2;
+//
+//        // Set the preferred size of the level panel to be displayed in the dialog
+//        gameControlsPanel.setPreferredSize(new Dimension(newWidth, newHeight));
+//
+//        // Create a modal dialog (blocks interaction with other windows while open)
+//        JDialog dialog = new JDialog(parentWindow);
+//        dialog.setUndecorated(true);  // Remove window borders and title bar
+//        dialog.setModal(true);        // Make dialog modal
+//        dialog.setResizable(false);   // Disable resizing by the user
+//
+//        // Add the level panel to the dialog and adjust dialog size
+//        dialog.getContentPane().add(gameControlsPanel);
+//        dialog.pack(); // Automatically size dialog to fit its contents
+//
+//        // Attempt to apply rounded corners to the dialog (if the platform supports it)
+//        try {
+//            dialog.setShape(new RoundRectangle2D.Double(0, 0, dialog.getWidth(), dialog.getHeight(), 30, 30));
+//        } catch (UnsupportedOperationException ex) {
+//            System.out.println("Rounded corners not supported on this platform");
+//        }
+//
+//        // Center the dialog relative to the parent window
+//        dialog.setLocationRelativeTo(parentWindow);
+//
+//        // Display the dialog
+//        dialog.setVisible(true);
     }
 
     private void addListeners() {

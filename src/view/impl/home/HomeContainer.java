@@ -1,14 +1,12 @@
 package view.impl.home;
 
 import utils.Resources;
-import utils.audio.AudioManager;
 import utils.audio.GameAudioController;
-import view.base.AbsViewPanel;
 import view.base.BasePanel;
 import view.impl.home.editor.LevelEditorPanel;
+import view.impl.home.levelsMap.LevelsMap;
 import view.impl.home.settings.BaseSettingsPanel;
 import view.impl.home.shop.ShopPanel;
-import view.impl.home.levelsMap.LevelsMap;
 
 import javax.swing.*;
 import java.awt.*;
