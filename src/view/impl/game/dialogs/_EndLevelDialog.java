@@ -1,17 +1,11 @@
 package view.impl.game.dialogs;
 
-import model.game.Game;
 import utils.Resources;
 import view.impl.game.GameMenu;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
-
-import static config.ViewConfig.BOARD_HEIGHT;
-import static config.ViewConfig.BOARD_WIDTH;
 
 // public here because controller needs to access it
 public abstract class _EndLevelDialog extends GameMenu {
@@ -21,14 +15,13 @@ public abstract class _EndLevelDialog extends GameMenu {
     protected final JLabel messageLabel = new JLabel();
 
     /** Label to show the elapsed time */
-    protected final JLabel timerLabel;
+    protected final JLabel timerLabel = new JLabel("Time: 0s");
 
     private int currentLevel;
 
     // only used in WinPanel and LosePanel- keep it Package-Private
     _EndLevelDialog(int currentLevel) {
         super(currentLevel);
-        timerLabel = new JLabel("Time: " + Game.getInstance().getElapsedTime() +"s",SwingConstants.CENTER);
 
 
 //        setupCommonLayoutElements(); // Set layout without center panel
@@ -138,7 +131,7 @@ public abstract class _EndLevelDialog extends GameMenu {
     }
 
     // Update the time
-    public void setElapsedTime(int seconds) {
+    public void updateElapsedTime(int seconds) {
         timerLabel.setText("Time: " + seconds + "s");
         timerLabel.revalidate();
         timerLabel.repaint();

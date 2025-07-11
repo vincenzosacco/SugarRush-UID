@@ -29,24 +29,20 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
         Game.getInstance().addPropertyChangeListener(this);
     }
 
+    private boolean isStarted = false;
     // Use keyPressed instead of keyTyped because we want to capture key events -> https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
     @Override
     public void keyPressed(KeyEvent e) {
         GameLoop gl = GameLoop.getInstance();
         Game game = Game.getInstance();
 
-        // ESCAPE is used to toggle menu.
-        // I need to exclude it to avoid the game loop to start when the menu is opening
-        if ( e.getKeyCode() == KeyEvent.VK_ESCAPE)
-            return;
-
         // START GameLoop and Timer at the first key press
-        if (!gl.isRunning()){
+        if (!isStarted && e.getKeyCode()!= KeyEvent.VK_ESCAPE){ // ESCAPE is excluded because it is used to pause the game.
             gl.start();
             game.start();
+            isStarted = true;
         }
-        else {
-            assert gl.isRunning() : "GameLoop should be running when the game is started. If not, there is a bug somewhere";
+        if (gl.isRunning() && game.isRunning()) {
             //--MOVEMENT //
             GameConstants.Direction direction = null;
             switch (e.getKeyCode()) {
@@ -123,10 +119,10 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
             // WIN
             if (isWin) {
                 ProfileManager.getLastProfile().sumCoins(Game.getInstance().getStarCount() * 10); // 10 coins per star
-                panel.winLevel();
+                panel.endLevel(true);
             // LOSE
             } else {
-                panel.loseLevel();
+                panel.endLevel(false);
             }
         }
         else { // JUST EXIT when isWin==null //

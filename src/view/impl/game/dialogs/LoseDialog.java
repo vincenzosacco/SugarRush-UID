@@ -5,7 +5,14 @@ import java.awt.*;
 
 public class LoseDialog extends _EndLevelDialog {
     public LoseDialog(int currentLevel) {
+
         super(currentLevel);
+
+        // override the messageLabel to show "GAME OVER"
+        messageLabel.setText("GAME OVER");
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        messageLabel.setForeground(new Color(178, 34, 34)); // Firebrick
+        messageLabel.setFont(new Font("Arial", Font.BOLD, 48)); // Initial dimension
     }
 
 //    public LoseDialog(int) {
@@ -20,10 +27,6 @@ public class LoseDialog extends _EndLevelDialog {
 //    }
 
     private void createLoseSpecificComponents() {
-        messageLabel.setText("GAME OVER");
-        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        messageLabel.setForeground(new Color(178, 34, 34)); // Firebrick
-        messageLabel.setFont(new Font("Arial", Font.BOLD, 48)); // Initial dimension
     }
 
     // Method to set up key bindings

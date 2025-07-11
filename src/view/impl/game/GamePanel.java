@@ -8,6 +8,7 @@ import view.base.BasePanel;
 import view.impl._common.buttons.CustomRoundLogoButton;
 import view.impl.game.dialogs.LoseDialog;
 import view.impl.game.dialogs.WinDialog;
+import view.impl.game.dialogs._EndLevelDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -204,33 +205,19 @@ public class GamePanel extends BasePanel {
         return gameMenu;
     }
 
-    //END LEVEL
-    public void loseLevel(){
-        int currentLevel = Model.getInstance().getGame().getCurrLevel();
-        losePanel.setCurrentLevel(currentLevel);
-        losePanel.updateLabels(currentLevel);
-        losePanel.setVisible(true);
-//        applyPanelBounds(losePanel);
-//        losePanel.requestFocusInWindow();
-//        pauseButton.setEnabled(false);
-//        GameAudioController.getInstance().playSfx("death"); // Play Death SFX
-//        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
-//        this.revalidate();
-//        this.repaint();
-    }
-    //WIN LEVEL
-    public void winLevel(){
-        int currentLevel = Model.getInstance().getGame().getCurrLevel();
-        winPanel.setCurrentLevel(currentLevel);
-        winPanel.updateLabels(currentLevel);
-        winPanel.setVisible(true);
-//        applyPanelBounds(winPanel);
-//        winPanel.requestFocusInWindow();
-//        pauseButton.setEnabled(false);
-//        GameAudioController.getInstance().playSfx("win"); // Play Victory SFX
-//        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
-//        this.revalidate();
-//        this.repaint();
+
+    /**
+     * Ends the currentlevel and shows the appropriate dialog (win or lose).
+     * @param isWin true if the player won the level, false if lost
+     * */
+    public void endLevel(boolean isWin) {
+        _EndLevelDialog dialog = isWin ? winPanel : losePanel;
+        dialog.setCurrentLevel(Game.getInstance().getCurrLevel());
+        dialog.updateElapsedTime(Game.getInstance().getElapsedTime());
+        dialog.setVisible(true);
+
+        pauseButton.setEnabled(false); // Disable the pause button when the level ends
+        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music when the level ends
     }
 
     //------------------------------------- CONTROLLER RELATED METHODS -------------------------------------------------------
