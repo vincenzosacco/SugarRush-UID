@@ -10,8 +10,6 @@ public abstract class BaseDialog extends BasePanel  {
     private BufferedImage backgroundImage;
 
     public BaseDialog() {
-        // Use BorderLayout and transparency
-        setLayout(new BorderLayout());
         setOpaque(false);
     }
 
@@ -49,9 +47,9 @@ public abstract class BaseDialog extends BasePanel  {
             lastHeight = height;
             // Get the background image
             backgroundImage = loadBackgroundImage();
-        } else {
-            g2.drawImage(backgroundImage, 0, 0, width, height, this);
         }
+        g2.drawImage(backgroundImage, 0, 0, width, height, this);
+
 
         // Draw rounded border
         //Restore the original clip BEFORE drawing the border and child components
@@ -75,5 +73,6 @@ public abstract class BaseDialog extends BasePanel  {
         // Paint child components
         super.paintComponent(g);
     }
+
 }
 

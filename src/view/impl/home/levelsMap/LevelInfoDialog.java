@@ -22,8 +22,10 @@ import java.net.URL;
 
 public class LevelInfoDialog extends BaseDialog {
     // Buttons for closing and starting the level
-    private final RoundCloseButton closeButton;
-    private final CustomLogoButton playButton;
+    protected final RoundCloseButton closeButton;
+    protected final CustomLogoButton playButton = new CustomLogoButton("play", new Color(50, 205, 50)); // Lime green;
+    private int levelIndex;
+    private final JLabel levelLabel ;
 
     // Arrays to store coin icons and corresponding text
     private final JLabel[] iconLabels = new JLabel[3];
@@ -32,30 +34,31 @@ public class LevelInfoDialog extends BaseDialog {
     // Original images for resizing
     private final Image[] originalImages = new Image[3];
 
+    // BORDER LAYOUT AREAS
+    /** empty placeholder for the left area
+     * @apiNote replace it with a custom panel to add
+     * */
+    protected final JPanel topLeftArea = new JPanel();
+
+    protected final JPanel bottomArea = new JPanel();
+
     // Constructor takes the level file and its index
     public LevelInfoDialog(InputStream levelFile, int levelIndex){
+        super();
+
         // Load level data (coin status and descriptive text)
+        this.levelIndex = levelIndex;
         LevelData levelData = new LevelData(levelFile);
         Boolean[] coinsCollected = ProfileManager.getLastProfile().getLevelStarsCount(levelIndex);
         String[] textRequest = levelData.getTextRequest();
 
         // Use BorderLayout and transparency
         setLayout(new BorderLayout());
-        setOpaque(false);
-
-        LevelController controller=new LevelController(this);
 
         // Create and configure the close buttons
         closeButton = new RoundCloseButton();
-        closeButton.addActionListener(e -> {
-            controller.onClose();
-        });
 
-        // Create and configure the play buttons
-        playButton = new CustomLogoButton("play", new Color(50, 205, 50)); // Lime green
-        playButton.addActionListener(e -> {
-            controller.onPlay(levelIndex);
-        });
+
 
         // --------------------- TOP PANEL ---------------------
 
@@ -63,14 +66,13 @@ public class LevelInfoDialog extends BaseDialog {
         topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // Left placeholder (empty panel)
-        JPanel leftPanel = new JPanel();
-        leftPanel.setOpaque(false);
-        topPanel.add(leftPanel);
+        // Add setting in topLeftArea
+        topLeftArea.setOpaque(false);
+        topPanel.add(topLeftArea);
 
 
         // Centered level label
-        JLabel levelLabel = new JLabel("Level " + levelIndex, SwingConstants.CENTER);
+        levelLabel = new JLabel("Level " + levelIndex, SwingConstants.CENTER);
         levelLabel.setForeground(Color.BLACK);
 
         int levelFontSize = Math.min(getWidth() / 15, getHeight() / 15);
@@ -145,25 +147,33 @@ public class LevelInfoDialog extends BaseDialog {
         add(centerPanel, BorderLayout.CENTER);
 
         // --------------------- BOTTOM PANEL ---------------------
+        buildBottomArea();
+        add(bottomArea, BorderLayout.PAGE_END);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomPanel.setOpaque(false);
-        bottomPanel.add(playButton);
-        add(bottomPanel, BorderLayout.PAGE_END);
 
         // --- KEY BINDINGS ---
         setupKeyBindings();
 
-        // --------------------- RESIZE LISTENER ---------------------
-        //Dynamically resize when the panel changes size
-        resizeComponents(levelLabel);
-
-        // Force an initial resize event to apply layout immediately
-        SwingUtilities.invokeLater(() -> {
-            getComponentListeners()[0].componentResized(
-                    new ComponentEvent(LevelInfoDialog.this, ComponentEvent.COMPONENT_RESIZED)
-            );
+        // --- COMPONENT RESIZING ---
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                resizeComponents();
+            }
         });
+    }
+
+    /**
+     * Builds the bottom area of the game menu.
+     * @apiNote This method is called by {@link #LevelInfoDialog(InputStream, int)}
+     */
+    protected void buildBottomArea(){
+        bottomArea.setLayout(new GridLayout(1, 3));
+        bottomArea.setOpaque(false);
+        bottomArea.add(Box.createHorizontalGlue());
+        bottomArea.add(playButton);
+        bottomArea.add(Box.createHorizontalGlue());
     }
 
     // Opens a dialog window containing the CustomDialog panel
@@ -203,19 +213,22 @@ public class LevelInfoDialog extends BaseDialog {
         dialog.setVisible(true); // Show dialog
     }
 
-    private void resizeComponents(JLabel levelLabel){
-        this.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
+    /**
+     * Method to dynamically resize components based on the size of the dialog.
+     * @implNote This method is called by {@link #addNotify()} and by the {@link ComponentAdapter} added to this class.
+     */
+    protected void resizeComponents(){
+//        this.addComponentListener(new ComponentAdapter() {
+//            @Override
+//            public void componentResized(ComponentEvent e) {
                 int panelWidth = getWidth();
                 int panelHeight = getHeight();
 
-                // Resize level label font
+
+        // Resize level label font
                 int levelFontSize = Math.min(getWidth() / 12, getHeight() / 12);
                 levelFontSize = Math.max(25, levelFontSize);
                 levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
-                levelLabel.revalidate();
-                levelLabel.repaint();
 
                 // Resize coin icons and text areas
                 int dimIconSize = Math.min(panelHeight / 6, panelWidth / 6);
@@ -235,23 +248,24 @@ public class LevelInfoDialog extends BaseDialog {
                     textLabels[i].repaint();
                 }
 
+            //--BUTTONS-- //
+                // BOTTOM AREA
+                int w3Percent = (int) (getWidth() * 0.03);
+                int h3Percent = (int) (getHeight() * 0.03);
+                bottomArea.setBorder(BorderFactory.createEmptyBorder(h3Percent, w3Percent, h3Percent, w3Percent));
+
                 // Resize close buttons
                 int size = Math.min(getWidth(), getHeight()) / 10;
                 size = Math.max(size, 30);
                 closeButton.setPreferredSize(new Dimension(size, size));
-                closeButton.revalidate();
-                closeButton.repaint();
 
                 // Resize play buttons
-                playButton.setPreferredSize(new Dimension(size * 2, size));
-                playButton.revalidate();
-                playButton.repaint();
-
+                playButton.setPreferredSize(new Dimension(size *2 , size));
                 revalidate();
                 repaint();
             }
-        });
-    }
+//        });
+//    }
 
     // Method to set up key bindings
     private void setupKeyBindings() {
@@ -289,9 +303,27 @@ public class LevelInfoDialog extends BaseDialog {
         });
     }
 
-//---------------------------------------- ABSTRACT PARENT OVERRIDE --------------------------------------
+//---------------------------------------- ABSTRACT PARENTs OVERRIDE --------------------------------------
     @Override
     protected BufferedImage loadBackgroundImage() {
         return Resources.getBestImage("/imgs/panels/levels/level-info-dialog-BG.jpg", getWidth(), getHeight());
+    }
+
+    @Override
+    protected void bindControllers(){
+        LevelController controller=new LevelController(this);
+
+        playButton.addActionListener(e -> {
+            controller.onPlay(levelIndex);
+        });
+        closeButton.addActionListener(e -> {
+            controller.onClose();
+        });
+    }
+
+    @Override
+    public void addNotify(){
+        resizeComponents();
+        super.addNotify();
     }
 }

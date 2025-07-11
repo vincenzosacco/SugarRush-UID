@@ -1,41 +1,25 @@
 package view.impl.game;
 
 import controller.game.GameMenuController;
-import model.game.Game;
-import model.game.LevelData;
-import model.game.MapParser;
-import persistance.profile.ProfileManager;
-import utils.Resources;
-import view.base.BasePanel;
 import view.impl._common.buttons.*;
 import view.impl.home.levelsMap.LevelInfoDialog;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.InputStream;
-import java.util.Objects;
-
-import static config.ViewConfig.BOARD_HEIGHT;
-import static config.ViewConfig.BOARD_WIDTH;
 
 /**
  * Panel for game settings
  */
-public class GameMenu extends BasePanel {
-    private final LevelInfoDialog levelInfoDialog;
+public class GameMenu extends LevelInfoDialog {
+//    private final LevelInfoDialog levelInfoDialog;
 
     // Buttons for closing and starting the level
     //private final RoundCloseButton closeButton;
 //    private final CustomLogoButton playButton;
-//    private final CustomLogoButton restartButton;
-//    private final CustomRoundLogoButton settingsButton;
-//    private final CustomButton exitButton;
+    private CustomLogoButton restartButton;
+    private final CustomRoundLogoButton settingsButton;
+    private CustomButton exitButton;
 
 //    private int currentLevel=1; // Current level number, cannot be < 1 or > ModelConfig.NUM_LEVELS
 
@@ -44,17 +28,12 @@ public class GameMenu extends BasePanel {
 //        this.currentLevel = currentLevel;
 //    }
 
-    public GameMenu(){
-        super();
-//        setOpaque(false);
+    public GameMenu(InputStream levelFile, int currentLevel){
+        super(levelFile, currentLevel);
 
         // LEVEL INFO DIALOG//
-        // TODO instead of recreating the dialog every time, create once and reuse it!!!
-        int levelIndex = Game.getInstance().getCurrLevel();
-        InputStream levelFile = Resources.getResourceAsStream("/maps/map" + levelIndex + ".txt");
-        levelInfoDialog = new LevelInfoDialog(levelFile, levelIndex);
 
-        add(levelInfoDialog);
+//        add(levelInfoDialog);
 
 //        GameMenuController controller=new GameMenuController(this);
 
@@ -64,23 +43,16 @@ public class GameMenu extends BasePanel {
 //            controller.onResume();
 //        });
 //        // Create and configure the restart buttons
-//        restartButton=new CustomLogoButton("restart",new Color(255, 193, 7));
-//        restartButton.addActionListener(e -> {
-//            controller.onRestart();
-//        });
 //
 //        // Create and configure the EXIT buttons
-//        exitButton=new CustomButton("EXIT",Color.WHITE,new Color(220, 53, 69));
-//        exitButton.addActionListener(e ->{
-//            controller.onExit();
-//        });
-//
-//        // Create and configure the settings buttons
-//        settingsButton=new CustomRoundLogoButton("settings",new Color(119, 136, 153));
-//        settingsButton.addActionListener(e ->{
-//            controller.onSettings();
-//        });
 
+//
+        // BUTTONS
+        settingsButton=new CustomRoundLogoButton("settings",new Color(119, 136, 153));
+        // not needed anymore
+        if (closeButton != null && closeButton.getParent() != null){
+            closeButton.getParent().remove(closeButton);
+        }
 
         // --------------------- TOP PANEL ---------------------
 
@@ -91,7 +63,8 @@ public class GameMenu extends BasePanel {
 //        // Left placeholder (empty panel)
 //        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 //        leftPanel.setOpaque(false);
-//        leftPanel.add(settingsButton);
+          topLeftArea.setLayout(new BorderLayout());
+          topLeftArea.add(settingsButton, BorderLayout.WEST);
 //        topPanel.add(leftPanel);
 //
 //        // Centered level label
@@ -160,7 +133,6 @@ public class GameMenu extends BasePanel {
 //        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 //        bottomPanel.setOpaque(false);
 //        bottomPanel.add(exitButton);
-//        bottomPanel.add(restartButton);
 //        bottomPanel.add(playButton);
 //
 //        add(bottomPanel, BorderLayout.PAGE_END);
@@ -181,9 +153,6 @@ public class GameMenu extends BasePanel {
 //
 //        this.setFocusable(true);
 //        this.setVisible(false);
-//
-//        // --- KEY BINDINGS ---
-//        setupKeyBindings();
     }
 
 //    public void updateContent(){
@@ -307,7 +276,7 @@ public class GameMenu extends BasePanel {
 //        settingsButton.setPreferredSize(new Dimension(size * 2, size));
 //        settingsButton.revalidate();
 //        settingsButton.repaint();
-//
+
 //        playButton.setPreferredSize(new Dimension(size * 2, size));
 //        playButton.revalidate();
 //        playButton.repaint();
@@ -324,89 +293,114 @@ public class GameMenu extends BasePanel {
 //        repaint();    // Redraw the entire panel
 //    }
 
-    // Method to set up key bindings
-//    private void setupKeyBindings() {
-//        // Get the InputMap for when the component is focused or one of its children is focused
-//        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-//        // Get the ActionMap to associate keys with actions
-//        ActionMap actionMap = this.getActionMap();
-//
-//        // --- Bind ENTER key to Play buttons ---
-//        // Create an InputStroke for the ENTER key
-//        KeyStroke enterKeyStroke = KeyStroke.getKeyStroke("ENTER");
-//        // Put the KeyStroke and an identifier (e.g., "pressPlay") into the InputMap
-//        inputMap.put(enterKeyStroke, "pressPlay");
-//        // Associate the identifier with an AbstractAction in the ActionMap
-//        actionMap.put("pressPlay", new AbstractAction() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Programmatically trigger the action listener of the playButton
-//                playButton.doClick();
-//            }
-//        });
-//
-//    }
 
 // ----------------------------------------SWING's METHODS-------------------------------------------------------------
 
     // Custom painting to render the rounded background and border
-    @Override
-    protected void paintComponent(Graphics g) {
+//    @Override
+//    protected void paintComponent(Graphics g) {
+//
+////        Graphics2D g2 = (Graphics2D) g.create();
+////
+////        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+////
+////        int width = getWidth();
+////        int height = getHeight();
+////        int arc = 30;
+////
+////        // Rounded rectangle clipping for a smooth shape
+////        RoundRectangle2D panelShape = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
+////        // Save the original clip of the graphic context
+////        Shape originalClip = g2.getClip();
+////
+////        g2.setClip(panelShape);
+////
+////        // Draw background image or fallback to white
+////        if (backgroundImage != null) {
+////            g2.drawImage(backgroundImage, 0, 0, width, height, this);
+////        } else {
+////            g2.setColor(Color.WHITE);
+////            g2.fillRect(0, 0, width, height);
+////        }
+////
+////        // Draw rounded border
+////        //Restore the original clip BEFORE drawing the border and child components
+////        //to prevent the edge and child components from being cut by the rounded clip
+////        g2.setClip(originalClip);
+////
+////        float borderWidth = 2.0f;
+////        g2.setStroke(new BasicStroke(borderWidth));
+////        g2.setColor(Color.BLACK);
+////
+////        // Draw the border slightly indented to keep it within the bounds of the panel.
+////        RoundRectangle2D borderOutline = new RoundRectangle2D.Float(
+////                borderWidth / 2, borderWidth / 2,
+////                width - borderWidth, height - borderWidth,
+////                arc, arc
+////        );
+////        g2.draw(borderOutline);
+////
+////        g2.dispose();
+////
+////        // Paint child components
+//        super.paintComponent(g);
+//    }
 
-//        Graphics2D g2 = (Graphics2D) g.create();
-//
-//        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//
-//        int width = getWidth();
-//        int height = getHeight();
-//        int arc = 30;
-//
-//        // Rounded rectangle clipping for a smooth shape
-//        RoundRectangle2D panelShape = new RoundRectangle2D.Float(0, 0, width, height, arc, arc);
-//        // Save the original clip of the graphic context
-//        Shape originalClip = g2.getClip();
-//
-//        g2.setClip(panelShape);
-//
-//        // Draw background image or fallback to white
-//        if (backgroundImage != null) {
-//            g2.drawImage(backgroundImage, 0, 0, width, height, this);
-//        } else {
-//            g2.setColor(Color.WHITE);
-//            g2.fillRect(0, 0, width, height);
-//        }
-//
-//        // Draw rounded border
-//        //Restore the original clip BEFORE drawing the border and child components
-//        //to prevent the edge and child components from being cut by the rounded clip
-//        g2.setClip(originalClip);
-//
-//        float borderWidth = 2.0f;
-//        g2.setStroke(new BasicStroke(borderWidth));
-//        g2.setColor(Color.BLACK);
-//
-//        // Draw the border slightly indented to keep it within the bounds of the panel.
-//        RoundRectangle2D borderOutline = new RoundRectangle2D.Float(
-//                borderWidth / 2, borderWidth / 2,
-//                width - borderWidth, height - borderWidth,
-//                arc, arc
-//        );
-//        g2.draw(borderOutline);
-//
-//        g2.dispose();
-//
-//        // Paint child components
-        super.paintComponent(g);
+    //--------------------------------- PARENT METHODS ---------------------------------------------------------------------------
+
+    @Override
+    protected void buildBottomArea(){
+//        super.buildBottomArea(); dont call this. i need to override buttons position
+        restartButton = new CustomLogoButton("restart",new Color(255, 193, 7));
+        exitButton =new CustomButton("EXIT",Color.WHITE,new Color(220, 53, 69));
+
+        bottomArea.setLayout(new GridLayout(1, 3));
+
+        bottomArea.setOpaque(false);
+        bottomArea.add(exitButton);
+        bottomArea.add(playButton); // play button from parent
+        bottomArea.add(restartButton);
+
     }
 
     @Override
-    public void addNotify() {
+    protected void resizeComponents(){
         try {
             setPreferredSize(new Dimension(getParent().getWidth()/2, getParent().getWidth()/2));
         }
         catch (NullPointerException e){
             System.err.println("Parent of GameMenu is null.");
         }
-        super.addNotify();
+
+        // BUTTONS //
+        int size = Math.min(getWidth(), getHeight()) / 10;
+        size = Math.max(size, 30);
+
+        // Resize the buttons
+        settingsButton.setPreferredSize(new Dimension(size * 2, size));
+        restartButton.setPreferredSize(new Dimension(size * 2, size));
+
+        // set gap between bottom buttons
+        try {
+            GridLayout layout = (GridLayout) bottomArea.getLayout();
+            layout.setVgap(size);
+        }
+        catch (ClassCastException e){
+            throw new AssertionError("Bottom area layout is not a GridLayout.");
+        }
+
+        super.resizeComponents();// <-- calls repaint() and revalidate()
     }
+
+    //--------------------------------- CONTROLLER -----------------------------------------------------------------------------------
+    @Override
+    protected void bindControllers(){
+//        super.bindControllers(); dont call this. i need to override buttons behavior
+        GameMenuController controller = new GameMenuController();
+        playButton.addActionListener(controller::onResume);
+        settingsButton.addActionListener(controller::onSettings);
+        restartButton.addActionListener(controller::onRestart);
+//        exitButton.addActionListener(controller::onExit);
+    }
+
 }

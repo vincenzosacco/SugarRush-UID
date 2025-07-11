@@ -5,6 +5,7 @@ import controller.LevelsMapController;
 import persistance.profile.ProfileManager;
 import utils.Resources;
 import view.base.AbsViewPanel;
+import view.base.BasePanel;
 import view.impl._common.panels.CoinCountPanel;
 import view.impl._common.buttons.CustomButton;
 import view.impl._common.buttons.LevelButton;
@@ -18,7 +19,7 @@ import java.awt.image.BufferedImage;
 import static config.ViewConfig.BOARD_HEIGHT;
 import static config.ViewConfig.BOARD_WIDTH;
 
-public class LevelsMap extends AbsViewPanel {
+public class LevelsMap extends BasePanel {
     // Background image for the panel
     private BufferedImage backgroundImage;
 
@@ -34,9 +35,16 @@ public class LevelsMap extends AbsViewPanel {
     private final CustomButton tutorialButton;
 
 
+    // DIALOGS
+    private final LevelInfoDialog levelInfoDialog;
+
+
     public LevelsMap() {
         // Initialize the array of level buttons
         levelButtons = new LevelButton[numLevels];
+        // Default level dialog
+        levelInfoDialog = new LevelInfoDialog(
+                Resources.getResourceAsStream("/maps/map" + 1 + ".txt"), 1);
 
         // COIN COUNT PANEL //
         add(coinPanel);
@@ -164,13 +172,15 @@ public class LevelsMap extends AbsViewPanel {
         // Retrieve the top-level window (e.g., JFrame) that contains this panel
         Window parentWindow = SwingUtilities.getWindowAncestor(this);
 
-        // Get the dimensions of the parent window to calculate proportional dialog size
-        Dimension parentSize = parentWindow.getSize();
-        int newWidth = parentSize.width / 2;
-        int newHeight = parentSize.height / 2;
+        if (parentWindow != null) {
+            // Get the dimensions of the parent window to calculate proportional dialog size
+            Dimension parentSize = parentWindow.getSize();
+            int newWidth = parentSize.width / 2;
+            int newHeight = parentSize.height / 2;
+            // Set the preferred size of the level panel to be displayed in the dialog
+            levelInfoDialog.setPreferredSize(new Dimension(newWidth, newHeight));
+        }
 
-        // Set the preferred size of the level panel to be displayed in the dialog
-        levelInfoDialog.setPreferredSize(new Dimension(newWidth, newHeight));
 
         // Create a modal dialog (blocks interaction with other windows while open)
         JDialog dialog = new JDialog(parentWindow);
@@ -227,7 +237,7 @@ public class LevelsMap extends AbsViewPanel {
 //------------------------------------------CONTROLLER RELATED METHODS---------------------------------------------
 
     @Override
-    protected void bindController() {
+    protected void bindControllers() {
         LevelsMapController controller = new LevelsMapController(this);
         // Map each button with the right action listener
         for (int i = 0; i < levelButtons.length; i++) {

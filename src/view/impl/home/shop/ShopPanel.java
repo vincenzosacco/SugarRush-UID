@@ -104,4 +104,11 @@ public class ShopPanel extends BasePanel {
         super.addNotify(); // <-- this request focus
     }
 
+//--------------------------------------- ABSTRACT OVERRIDEs ----------------------------------------------------------------------------------
+    @Override
+    protected void bindControllers(){
+
+    }
+
+
 }

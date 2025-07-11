@@ -21,12 +21,6 @@ public class LevelDialog extends BaseDialog {
     public LevelDialog(String title, String text, String buttonText){
         super(); // <-- load bg image
         button = new CustomButton(buttonText, Color.WHITE, new Color(100, 149, 237));
-        button.addActionListener(e -> {
-            Window window = SwingUtilities.getWindowAncestor(this);
-            if (window != null) {
-                window.dispose(); // Close the dialog
-            }
-        });
 
         // --------------------- TOP PANEL ---------------------
         // Title
@@ -120,5 +114,15 @@ public class LevelDialog extends BaseDialog {
     @Override
     protected BufferedImage loadBackgroundImage() {
         return Resources.getBestImage("/imgs/panels/levels/endLevelImage.jpg", getWidth(), getHeight());
+    }
+
+    @Override
+    protected void bindControllers() {
+        button.addActionListener(e -> {
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) {
+                window.dispose(); // Close the dialog
+            }
+        });
     }
 }

@@ -4,6 +4,7 @@ import utils.Resources;
 import utils.audio.AudioManager;
 import utils.audio.GameAudioController;
 import view.base.AbsViewPanel;
+import view.base.BasePanel;
 import view.impl.home.editor.LevelEditorPanel;
 import view.impl.home.settings.BaseSettingsPanel;
 import view.impl.home.shop.ShopPanel;
@@ -17,7 +18,7 @@ import java.awt.event.ComponentEvent;
 import static config.ViewConfig.BOARD_HEIGHT;
 import static config.ViewConfig.BOARD_WIDTH;
 
-public class HomeContainer extends AbsViewPanel {
+public class HomeContainer extends BasePanel {
     // CardLayout to switch between views (like tabs)
     private final CardLayout cardLayout;
     private final JPanel contentPanel;
@@ -27,7 +28,7 @@ public class HomeContainer extends AbsViewPanel {
     private final BaseSettingsPanel baseSettingsPanel;
 
     // Arrays to store tab buttons and their underline indicators
-    JButton[] buttons = new JButton[4];
+    private final JButton[] buttons = new JButton[4];
     JPanel[] underlinePanels = new JPanel[4];
 
     public HomeContainer(){
@@ -89,31 +90,6 @@ public class HomeContainer extends AbsViewPanel {
         contentPanel.revalidate();
         contentPanel.repaint();
 
-        // Define actions for switching tabs
-        mapButton.addActionListener(e -> {
-            cardLayout.show(contentPanel, "Start");
-            updateTabSelection(0);
-            contentPanel.revalidate();
-            contentPanel.repaint();
-        });
-        levelEditorButton.addActionListener(e -> {
-            cardLayout.show(contentPanel, "Editor");
-            updateTabSelection(1);
-            contentPanel.revalidate();
-            contentPanel.repaint();
-        });
-        shopButton.addActionListener(e -> {
-            cardLayout.show(contentPanel, "Shop");
-            updateTabSelection(2);
-            contentPanel.revalidate();
-            contentPanel.repaint();
-        });
-        settingsButton.addActionListener(e -> {
-            cardLayout.show(contentPanel, "Settings");
-            updateTabSelection(3);
-            contentPanel.revalidate();
-            contentPanel.repaint();
-        });
 
 
         // Add tab bar and content area to the panel
@@ -122,6 +98,7 @@ public class HomeContainer extends AbsViewPanel {
 
         this.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
     }
+
 
 
 
@@ -172,7 +149,7 @@ public class HomeContainer extends AbsViewPanel {
 
     //--------------------------------------- CONTROLLER METHODS ---------------------------------------//
     @Override
-    protected void bindController() {
+    protected void bindControllers() {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
@@ -187,6 +164,39 @@ public class HomeContainer extends AbsViewPanel {
                 GameAudioController.getInstance().stopBackgroundMusic();
             }
         });
+
+        // Define actions for switching tabs
+        buttons[0].addActionListener(e -> {
+            cardLayout.show(contentPanel, "Start");
+            updateTabSelection(0);
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        });
+        buttons[1].addActionListener(e -> {
+            cardLayout.show(contentPanel, "Editor");
+            updateTabSelection(1);
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        });
+        // Shop button
+        buttons[2].addActionListener(e -> {
+            cardLayout.show(contentPanel, "Shop");
+            updateTabSelection(2);
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        });
+        // Settings button
+        buttons[3].addActionListener(e -> {
+            showSettings();
+        });
+
+    }
+
+    public void showSettings(){
+        cardLayout.show(contentPanel, "Settings");
+        updateTabSelection(3);
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
 

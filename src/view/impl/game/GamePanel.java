@@ -4,23 +4,28 @@ import controller.game.GameController;
 import controller.game.GameMenuController;
 import model.Model;
 import model.game.Game;
+import utils.Resources;
 import utils.audio.GameAudioController;
 import view.base.AbsViewPanel;
+import view.base.BasePanel;
 import view.impl._common.buttons.CustomRoundLogoButton;
 import view.impl.game.dialogs.LoseDialog;
 import view.impl.game.dialogs.WinDialog;
+import view.impl.home.levelsMap.LevelInfoDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.InputStream;
 
 import static config.ViewConfig.*;
 
 /**
  * Main game panel (Contains graphics, UI, menus, pause/win logic)
  */
-public class GamePanel extends AbsViewPanel {
+public class GamePanel extends BasePanel {
 
     private final GameMenu gameMenu;
     private final LoseDialog losePanel;
@@ -81,7 +86,11 @@ public class GamePanel extends AbsViewPanel {
         layeredPane.add(buttonContainerPanel, JLayeredPane.PALETTE_LAYER); // Added to a higher level of the game
 
         //Menu panels (overlays)
-        gameMenu = new GameMenu();
+        int levelIndex = Game.getInstance().getCurrLevel();
+        InputStream levelFile = Resources.getResourceAsStream("/maps/map" + levelIndex + ".txt");
+
+        gameMenu = new GameMenu(levelFile, levelIndex);
+
         losePanel = new LoseDialog();
         winPanel = new WinDialog();
 
@@ -123,6 +132,29 @@ public class GamePanel extends AbsViewPanel {
                 layeredPane.repaint();
             }
         });
+
+        // KEY BINDINGS
+        setupKeyBindings();
+    }
+
+    private void setupKeyBindings(){
+    //--Make press "ESC" to virtual click on the pause button //
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = this.getActionMap();
+
+        // Create an InputStroke for the ESCAPE key
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke("ESCAPE");
+        // Put the KeyStroke and an identifier (e.g., "pressClose") into the InputMap
+        inputMap.put(escapeKeyStroke, "pressClose");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressClose", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the closeButton
+                pauseButton.doClick();
+            }
+        });
+
     }
 
     // Method to calculate and apply centered bounds to menu panels
@@ -214,7 +246,7 @@ public class GamePanel extends AbsViewPanel {
 
     //------------------------------------- CONTROLLER RELATED METHODS -------------------------------------------------------
     @Override
-    public void bindController() {
+    public void bindControllers() {
         GameController controller = new GameController();
         this.addKeyListener(controller);
 
@@ -238,10 +270,15 @@ public class GamePanel extends AbsViewPanel {
 
     }
 
-    /* Simulate a click on the Pause button */
+
     public void clickPause() {
+        if (!pauseButton.isEnabled())
+            pauseButton.setEnabled(true);
+
         pauseButton.doClick();
     }
+
+
 
     //------------------------------------- SWINGs OVERRIDE METHODS -------------------------------------------------------
     @Override
@@ -260,6 +297,5 @@ public class GamePanel extends AbsViewPanel {
         // Repaint the background
         repaintBackground();
     }
-
 
 }

@@ -51,11 +51,6 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
                 case KeyEvent.VK_DOWN -> direction = DOWN;
                 case KeyEvent.VK_LEFT -> direction = LEFT;
                 case KeyEvent.VK_RIGHT -> direction = RIGHT;
-                case KeyEvent.VK_ESCAPE -> View.getInstance().getGamePanel().clickPause();
-                /* Cannot call directly onPause() because it takes an ActionEvent as parameter.
-                 Simulate a click on the pause button instead of writing another code behaviour of 'PAUSE'
-                 maintain a unique definition of 'PAUSE'.
-                 This is good to avoid bugs or different behavior between 'ESC' and click PauseButton.*/
             }
 
             if (direction != null) {
@@ -128,6 +123,5 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
         // At the end, i can reset the game
 //        game.clear(); // Clear the game model
     }
-
 
 }

@@ -4,13 +4,14 @@ import config.ViewConfig;
 import controller.editor.LevelEditorController;
 import model.editor.LevelEditor;
 import view.base.AbsViewPanel;
+import view.base.BasePanel;
 import view.impl.game.BlocksImages;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class LevelEditorPanel extends AbsViewPanel {
+public class LevelEditorPanel extends BasePanel {
     private final JPanel sidebar = new JPanel();
 
     public LevelEditorPanel(){
@@ -29,7 +30,7 @@ public class LevelEditorPanel extends AbsViewPanel {
     }
 
     @Override
-    protected void bindController() {
+    protected void bindControllers() {
         this.addKeyListener(new LevelEditorController(this, LevelEditor.getInstance()));
     }
 

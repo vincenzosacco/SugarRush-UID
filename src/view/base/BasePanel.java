@@ -17,9 +17,19 @@ public abstract class BasePanel extends JPanel {
 //        });
     }
 
+    /**
+     * @implNote In {@code BasePanel} call {@link #bindControllers() bindControllers} and {@link #requestFocusInWindow() requestFocusInWindow}
+     */
     @Override
     public void addNotify() {
         super.addNotify();
         requestFocusInWindow();
+        bindControllers();
     }
+
+    /** Add listeners.
+     * @apiNote This method is called in {@link #addNotify() addNotify}
+     */
+    protected abstract void bindControllers();
+
 }
