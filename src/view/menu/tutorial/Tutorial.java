@@ -33,30 +33,43 @@ public class Tutorial extends JPanel {
         cardPanel = new JPanel(cardLayout);
 
         // Add tutorial pages with image and text
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Welcome to the tutorial!\n" +
+        addTutorialPage("/imgs/tutorial/tutorial.jpg", "Welcome to the tutorial!\n" +
                 "In this screen you can use the keyboard arrows to move between pages, or exit by pressing ESC.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Level Selection\n" +
-                "There are various levels, sorted by difficulty. You start at level 1, the others are unlocked by completing the previous ones.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Toolbar\n" +
-                "At the bottom you will find buttons to access the level editor, the shop and the settings.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Settings\n" +
+        addTutorialPage("/imgs/tutorial/tutorialHomeScreen.jpg", "Toolbar\n" +
+                "At the bottom you will find buttons to access the story levels, the level editor, the shop and the settings.");
+        addTutorialPage("/imgs/tutorial/tutorialSettings.jpg", "Settings\n" +
                 "From here you can adjust the volume of music and effects, and consult the game controls.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Pause Menu\n" +
+        addTutorialPage("/imgs/tutorial/tutorialShop.jpg", "Shop\n" +
+                "From here you can spend the coins you accumulate, to buy different new characters to use in the various levels.");
+        addTutorialPage("/imgs/tutorial/tutorialHomeScreen.jpg", "Story levels\n" +
+                "There are various levels, sorted by difficulty. You start at level 1, the others are unlocked by completing the previous ones.");
+        addTutorialPage("/imgs/tutorial/tutorialHomeScreen.jpg", "Level Colors\n" +
+                "• **Gray**: level is locked.\n" +
+                "• **Red**: level is unlocked but not yet completed.\n" +
+                "• **Green**: level completed with 1 or 2 stars.\n" +
+                "• **Gold**: level completed with 3 stars.");
+        addTutorialPage("/imgs/tutorial/tutorialPlay.jpg", "Play level\n" +
+                "You can play the level by selecting it and pressing the play button (or the ENTER key).\n"+
+                "From here, you can also view the missions you need to complete to earn coins.");
+        addTutorialPage("/imgs/tutorial/tutorialPlay.jpg", "Rewards\n" +
+                "For each completed mission, you will receive 100 coins.\n" +
+                "Each time you finish a level, you will still receive 10 coins.");
+        addTutorialPage("/imgs/tutorial/tutorialGame.jpg", "Pause Menu\n" +
                 "During gameplay, press ESC or the pause button to open the level objectives menu.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Pause Menu – Functionality\n" +
-                "From the menu you can open the settings, exit, restart the level or continue (also with the ENTER key).");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Movement\n" +
+        addTutorialPage("/imgs/tutorial/tutorialPauseMenu.jpg", "Pause Menu – Functionality\n" +
+                "From the menu you can see the missions to complete to get the medals, you can open the settings, exit, restart the level or continue (also with the ENTER key).");
+        addTutorialPage("/imgs/tutorial/tutorialGame.jpg", "Movement\n" +
                 "Use the arrows to move your character.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Warning!\n" +
-                "Avoid enemies and traps, or you will lose! Collect coins by completing missions to buy upgrades in the shop.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "If you lose\n" +
+        addTutorialPage("/imgs/tutorial/tutorialWarning.jpg", "Warning!\n" +
+                "Avoid enemies and traps, or you will lose! Complete missions to get more coins.");
+        addTutorialPage("/imgs/tutorial/tutorialLose.jpg", "If you lose\n" +
                 "You can exit with ESC or restart the level by pressing the ‘Restart’ button or the ENTER key.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Goal\n" +
-                "Win by reaching the final finish line.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Next Levels\n" +
+        addTutorialPage("/imgs/tutorial/tutorialGoal.jpg", "Goal\n" +
+                "Win by reaching the final Sugar.");
+        addTutorialPage("/imgs/tutorial/tutorialWin.jpg", "Next Levels\n" +
                 "After winning, you can immediately move to the next level with the ‘Next’ button or by pressing ENTER.");
-        addTutorialPage("/imgs/tutorial/step1.jpg", "Have fun!\n" +
-                "Have fun and good luck in the game!");
+        addTutorialPage("/imgs/tutorial/tutorialCompleted.jpg", "Have fun!\n" +
+                "Complete all your levels, have fun, and good luck in the game!");
 
         add(cardPanel, BorderLayout.CENTER);
 
