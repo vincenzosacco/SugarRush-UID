@@ -1,6 +1,8 @@
 package view.impl._common.buttons;
 
+import controller.menu.LevelButtonController;
 import utils.Resources;
+import view.impl.home.levelsMap.LevelsMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,8 +56,6 @@ public class LevelButton extends JButton {
                 setFont(new Font("Arial", Font.BOLD, fontSize));
             }
         });
-
-
 
     }
 
@@ -175,5 +175,15 @@ public class LevelButton extends JButton {
         this.coinsCollected = stars.clone();
         updateBackgroundColor(); // Update background color when stars collected change
         repaint(); // Refresh button appearance
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        updateBackgroundColor(); // Ensure background color is set when added to a container
+        repaint(); // Initial repaint to apply the background color
+
+        addActionListener(new LevelButtonController(
+                (LevelsMap) SwingUtilities.getAncestorOfClass(LevelsMap.class, this), num));
     }
 }
