@@ -3,6 +3,7 @@ package model.game;
 import model.game.GameConstants.Block;
 import model.game.entities.Creature;
 import model.game.entities.evil.Enemy1;
+import model.game.entities.evil.Enemy2;
 import utils.Resources;
 
 import java.io.BufferedReader;
@@ -116,6 +117,24 @@ public class MapParser {
                         gameBoard.entities.add(new Enemy1(row,col));
                     }
                     case 't' -> mat.get(row).add(Block.THORNS);
+                    case 'r' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        gameBoard.entities.add(new Enemy2(row, col, GameConstants.Direction.RIGHT));
+                    }
+                    case 'l' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        gameBoard.entities.add(new Enemy2(row, col, GameConstants.Direction.LEFT));
+                    }
+                    case 'u' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        gameBoard.entities.add(new Enemy2(row, col,GameConstants.Direction.UP));
+                    }
+                    case 'd' -> {
+                        mat.get(row).add(Block.ENEMY2);
+                        gameBoard.entities.add(new Enemy2(row, col, GameConstants.Direction.DOWN));
+                    }
+
+
                     case ' '-> mat.get(row).add(Block.SPACE);
                     default -> throw new IllegalArgumentException("Invalid char in game file '" + map + "': "
                             + tileMapChar+ " at row: " + row + " col: " + col);
