@@ -89,7 +89,8 @@ public class Game extends GameBoard {
     }
 
     public void start(){
-        assert currLevel > 0 && currLevel < NUM_LEVELS : "Current level must be between 1 and " + NUM_LEVELS;
+        assert currLevel > 0 && currLevel <= NUM_LEVELS : "Current level must be between 1 and " + NUM_LEVELS +
+                ". Actual value: " + currLevel + ".";
         assert !entities.isEmpty() : "Entities list should not be empty when starting the game.";
 
         _Timer.start();
