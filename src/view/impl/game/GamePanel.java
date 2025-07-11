@@ -176,8 +176,16 @@ public class GamePanel extends BasePanel {
     }
 
     private final JLabel timerCountLabel = new JLabel("0");
-    public void setElapsedTime(long seconds) {
-        timerCountLabel.setText(String.valueOf(seconds));
+
+    /**
+     * Sets the elapsed time in milliseconds on the timer label.
+     * This method formats the time in "ss:cc" to display seconds and tenths of seconds.
+     * @param centSec the elapsed time in milliseconds
+     */
+    public synchronized void setElapsedTime(long centSec) {
+        // Format in "ss:cc" format
+        String formattedTime = String.format("%02d:%02d", (centSec / 100) % 60, centSec % 100);
+        timerCountLabel.setText(formattedTime);
     }
 
     public void repaintBackground() {
@@ -262,7 +270,7 @@ public class GamePanel extends BasePanel {
         super.addNotify(); //<-- requests focus here
 
         // Reset the elapsed time
-        setElapsedTime(Game.getInstance().getElapsedTime());
+//        setElapsedTime(Game.getInstance().getElapsedTime());
 
         // Reset components
         gameContentDrawingPanel.setVisible(true);

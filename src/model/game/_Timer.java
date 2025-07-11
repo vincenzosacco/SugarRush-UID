@@ -6,7 +6,7 @@ import view.View;
 import javax.swing.*;
 
 class _Timer {
-    static int elapsedTime = 0;
+    static long elapsedTime = 0L;
 
     private final static GameLoop gl = GameLoop.getInstance(); // shortcut
 
@@ -17,27 +17,27 @@ class _Timer {
      *     <li>VIEW -> update the view with the elapsed time each second</li>
      * </ul>
      */
-    static final Timer timer  = new Timer(1000, e -> {
-        // Increment the elapsed time in seconds
+    static final Timer timer  = new Timer(10, e -> {
+        // Increment the elapsed time each centisecond
         elapsedTime++;
-        // Update the timer label in the view with the elapsed seconds
-        View.getInstance().getGamePanel().setElapsedTime(elapsedTime);
+        // Update the timer label in the view with the elapsed
+        View.getInstance().getGamePanel().setElapsedTime(elapsedTime); //time in seconds
     });
 
     public static void start() {
         assert gl.isRunning() : "GameLoop should be running when starting the timer";
-        assert elapsedTime == 0 : "Elapsed time should be 0 when starting the timer";
+        assert elapsedTime == 0L : "Elapsed time should be 0 when starting the timer";
         timer.start();
     }
     public static void stopTimer() {
-        elapsedTime = 0; // Reset elapsed seconds when stopping the timer
+        elapsedTime = 0L; // Reset elapsed seconds when stopping the timer
         if (timer.isRunning()) {
             timer.stop();
         }
     }
     /** Set pause if the Game is running, otherwise resume*/
     public static void togglePause() {
-        if (elapsedTime == 0) return; // Do not toggle pause if the game has just started
+        if (elapsedTime == 0L) return; // Do not toggle pause if the game has just started
 
         if (isRunning()){
             timer.stop();

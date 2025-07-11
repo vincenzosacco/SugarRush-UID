@@ -131,7 +131,7 @@ public abstract class _EndLevelDialog extends GameMenu {
     }
 
     // Update the time
-    public void updateElapsedTime(int seconds) {
+    public void updateElapsedTime(long seconds) {
         timerLabel.setText("Time: " + seconds + "s");
         timerLabel.revalidate();
         timerLabel.repaint();

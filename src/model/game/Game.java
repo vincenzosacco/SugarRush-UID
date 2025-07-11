@@ -213,7 +213,7 @@ public class Game extends GameBoard {
         return starCount;
     }
     // ELAPSED TIME //
-    public int getElapsedTime() {
+    public long getElapsedTime() {
         return _Timer.elapsedTime;
     }
 
