@@ -1,10 +1,8 @@
 package view.impl.home.levelsMap;
 
 import config.ModelConfig;
-import controller.LevelsMapController;
 import persistance.profile.ProfileManager;
 import utils.Resources;
-import view.base.AbsViewPanel;
 import view.base.BasePanel;
 import view.impl._common.panels.CoinCountPanel;
 import view.impl._common.buttons.CustomButton;
@@ -43,8 +41,7 @@ public class LevelsMap extends BasePanel {
         // Initialize the array of level buttons
         levelButtons = new LevelButton[numLevels];
         // Default level dialog
-        levelInfoDialog = new LevelInfoDialog(
-                Resources.getResourceAsStream("/maps/map" + 1 + ".txt"), 1);
+        levelInfoDialog = new LevelInfoDialog(1);
 
         // COIN COUNT PANEL //
         add(coinPanel);
@@ -168,7 +165,10 @@ public class LevelsMap extends BasePanel {
     }
 
     // Opens a dialog window containing the selected level's panel
-    public void showLevelDialog(LevelInfoDialog levelInfoDialog) {
+    public void showLevelDialog(int levelIndex) {
+        // UPDATE LEVEL INFO DIALOG //
+        levelInfoDialog.updateLevelIndex(levelIndex);
+
         // Retrieve the top-level window (e.g., JFrame) that contains this panel
         Window parentWindow = SwingUtilities.getWindowAncestor(this);
 
@@ -238,11 +238,6 @@ public class LevelsMap extends BasePanel {
 
     @Override
     protected void bindControllers() {
-        LevelsMapController controller = new LevelsMapController(this);
-        // Map each button with the right action listener
-        for (int i = 0; i < levelButtons.length; i++) {
-            controller.bindListenerToButton(levelButtons[i],i+1);
-        }
     }
 
 }

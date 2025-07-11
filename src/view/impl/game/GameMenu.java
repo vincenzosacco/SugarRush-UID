@@ -18,7 +18,7 @@ public class GameMenu extends LevelInfoDialog {
     //private final RoundCloseButton closeButton;
 //    private final CustomLogoButton playButton;
     private CustomLogoButton restartButton;
-    private final CustomRoundLogoButton settingsButton;
+    private CustomRoundLogoButton settingsButton;
     private CustomButton exitButton;
 
 //    private int currentLevel=1; // Current level number, cannot be < 1 or > ModelConfig.NUM_LEVELS
@@ -28,8 +28,8 @@ public class GameMenu extends LevelInfoDialog {
 //        this.currentLevel = currentLevel;
 //    }
 
-    public GameMenu(InputStream levelFile, int currentLevel){
-        super(levelFile, currentLevel);
+    public GameMenu(int currentLevel){
+        super(currentLevel);
 
         // LEVEL INFO DIALOG//
 
@@ -48,7 +48,6 @@ public class GameMenu extends LevelInfoDialog {
 
 //
         // BUTTONS
-        settingsButton=new CustomRoundLogoButton("settings",new Color(119, 136, 153));
         // not needed anymore
         if (closeButton != null && closeButton.getParent() != null){
             closeButton.getParent().remove(closeButton);
@@ -63,9 +62,7 @@ public class GameMenu extends LevelInfoDialog {
 //        // Left placeholder (empty panel)
 //        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 //        leftPanel.setOpaque(false);
-          topLeftArea.setLayout(new BorderLayout());
-          topLeftArea.add(settingsButton, BorderLayout.WEST);
-//        topPanel.add(leftPanel);
+     //        topPanel.add(leftPanel);
 //
 //        // Centered level label
 //        JLabel levelLabel = new JLabel("Level " + currentLevel, SwingConstants.CENTER);
@@ -360,6 +357,22 @@ public class GameMenu extends LevelInfoDialog {
         bottomArea.add(exitButton);
         bottomArea.add(playButton); // play button from parent
         bottomArea.add(restartButton);
+
+    }
+
+    @Override
+    protected void buildTopArea(){
+        super.buildTopArea();
+        topArea.removeAll(); // remove all to re-add components in right order (GridLayout)
+
+        settingsButton=new CustomRoundLogoButton("settings",new Color(119, 136, 153));
+
+        JPanel topLeftArea = new JPanel(new BorderLayout());
+        topLeftArea.add(settingsButton, BorderLayout.WEST);
+        topLeftArea.setOpaque(false);
+
+        topArea.add(topLeftArea);
+        topArea.add(levelLabel);
 
     }
 

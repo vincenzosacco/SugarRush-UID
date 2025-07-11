@@ -1,17 +1,14 @@
 package view.impl.game;
 
 import controller.game.GameController;
-import controller.game.GameMenuController;
 import model.Model;
 import model.game.Game;
 import utils.Resources;
 import utils.audio.GameAudioController;
-import view.base.AbsViewPanel;
 import view.base.BasePanel;
 import view.impl._common.buttons.CustomRoundLogoButton;
 import view.impl.game.dialogs.LoseDialog;
 import view.impl.game.dialogs.WinDialog;
-import view.impl.home.levelsMap.LevelInfoDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,9 +84,7 @@ public class GamePanel extends BasePanel {
 
         //Menu panels (overlays)
         int levelIndex = Game.getInstance().getCurrLevel();
-        InputStream levelFile = Resources.getResourceAsStream("/maps/map" + levelIndex + ".txt");
-
-        gameMenu = new GameMenu(levelFile, levelIndex);
+        gameMenu = new GameMenu(levelIndex);
 
         losePanel = new LoseDialog();
         winPanel = new WinDialog();

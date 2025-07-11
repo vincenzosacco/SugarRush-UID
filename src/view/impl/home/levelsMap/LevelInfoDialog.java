@@ -1,6 +1,6 @@
 package view.impl.home.levelsMap;
 
-import controller.menu.LevelController;
+import controller.menu.LevelInfoController;
 import model.game.LevelData;
 import persistance.profile.ProfileManager;
 import utils.Resources;
@@ -21,36 +21,31 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class LevelInfoDialog extends BaseDialog {
-    // Buttons for closing and starting the level
-    protected final RoundCloseButton closeButton;
-    protected final CustomLogoButton playButton = new CustomLogoButton("play", new Color(50, 205, 50)); // Lime green;
-    private int levelIndex;
-    private final JLabel levelLabel ;
 
     // Arrays to store coin icons and corresponding text
     private final JLabel[] iconLabels = new JLabel[3];
     private final JTextArea[] textLabels = new JTextArea[3];
-
+    protected final JLabel levelLabel = new JLabel();
     // Original images for resizing
     private final Image[] originalImages = new Image[3];
 
     // BORDER LAYOUT AREAS
-    /** empty placeholder for the left area
-     * @apiNote replace it with a custom panel to add
-     * */
-    protected final JPanel topLeftArea = new JPanel();
-
     protected final JPanel bottomArea = new JPanel();
+    protected final JPanel centerArea = new JPanel();
+    protected final JPanel topArea = new JPanel();
 
-    // Constructor takes the level file and its index
-    public LevelInfoDialog(InputStream levelFile, int levelIndex){
+    // Buttons for closing and starting the level
+    protected final RoundCloseButton closeButton;
+    protected final CustomLogoButton playButton = new CustomLogoButton("play", new Color(50, 205, 50)); // Lime green;
+
+    // CONTROLLER
+    private final LevelInfoController controller;
+    private int levelIndex;
+
+    public LevelInfoDialog(int levelIndex){
         super();
-
-        // Load level data (coin status and descriptive text)
+        controller = new LevelInfoController(this, levelIndex);
         this.levelIndex = levelIndex;
-        LevelData levelData = new LevelData(levelFile);
-        Boolean[] coinsCollected = ProfileManager.getLastProfile().getLevelStarsCount(levelIndex);
-        String[] textRequest = levelData.getTextRequest();
 
         // Use BorderLayout and transparency
         setLayout(new BorderLayout());
@@ -58,42 +53,79 @@ public class LevelInfoDialog extends BaseDialog {
         // Create and configure the close buttons
         closeButton = new RoundCloseButton();
 
-
-
         // --------------------- TOP PANEL ---------------------
+        buildTopArea();
+        add(topArea, BorderLayout.PAGE_START);
 
-        JPanel topPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
-        topPanel.setOpaque(false);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        // --------------------- CENTER PANEL ---------------------
+        buildCenterArea();
+        add(centerArea, BorderLayout.CENTER);
 
-        // Add setting in topLeftArea
-        topLeftArea.setOpaque(false);
-        topPanel.add(topLeftArea);
+        // --------------------- BOTTOM PANEL ---------------------
+        buildBottomArea();
+        add(bottomArea, BorderLayout.PAGE_END);
+
+
+        // --- KEY BINDINGS ---
+        setupKeyBindings();
+
+        // --- COMPONENT RESIZING ---
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                resizeComponents();
+            }
+        });
+    }
+
+    //---------------------------------- CONTRUCTOR METHODS ---------------------------------------------------------
+
+    /**
+     * Builds the top area of the game menu updating {@link #topArea}.
+     * @apiNote This method is called by {@link #LevelInfoDialog(int)}
+     */
+    protected void buildTopArea(){
+        // --------------------- TOP PANEL ---------------------
+        topArea.setLayout(new GridLayout(1, 3)); // 1 row, 3 columns
+        topArea.setOpaque(false);
+        topArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        topArea.add(Box.createHorizontalGlue());
 
 
         // Centered level label
-        levelLabel = new JLabel("Level " + levelIndex, SwingConstants.CENTER);
+        levelLabel.setText("Level " + levelIndex);
+        levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setForeground(Color.BLACK);
 
         int levelFontSize = Math.min(getWidth() / 15, getHeight() / 15);
         levelFontSize = Math.max(15, levelFontSize);
         levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
 
-        topPanel.add(levelLabel);
+        topArea.add(levelLabel);
 
         // Right panel with close buttons
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         rightPanel.setOpaque(false);
         rightPanel.add(closeButton);
-        topPanel.add(rightPanel);
+        topArea.add(rightPanel);
 
-        add(topPanel, BorderLayout.PAGE_START);
+    }
 
-        // --------------------- CENTER PANEL ---------------------
+    /**
+     * Builds the center area of the game menu updating {@link #centerArea}. .
+     * @apiNote This method is called by {@link #LevelInfoDialog(int)}
+     */
+    protected void buildCenterArea(){
+        // Load level data (coin status and descriptive text)
+        LevelData levelData = new LevelData(Resources.getResourceAsStream("/maps/map"+ levelIndex +".txt"));
+        Boolean[] coinsCollected = ProfileManager.getLastProfile().getLevelStarsCount(levelIndex);
+        String[] textRequest = levelData.getTextRequest();
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setOpaque(false);
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS)); // Vertical layout
+
+        centerArea.setOpaque(false);
+        centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS)); // Vertical layout
 
         // For each coin (3 total), create a row with an icon and a description
         for (int i = 0; i < 3; i++) {
@@ -141,32 +173,14 @@ public class LevelInfoDialog extends BaseDialog {
 
             textLabels[i] = textArea;
             rowPanel.add(textArea);
-            centerPanel.add(rowPanel);
+            centerArea.add(rowPanel);
         }
 
-        add(centerPanel, BorderLayout.CENTER);
-
-        // --------------------- BOTTOM PANEL ---------------------
-        buildBottomArea();
-        add(bottomArea, BorderLayout.PAGE_END);
-
-
-        // --- KEY BINDINGS ---
-        setupKeyBindings();
-
-        // --- COMPONENT RESIZING ---
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                super.componentResized(e);
-                resizeComponents();
-            }
-        });
     }
 
     /**
-     * Builds the bottom area of the game menu.
-     * @apiNote This method is called by {@link #LevelInfoDialog(InputStream, int)}
+     * Builds the bottom area of the game menu updating {@link #bottomArea}.
+     * @apiNote This method is called by {@link #LevelInfoDialog(int)}
      */
     protected void buildBottomArea(){
         bottomArea.setLayout(new GridLayout(1, 3));
@@ -176,6 +190,46 @@ public class LevelInfoDialog extends BaseDialog {
         bottomArea.add(Box.createHorizontalGlue());
     }
 
+
+
+    // Method to set up key bindings
+    private void setupKeyBindings() {
+        // Get the InputMap for when the component is focused or one of its children is focused
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        // Get the ActionMap to associate keys with actions
+        ActionMap actionMap = this.getActionMap();
+
+        // --- Bind ENTER key to Play buttons ---
+        // Create an InputStroke for the ENTER key
+        KeyStroke enterKeyStroke = KeyStroke.getKeyStroke("ENTER");
+        // Put the KeyStroke and an identifier (e.g., "pressPlay") into the InputMap
+        inputMap.put(enterKeyStroke, "pressPlay");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressPlay", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the playButton
+                playButton.doClick();
+            }
+        });
+
+        // --- Bind ESCAPE key to Close buttons ---
+        // Create an InputStroke for the ESCAPE key
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke("ESCAPE");
+        // Put the KeyStroke and an identifier (e.g., "pressClose") into the InputMap
+        inputMap.put(escapeKeyStroke, "pressClose");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressClose", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the closeButton
+                closeButton.doClick();
+            }
+        });
+    }
+
+
+    //---------------------------------------- BEHAVIOR -------------------------------------------------------------
     // Opens a dialog window containing the CustomDialog panel
     public void showCustomDialog(LevelDialog levelDialog) {
         // Retrieve the top-level window (e.g., JFrame) that contains this panel
@@ -267,41 +321,7 @@ public class LevelInfoDialog extends BaseDialog {
 //        });
 //    }
 
-    // Method to set up key bindings
-    private void setupKeyBindings() {
-        // Get the InputMap for when the component is focused or one of its children is focused
-        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        // Get the ActionMap to associate keys with actions
-        ActionMap actionMap = this.getActionMap();
 
-        // --- Bind ENTER key to Play buttons ---
-        // Create an InputStroke for the ENTER key
-        KeyStroke enterKeyStroke = KeyStroke.getKeyStroke("ENTER");
-        // Put the KeyStroke and an identifier (e.g., "pressPlay") into the InputMap
-        inputMap.put(enterKeyStroke, "pressPlay");
-        // Associate the identifier with an AbstractAction in the ActionMap
-        actionMap.put("pressPlay", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Programmatically trigger the action listener of the playButton
-                playButton.doClick();
-            }
-        });
-
-        // --- Bind ESCAPE key to Close buttons ---
-        // Create an InputStroke for the ESCAPE key
-        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke("ESCAPE");
-        // Put the KeyStroke and an identifier (e.g., "pressClose") into the InputMap
-        inputMap.put(escapeKeyStroke, "pressClose");
-        // Associate the identifier with an AbstractAction in the ActionMap
-        actionMap.put("pressClose", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Programmatically trigger the action listener of the closeButton
-                closeButton.doClick();
-            }
-        });
-    }
 
 //---------------------------------------- ABSTRACT PARENTs OVERRIDE --------------------------------------
     @Override
@@ -310,20 +330,35 @@ public class LevelInfoDialog extends BaseDialog {
     }
 
     @Override
-    protected void bindControllers(){
-        LevelController controller=new LevelController(this);
+    public void addNotify(){
+        resizeComponents();
+        super.addNotify();
+    }
 
-        playButton.addActionListener(e -> {
-            controller.onPlay(levelIndex);
-        });
+//---------------------------------------- CONTROLLER RELATED -----------------------------------------------------
+    @Override
+    protected void bindControllers(){
+        playButton.addActionListener(controller::onPlay);
         closeButton.addActionListener(e -> {
             controller.onClose();
         });
     }
 
-    @Override
-    public void addNotify(){
-        resizeComponents();
-        super.addNotify();
+    /**
+     * Update the level index causing redrawing the entire component.
+     * @param levelIndex
+     */
+    public void updateLevelIndex(int levelIndex) {
+        this.levelIndex = levelIndex;
+
+        controller.setLevelIndex(levelIndex);
+
+        // reset title
+        levelLabel.setText("Level " + levelIndex);
+
+        // reset center text
+        centerArea.removeAll();
+        buildCenterArea();
     }
+
 }
