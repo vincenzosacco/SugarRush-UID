@@ -158,20 +158,27 @@ public class Game {
                 // 1- COMPUTE ENTITIES ACTION  //
                 Cell toMove = ent.computeAction(); // tell the entity where he wants to move
 
-                // 2- MANAGE COLLISIONS //
-                boolean canPerform = ent.manageCollision(gameMat.getCell(toMove), toMove );
-
-                // 3- PERFORM ACTION //
-                if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates
-
-                // APPLY NEW COORDS IN THE GAME MATRIX //
-                Cell newCoord = ent.getCoord();
-                gameMat.setCell(newCoord, ent.blockType());
-
-                if (!canPerform && ent instanceof Projectile){
-                    // Free the cell and remove the projectile
+                // If the projectile touches the border, it will be deleted
+                if(ent instanceof Projectile && toMove==null){
                     gameMat.setCell(ent.getCoord(), GameConstants.Block.SPACE);
                     entities.remove(ent);
+                }
+                else {
+                    // 2- MANAGE COLLISIONS //
+                    boolean canPerform = ent.manageCollision(gameMat.getCell(toMove), toMove);
+
+                    // 3- PERFORM ACTION //
+                    if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates
+
+                    // APPLY NEW COORDS IN THE GAME MATRIX //
+                    Cell newCoord = ent.getCoord();
+                    gameMat.setCell(newCoord, ent.blockType());
+                    // To delete the projectile
+                    if (!canPerform && ent instanceof Projectile) {
+                        // Free the cell and remove the projectile
+                        gameMat.setCell(ent.getCoord(), GameConstants.Block.SPACE);
+                        entities.remove(ent);
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package model.game.entities;
 
+import config.ModelConfig;
 import model.Model;
 import model.game.GameConstants;
 import model.game.Entity;
@@ -38,12 +39,36 @@ public class Creature extends Entity {
         // Direction.NONE case is handled in shouldPerform
 
         Cell newCoord = getCoord();
-
+        // If the creature goes out of the borders, it dies
         switch (this.direction) {
-            case Direction.UP -> newCoord.decrRow(); // going up means decrementing the row index by 1
-            case Direction.DOWN -> newCoord.incrRow(); // going down means incrementing the row index by 1
-            case Direction.LEFT -> newCoord.decrCol(); // going left means decrementing the col index by 1
-            case Direction.RIGHT -> newCoord.incrCol(); // going right means incrementing the col index by 1
+            case Direction.UP -> {
+                if (newCoord.getRow()==0){
+                    Model.getInstance().getGame().killCreature();
+                    break;
+                }
+                newCoord.decrRow();
+            } // going up means decrementing the row index by 1
+            case Direction.DOWN ->{
+                if (newCoord.getRow()== ModelConfig.ROW_COUNT-1){
+                    Model.getInstance().getGame().killCreature();
+                    break;
+                }
+                newCoord.incrRow();
+            } // going down means incrementing the row index by 1
+            case Direction.LEFT ->{
+                if (newCoord.getCol()==0){
+                    Model.getInstance().getGame().killCreature();
+                    break;
+                }
+                newCoord.decrCol();
+            } // going left means decrementing the col index by 1
+            case Direction.RIGHT ->{
+                if (newCoord.getCol()==ModelConfig.COL_COUNT-1){
+                    Model.getInstance().getGame().killCreature();
+                    break;
+                }
+                newCoord.incrCol();
+            } // going right means incrementing the col index by 1
             default -> throw new IllegalStateException("Unknown direction: " + this.direction);
         }
 

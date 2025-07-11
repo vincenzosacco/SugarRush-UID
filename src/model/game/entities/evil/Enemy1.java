@@ -1,5 +1,6 @@
 package model.game.entities.evil;
 
+import config.ModelConfig;
 import model.Model;
 import model.game.GameConstants;
 import model.game.utils.Cell;
@@ -34,14 +35,24 @@ public class Enemy1 extends Enemy {
         Cell newCoord = getCoord();
 
         // Try to move in the current direction
+        // If it reaches the border it changes direction
         switch (this.direction) {
-            case LEFT -> newCoord.decrCol();
-            case RIGHT -> newCoord.incrCol();
+            case LEFT ->{
+                if (newCoord.getCol()==0){
+                    this.direction = this.direction.opposite();
+                    break;
+                }
+                newCoord.decrCol();
+            }
+            case RIGHT ->{
+                if (newCoord.getCol()== ModelConfig.COL_COUNT-1){
+                    this.direction = this.direction.opposite();
+                    break;
+                }
+                newCoord.incrCol();
+            }
             default -> throw new IllegalStateException("Unexpected value: " + this.direction);
         }
-
-        // If it hits a wall or is out of bounds, change direction
-
         // Stay in the same place if no valid move is possible
         return newCoord;
     }

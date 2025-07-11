@@ -1,5 +1,6 @@
 package model.game.entities.evil;
 
+import config.ModelConfig;
 import model.Model;
 import model.game.GameConstants;
 import model.game.utils.Cell;
@@ -39,12 +40,32 @@ public class Enemy2 extends Enemy {
     private void shoot() {
         Cell projCoord = new Cell(coord); // Start at current position
 
-        // Compute the target cell based on direction
+        // Compute the target cell based on a direction (if he would shoot outside the border, he doesn't shoot)
         switch (direction) {
-            case LEFT -> projCoord.decrCol();
-            case RIGHT -> projCoord.incrCol();
-            case UP -> projCoord.decrRow();
-            case DOWN -> projCoord.incrRow();
+            case LEFT ->{
+                if(projCoord.getCol()==0){
+                    return;
+                }
+                projCoord.decrCol();
+            }
+            case RIGHT ->{
+                if(projCoord.getCol()== ModelConfig.COL_COUNT-1){
+                    return;
+                }
+                projCoord.incrCol();
+            }
+            case UP ->{
+                if(projCoord.getRow()==0){
+                    return;
+                }
+                projCoord.decrRow();
+            }
+            case DOWN ->{
+                if(projCoord.getRow()== ModelConfig.ROW_COUNT-1){
+                    return;
+                }
+                projCoord.incrRow();
+            }
             default -> { return; }
         }
 

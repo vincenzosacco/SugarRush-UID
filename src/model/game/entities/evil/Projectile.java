@@ -1,5 +1,6 @@
 package model.game.entities.evil;
 
+import config.ModelConfig;
 import model.Model;
 import model.game.GameConstants;
 import model.game.utils.Cell;
@@ -30,12 +31,32 @@ public class Projectile extends Entity {
     protected Cell computeAction() {
         Cell newCoord = getCoord(); // Start from current position
 
-        // Update coordinates based on direction
+        // Update coordinates based on a direction (returns null if the projectile touch the border)
         switch (direction) {
-            case LEFT -> newCoord.decrCol();
-            case RIGHT -> newCoord.incrCol();
-            case UP -> newCoord.decrRow();
-            case DOWN -> newCoord.incrRow();
+            case LEFT ->{
+                if (newCoord.getCol()==0){
+                    return null;
+                }
+                newCoord.decrCol();
+            }
+            case RIGHT ->{
+                if (newCoord.getCol()==ModelConfig.COL_COUNT-1){
+                    return null;
+                }
+                newCoord.incrCol();
+            }
+            case UP ->{
+                if (newCoord.getRow()==0){
+                    return null;
+                }
+                newCoord.decrRow();
+            }
+            case DOWN ->{
+                if (newCoord.getRow()== ModelConfig.ROW_COUNT-1){
+                    return null;
+                }
+                newCoord.incrRow();
+            }
             default -> {}
         }
         return newCoord;
