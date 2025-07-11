@@ -11,7 +11,7 @@ import utils.audio.GameAudioController;
  * Enemy2 is a stationary enemy that shoots projectiles in a fixed direction every few frames.
  */
 public class Enemy2 extends Enemy {
-    private int shootDelay = 15; // Number of frames between each shot
+    private final int shootDelay = 15; // Number of frames between each shot
     private int shootCounter = 0; // Counter to track when to shoot
 
     public Enemy2(int row, int col,Direction direction) {
