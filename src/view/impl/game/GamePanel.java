@@ -23,6 +23,7 @@ import static config.ViewConfig.*;
 public class GamePanel extends BasePanel {
 
     private final GameMenu gameMenu;
+
     private final LoseDialog losePanel;
     private final WinDialog winPanel;
 
@@ -85,8 +86,8 @@ public class GamePanel extends BasePanel {
         gameMenu = new GameMenu(levelIndex);
         gameMenu.setupKeyBindings(); // ESC -> close menu
 
-        losePanel = new LoseDialog();
-        winPanel = new WinDialog();
+        losePanel = new LoseDialog(levelIndex);
+        winPanel = new WinDialog(levelIndex);
 
         // Add menu panels to the MODAL_LAYER layer (the top one, for overlay)
         layeredPane.add(gameMenu, JLayeredPane.MODAL_LAYER);
@@ -204,19 +205,18 @@ public class GamePanel extends BasePanel {
     }
 
     //END LEVEL
-    public LoseDialog loseLevel(){
+    public void loseLevel(){
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         losePanel.setCurrentLevel(currentLevel);
         losePanel.updateLabels(currentLevel);
         losePanel.setVisible(true);
-        applyPanelBounds(losePanel);
-        losePanel.requestFocusInWindow();
-        pauseButton.setEnabled(false);
-        GameAudioController.getInstance().playSfx("death"); // Play Death SFX
-        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
-        this.revalidate();
-        this.repaint();
-        return losePanel;
+//        applyPanelBounds(losePanel);
+//        losePanel.requestFocusInWindow();
+//        pauseButton.setEnabled(false);
+//        GameAudioController.getInstance().playSfx("death"); // Play Death SFX
+//        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
+//        this.revalidate();
+//        this.repaint();
     }
     //WIN LEVEL
     public void winLevel(){
@@ -224,13 +224,13 @@ public class GamePanel extends BasePanel {
         winPanel.setCurrentLevel(currentLevel);
         winPanel.updateLabels(currentLevel);
         winPanel.setVisible(true);
-        applyPanelBounds(winPanel);
-        winPanel.requestFocusInWindow();
-        pauseButton.setEnabled(false);
-        GameAudioController.getInstance().playSfx("win"); // Play Victory SFX
-        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
-        this.revalidate();
-        this.repaint();
+//        applyPanelBounds(winPanel);
+//        winPanel.requestFocusInWindow();
+//        pauseButton.setEnabled(false);
+//        GameAudioController.getInstance().playSfx("win"); // Play Victory SFX
+//        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
+//        this.revalidate();
+//        this.repaint();
     }
 
     //------------------------------------- CONTROLLER RELATED METHODS -------------------------------------------------------

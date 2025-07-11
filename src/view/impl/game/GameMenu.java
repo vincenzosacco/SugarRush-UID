@@ -19,9 +19,11 @@ public class GameMenu extends LevelInfoDialog {
     // Buttons for closing and starting the level
     //private final RoundCloseButton closeButton;
 //    private final CustomLogoButton playButton;
-    private CustomLogoButton restartButton;
-    private CustomRoundLogoButton settingsButton;
-    private CustomButton exitButton;
+
+    protected final CustomLogoButton restartButton = new CustomLogoButton("restart",new Color(255, 193, 7));
+    protected final CustomRoundLogoButton settingsButton=new CustomRoundLogoButton("settings",new Color(119, 136, 153));
+    protected final CustomButton exitButton =new CustomButton("EXIT",Color.WHITE,new Color(220, 53, 69));
+
 
 //    private int currentLevel=1; // Current level number, cannot be < 1 or > ModelConfig.NUM_LEVELS
 
@@ -50,10 +52,7 @@ public class GameMenu extends LevelInfoDialog {
 
 //
         // BUTTONS
-        // not needed anymore
-        if (closeButton != null && closeButton.getParent() != null){
-            closeButton.getParent().remove(closeButton);
-        }
+
 
         // --------------------- TOP PANEL ---------------------
 
@@ -350,9 +349,6 @@ public class GameMenu extends LevelInfoDialog {
     @Override
     protected void buildBottomArea(){
 //        super.buildBottomArea(); dont call this. i need to override buttons position
-        restartButton = new CustomLogoButton("restart",new Color(255, 193, 7));
-        exitButton =new CustomButton("EXIT",Color.WHITE,new Color(220, 53, 69));
-
         bottomArea.setLayout(new GridLayout(1, 3));
 
         bottomArea.setOpaque(false);
@@ -364,11 +360,8 @@ public class GameMenu extends LevelInfoDialog {
 
     @Override
     protected void buildTopArea(){
-        super.buildTopArea();
+        super.buildTopArea(); // i want super in this case to add the level label
         topArea.removeAll(); // remove all to re-add components in right order (GridLayout)
-
-        settingsButton=new CustomRoundLogoButton("settings",new Color(119, 136, 153));
-
         JPanel topLeftArea = new JPanel(new BorderLayout());
         topLeftArea.add(settingsButton, BorderLayout.WEST);
         topLeftArea.setOpaque(false);

@@ -29,8 +29,11 @@ public class LevelInfoDialog extends BaseDialog {
     private final Image[] originalImages = new Image[3];
 
     // BORDER LAYOUT AREAS
+    /** must be modified ONLY in buildBottomArea() */
     protected final JPanel bottomArea = new JPanel();
+    /** must be modified ONLY in buildCenterArea() */
     protected final JPanel centerArea = new JPanel();
+    /** must be modified ONLY in buildTopArea() */
     protected final JPanel topArea = new JPanel();
 
     // Buttons for closing and starting the level
@@ -52,22 +55,8 @@ public class LevelInfoDialog extends BaseDialog {
         // Create and configure the close buttons
         closeButton = new RoundCloseButton();
 
-        // --------------------- TOP PANEL ---------------------
-        buildTopArea();
-        add(topArea, BorderLayout.PAGE_START);
-
-        // --------------------- CENTER PANEL ---------------------
-        buildCenterArea();
-        add(centerArea, BorderLayout.CENTER);
-
-        // --------------------- BOTTOM PANEL ---------------------
-        buildBottomArea();
-        add(bottomArea, BorderLayout.PAGE_END);
-
-
-
-
-        // --- COMPONENT RESIZING ---
+        // -------------------- COMPONENT RESIZING -----------------
+        // must stay there and not in bindControllers() because bindControllers() can be overridden by subclasses
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -75,6 +64,7 @@ public class LevelInfoDialog extends BaseDialog {
                 resizeComponents();
             }
         });
+
     }
 
     //---------------------------------- CONTRUCTOR METHODS ---------------------------------------------------------
@@ -85,19 +75,19 @@ public class LevelInfoDialog extends BaseDialog {
      */
     protected void buildTopArea(){
         // --------------------- TOP PANEL ---------------------
+        topArea.removeAll(); //If exists, remove all components -> avoid bugs
         topArea.setLayout(new GridLayout(1, 3)); // 1 row, 3 columns
         topArea.setOpaque(false);
         topArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         topArea.add(Box.createHorizontalGlue());
 
-
         // Centered level label
         levelLabel.setText("Level " + levelIndex);
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setForeground(Color.BLACK);
 
-        int levelFontSize = Math.min(getWidth() / 15, getHeight() / 15);
+        int levelFontSize = Math.min(getWidth() / 15, getHeight() / 15);// can use getWidth() and getHeight() because is called in addNotify()
         levelFontSize = Math.max(15, levelFontSize);
         levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
 
@@ -121,7 +111,7 @@ public class LevelInfoDialog extends BaseDialog {
         Boolean[] coinsCollected = ProfileManager.getLastProfile().getLevelStarsCount(levelIndex);
         String[] textRequest = levelData.getTextRequest();
 
-
+        centerArea.removeAll(); //If exists, remove all components -> avoid bugs
         centerArea.setOpaque(false);
         centerArea.setLayout(new BoxLayout(centerArea, BoxLayout.Y_AXIS)); // Vertical layout
 
@@ -132,23 +122,10 @@ public class LevelInfoDialog extends BaseDialog {
 
             // Choose correct image based on coin collected or not
             String imgPath = coinsCollected[i] ? "/imgs/icons/star.jpg" : "/imgs/panels/levels/missingStar.jpg";
-            try {
-                // Use ClassLoader for robustness
-                URL coinImageUrl = getClass().getResource(imgPath); // Corrected path
-
-                if (coinImageUrl == null) {
-                    System.err.println("Error: Coin image resource not found: " + imgPath);
-                    originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback image
-                } else {
-                    originalImages[i] = ImageIO.read(coinImageUrl);
-                }
-            } catch (IOException e) { // Catch IOException specifically for ImageIO.read
-                e.printStackTrace();
-                originalImages[i] = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB); // Fallback
-            }
+            originalImages[i] = Resources.getBestImage(imgPath, 40, 40);
 
             // Scaled image icon
-            ImageIcon icon = new ImageIcon(originalImages[i].getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+            ImageIcon icon = new ImageIcon(originalImages[i]);
             iconLabels[i] = new JLabel(icon);
             rowPanel.add(iconLabels[i]);
 
@@ -181,6 +158,7 @@ public class LevelInfoDialog extends BaseDialog {
      * @apiNote This method is called by {@link #LevelInfoDialog(int)}
      */
     protected void buildBottomArea(){
+        bottomArea.removeAll(); //If exists, remove all components -> avoid bugs
         bottomArea.setLayout(new GridLayout(1, 3));
         bottomArea.setOpaque(false);
         bottomArea.add(Box.createHorizontalGlue());
@@ -271,55 +249,53 @@ public class LevelInfoDialog extends BaseDialog {
      * @implNote This method is called by {@link #addNotify()} and by the {@link ComponentAdapter} added to this class.
      */
     protected void resizeComponents(){
-//        this.addComponentListener(new ComponentAdapter() {
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-                int panelWidth = getWidth();
-                int panelHeight = getHeight();
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
 
 
         // Resize level label font
-                int levelFontSize = Math.min(getWidth() / 12, getHeight() / 12);
-                levelFontSize = Math.max(25, levelFontSize);
-                levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
+        int levelFontSize = Math.min(getWidth() / 12, getHeight() / 12);
+        levelFontSize = Math.max(25, levelFontSize);
+        levelLabel.setFont(new Font("Arial", Font.BOLD, levelFontSize));
 
-                // Resize coin icons and text areas
-                int dimIconSize = Math.min(panelHeight / 6, panelWidth / 6);
-                int dimFontSize = Math.min(panelHeight / 20, panelWidth / 20);
-                int iconSize = Math.max(30, dimIconSize);
-                int fontSize = Math.max(12, dimFontSize);
+        // Resize coin icons and text areas
+        int dimIconSize = Math.min(panelHeight / 6, panelWidth / 6);
+        int dimFontSize = Math.min(panelHeight / 20, panelWidth / 20);
+        int iconSize = Math.max(30, dimIconSize);
+        int fontSize = Math.max(12, dimFontSize);
 
-                for (int i = 0; i < 3; i++) {
-                    Image scaled = originalImages[i].getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
-                    iconLabels[i].setIcon(new ImageIcon(scaled));
-                    textLabels[i].setFont(new Font("Arial", Font.PLAIN, fontSize));
-
-                    // Resize the text area to fit nicely next to the icon
-                    int textWidth = (panelWidth - iconSize) * 9 / 10;
-                    textLabels[i].setPreferredSize(new Dimension(textWidth, fontSize * 4));
-                    textLabels[i].revalidate();
-                    textLabels[i].repaint();
-                }
-
-            //--BUTTONS-- //
-                // BOTTOM AREA
-                int w3Percent = (int) (getWidth() * 0.03);
-                int h3Percent = (int) (getHeight() * 0.03);
-                bottomArea.setBorder(BorderFactory.createEmptyBorder(h3Percent, w3Percent, h3Percent, w3Percent));
-
-                // Resize close buttons
-                int size = Math.min(getWidth(), getHeight()) / 10;
-                size = Math.max(size, 30);
-                closeButton.setPreferredSize(new Dimension(size, size));
-
-                // Resize play buttons
-                playButton.setPreferredSize(new Dimension(size *2 , size));
-                revalidate();
-                repaint();
+        for (int i = 0; i < 3; i++) {
+            // TODO remove this to a better image management
+            if (originalImages[i] == null) {
+                continue;
             }
-//        });
-//    }
+            Image scaled = originalImages[i].getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
+            iconLabels[i].setIcon(new ImageIcon(scaled));
+            textLabels[i].setFont(new Font("Arial", Font.PLAIN, fontSize));
 
+            // Resize the text area to fit nicely next to the icon
+            int textWidth = (panelWidth - iconSize) * 9 / 10;
+            textLabels[i].setPreferredSize(new Dimension(textWidth, fontSize * 4));
+            textLabels[i].revalidate();
+            textLabels[i].repaint();
+        }
+
+    //--BUTTONS-- //
+        // BOTTOM AREA
+        int w3Percent = (int) (getWidth() * 0.03);
+        int h3Percent = (int) (getHeight() * 0.03);
+        bottomArea.setBorder(BorderFactory.createEmptyBorder(h3Percent, w3Percent, h3Percent, w3Percent));
+
+        // Resize close buttons
+        int size = Math.min(getWidth(), getHeight()) / 10;
+        size = Math.max(size, 30);
+        closeButton.setPreferredSize(new Dimension(size, size));
+
+        // Resize play buttons
+        playButton.setPreferredSize(new Dimension(size *2 , size));
+        revalidate();
+        repaint();
+    }
 
 
 //---------------------------------------- ABSTRACT PARENTs OVERRIDE --------------------------------------
@@ -328,9 +304,28 @@ public class LevelInfoDialog extends BaseDialog {
         return Resources.getBestImage("/imgs/panels/levels/level-info-dialog-BG.jpg", getWidth(), getHeight());
     }
 
+    /** needed to avoid rebuilding on every addNotify() call */
+    private boolean isBuilt = false;
     @Override
     public void addNotify(){
-        resizeComponents();
+        //!!!FIRST BUILDING HERE, not in constructor!!! //
+        if (!isBuilt){
+            isBuilt = true;
+            // --------------------- TOP PANEL ---------------------
+            buildTopArea();
+            add(topArea, BorderLayout.PAGE_START);
+
+            // --------------------- CENTER PANEL ---------------------
+            buildCenterArea();
+            add(centerArea, BorderLayout.CENTER);
+
+            // --------------------- BOTTOM PANEL ---------------------
+            buildBottomArea();
+            add(bottomArea, BorderLayout.PAGE_END);
+
+//            updateLevelIndex(levelIndex);
+        }
+
         super.addNotify();
     }
 
@@ -345,7 +340,7 @@ public class LevelInfoDialog extends BaseDialog {
      * Update the level index causing redrawing the entire component.
      * @param levelIndex
      */
-    public void updateLevelIndex(int levelIndex) {
+    public final void updateLevelIndex(int levelIndex) {
         this.levelIndex = levelIndex;
 
         controller.setLevelIndex(levelIndex);
@@ -356,6 +351,7 @@ public class LevelInfoDialog extends BaseDialog {
         // reset center text
         centerArea.removeAll();
         buildCenterArea();
+        resizeComponents();
     }
 
 }

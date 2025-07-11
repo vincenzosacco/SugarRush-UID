@@ -1,5 +1,7 @@
 package view.impl._common.buttons;
 
+import utils.Resources;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -26,21 +28,8 @@ public class CustomRoundLogoButton extends JButton {
         setMargin(new Insets(0, 0, 0, 0));    // Removes all internal margins.
         setText(null); // Ensure no default text is drawn
         // Load the image once in the constructor
-        try {
-            // Gets the resource URL from the classpath.
-            URL imageUrl = getClass().getResource("/imgs/icons/"+text+".jpg");
-
-            if (imageUrl == null) {
-                System.err.println("Error: Image resource not found in classpath: /resources/imgs/icons/"+text+".jpg");
-            } else {
-                settingsImage = ImageIO.read(imageUrl);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Error loading image "+text+".jpg: " + e.getMessage());
-        }
-
-
+        // Gets the resource URL from the classpath.
+        settingsImage = (BufferedImage) Resources.getImage("/imgs/icons/"+text+".jpg");
     }
 
     @Override
