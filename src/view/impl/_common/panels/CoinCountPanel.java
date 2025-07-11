@@ -36,15 +36,18 @@ public class CoinCountPanel extends JPanel {
 
     public CoinCountPanel(int coins){
         this();
-        setCoins(coins);
+        updateCoinCount(coins);
     }
 
 
 
-    public void setCoins(int coins) {
+    public void updateCoinCount(int coins) {
         countLabel.setText(String.valueOf(coins)); // Update the label with the number of coins
     }
 
+    public void setTextColor(Color color) {
+        countLabel.setForeground(color); // Set the text color of the label
+    }
 
 //    @Override
 //    protected void paintComponent(Graphics g) {

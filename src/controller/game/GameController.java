@@ -1,9 +1,12 @@
 package controller.game;
 
+import config.ModelConfig;
 import model.game.Game;
 import model.game.GameConstants;
+import model.game.utils.Cell;
 import persistance.profile.ProfileManager;
 import view.View;
+import view.impl.game.GameMenu;
 import view.impl.game.GamePanel;
 
 import javax.swing.*;
@@ -24,7 +27,9 @@ import static model.game.GameConstants.Direction.*;
  * <p>Game state changes (like win,lose,ecc...) are handled thanks to {@link PropertyChangeListener} interface.
  */
 public class GameController extends KeyAdapter implements PropertyChangeListener {
-    public GameController() {
+    private final GamePanel gamePanel;
+    public GameController(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
         // Add this as observer to the Game model. This allows the controller to listen for Game Events.
         Game.getInstance().addPropertyChangeListener(this);
     }
@@ -63,23 +68,19 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
     // PROPERTY CHANGE LISTENER (modern Observer) //
 
     public enum PropertyName{
-        EXIT
+        EXIT,RESTART
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent e) {
         // Handle property changes from the Game model
         SwingUtilities.invokeLater(() -> {
-            String propertyName = e.getPropertyName();
-            if (propertyName.equals(PropertyName.EXIT.toString())) {
-//                Game.Event cause = (Game.Event) e.getNewValue();
-//                assert (cause == Game.Event.WIN || cause == Game.Event.LOSE);
-//                onExitProperty(cause == Game.Event.WIN);
-                Boolean cause = (Boolean) e.getNewValue();
-                onExitProperty(cause);
-
-            }
-            else throw new IllegalStateException("Unexpected value: " + propertyName);
+            String name = e.getPropertyName();
+            if (name.equals(PropertyName.EXIT.toString())) {
+                onExitProperty((Boolean) e.getNewValue());
+            } else if (name.equals(PropertyName.RESTART.toString())) {
+                onRestartProperty();
+            } else throw new IllegalStateException("Unexpected value: " + name);
         });
     }
 
@@ -95,8 +96,8 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
         }
 
         // GameLoop is paused when the game is paused. See GameLoop.run()
-        Game.getInstance().togglePause();
-        View.getInstance().getGamePanel().toggleMenu();
+        Game.getInstance().pause();
+        gamePanel.openMenu();
     }
 
 
@@ -108,26 +109,36 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
     private void onExitProperty(Boolean isWin) {
         // GAMELOOP //
         GameLoop gl = GameLoop.getInstance();
-
         if (gl.isRunning())
             gl.shutdown();
 
-
         // VIEW //
-        GamePanel panel = View.getInstance().getGamePanel();
         if (isWin != null) {
             // WIN
             if (isWin) {
-                ProfileManager.getLastProfile().sumCoins(Game.getInstance().getStarCount() * 10); // 10 coins per star
-                panel.endLevel(true);
+                ProfileManager.getLastProfile().sumCoins(Game.getInstance().getStarCount() * ModelConfig.COINS_PER_STAR); // 10 coins per star
+                gamePanel.endLevel(true);
             // LOSE
             } else {
-                panel.endLevel(false);
+                gamePanel.endLevel(false);
             }
         }
         else { // JUST EXIT when isWin==null //
             View.getInstance().showHome();
         }
+    }
+
+
+    private void onRestartProperty() {
+        GameLoop gl = GameLoop.getInstance();
+        if (gl.isRunning()) { // when restart is pressed from EndLevelDialog, gl is no longer running due onExitProperty
+            gl.shutdown();
+        }
+
+        isStarted = false;
+        gamePanel.setElapsedTime(0L);
+        gamePanel.repaintBackground();
+        gamePanel.repaint();
     }
 
 }

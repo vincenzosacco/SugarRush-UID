@@ -8,4 +8,9 @@ public interface ModelConfig {
     int NUM_LEVELS = 6;
 
     int MAX_COINS = 99999999; // Maximum coins a player can have
+
+    /** Multiplier for the number of coins collected per star.
+     * This is used to calculate the total coins earned at the end of a level.
+     * */
+    int COINS_PER_STAR = 10;
 }

@@ -3,7 +3,6 @@ package model.game;
 import controller.game.GameController;
 import model.game.entities.Creature;
 import model.game.utils.Cell;
-import utils.audio.GameAudioController;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
@@ -84,7 +83,7 @@ public class Game extends GameBoard {
     void clear() {
         super.clear(); // clear matrix and entities
         // Reset all stuffs related to the game state
-        _Timer.stopTimer(); // Stop the timer
+        _Timer.stop(); // Stop the timer
         starCount = 0; // Reset star count
     }
 
@@ -95,11 +94,12 @@ public class Game extends GameBoard {
 
         _Timer.start();
     }
-    public void restart() {
-        setLevel(currLevel); // Reset the level to the current one
+
+    public void pause(){
+        _Timer.pause();
     }
-    public void togglePause() {
-        _Timer.togglePause();
+    public void resume(){
+        _Timer.resume();
     }
 
     public boolean isRunning() {
@@ -155,21 +155,31 @@ public class Game extends GameBoard {
      */
     public void end(Boolean isWin){
         assert pcs.getPropertyChangeListeners().length != 0 : "At least one listener is required";
+        // Pause game
+        pause();
 
-        togglePause();
-
+        // Add star if "in time win"
         if (isWin!= null && isWin) {
             // CHECK ADD STAR //
-            if (getElapsedTime() < 60) {
+            if (getElapsedTime() < 60) { //TODO replace 60 with value read from map file
                 addstar(); // if the elapsed time is less than 60 seconds, add a star
             }
         }
 
+        // Notify listeners (GameController) about the game end event
         pcs.firePropertyChange(new PropertyChangeEvent(this,
                 GameController.PropertyName.EXIT.toString(),
                 Event.PLAY, isWin));
+
     }
 
+    public void restart() {
+        setLevel(currLevel); // Reset the level to the current one
+        assert pcs != null : "PropertyChangeSupport should not be null when restarting the game.";
+        pcs.firePropertyChange(new PropertyChangeEvent(this,
+                GameController.PropertyName.RESTART.toString(),
+                null, null)); // Notify listeners that the game is restarting
+    }
     //------------------------------ GETTERS AND SETTERS -----------------------------------------------//
 
     // LEVELS //
@@ -194,6 +204,7 @@ public class Game extends GameBoard {
         }
         assert mapPath != null : "Map path should not be null for level " + index;
         MapParser.loadMap(mapPath, this);
+
     }
 
     // STARS //

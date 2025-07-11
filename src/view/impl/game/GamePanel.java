@@ -1,7 +1,6 @@
 package view.impl.game;
 
 import controller.game.GameController;
-import model.Model;
 import model.game.Game;
 import utils.audio.GameAudioController;
 import view.base.BasePanel;
@@ -34,13 +33,10 @@ public class GamePanel extends BasePanel {
 
     private final _GameContent gameContentDrawingPanel=new _GameContent();
 
-    public CustomRoundLogoButton getPauseButton() {
-        return pauseButton;
+    public void setEnablePauseButton(boolean enable) {
+        pauseButton.setEnabled(enable);
     }
 
-    public JPanel getGameContentDrawingPanel() {
-        return gameContentDrawingPanel;
-    }
 
     public GamePanel() {
         setLayout(new GridLayout(1,1));
@@ -194,25 +190,17 @@ public class GamePanel extends BasePanel {
     }
 
     // SETTINGS
-    public GameMenu toggleMenu(){
-//        int currentLevel = Model.getInstance().getGame().getCurrLevel();
-//        gameMenu.setCurrentLevel(currentLevel); // Update the level in the settings panel
-//        gameMenu.updateContent(); // Update texts/coins
-
-        gameMenu.setVisible(!gameMenu.isVisible()); // Make visible/invisible
-        if(gameMenu.isVisible()){
-            pauseButton.setEnabled(false);
-            GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music when menu is open
-        }
-        else{
-            pauseButton.setEnabled(true);
-        }
-
-        this.revalidate();
-        this.repaint();
-        return gameMenu;
+    public void closeMenu() {
+        gameMenu.setVisible(false); // Hide the menu
+        pauseButton.setEnabled(true); // Enable the pause button when the menu is closed
+        GameAudioController.getInstance().playGameMusic(); // Resume game music when the menu is closed
     }
 
+    public void openMenu() {
+        gameMenu.setVisible(true); // Show the menu
+        pauseButton.setEnabled(false); // Disable the pause button when the menu is open
+        GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music when the menu is open
+    }
 
     /**
      * Ends the currentlevel and shows the appropriate dialog (win or lose).
@@ -220,7 +208,7 @@ public class GamePanel extends BasePanel {
      * */
     public void endLevel(boolean isWin) {
         _EndLevelDialog dialog = isWin ? winPanel : losePanel;
-        dialog.setCurrentLevel(Game.getInstance().getCurrLevel());
+        dialog.updateLevel(Game.getInstance().getCurrLevel());
         dialog.updateElapsedTime(Game.getInstance().getElapsedTime());
         dialog.setVisible(true);
 
@@ -231,7 +219,7 @@ public class GamePanel extends BasePanel {
     //------------------------------------- CONTROLLER RELATED METHODS -------------------------------------------------------
     @Override
     public void bindControllers() {
-        GameController controller = new GameController();
+        GameController controller = new GameController(this);
         this.addKeyListener(controller);
 
         this.addComponentListener(new ComponentAdapter() {
@@ -253,15 +241,6 @@ public class GamePanel extends BasePanel {
         pauseButton.addActionListener(controller::onPause);
 
     }
-
-
-    public void clickPause() {
-        if (!pauseButton.isEnabled())
-            pauseButton.setEnabled(true);
-
-        pauseButton.doClick();
-    }
-
 
 
     //------------------------------------- SWINGs OVERRIDE METHODS -------------------------------------------------------

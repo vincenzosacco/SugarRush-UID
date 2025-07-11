@@ -29,20 +29,23 @@ class _Timer {
         assert elapsedTime == 0L : "Elapsed time should be 0 when starting the timer";
         timer.start();
     }
-    public static void stopTimer() {
+    public static void stop() {
         elapsedTime = 0L; // Reset elapsed seconds when stopping the timer
         if (timer.isRunning()) {
             timer.stop();
         }
     }
-    /** Set pause if the Game is running, otherwise resume*/
-    public static void togglePause() {
-        if (elapsedTime == 0L) return; // Do not toggle pause if the game has just started
 
-        if (isRunning()){
+    public static void pause() {
+        if (elapsedTime == 0L) return; // Do not toggle pause if the game has just started
+        if (isRunning()) {
             timer.stop();
         }
-        else {
+    }
+    public static void resume() {
+        if (elapsedTime == 0L) return; // Do not toggle pause if the game has just started
+
+        if (!isRunning()) {
             timer.start();
         }
     }

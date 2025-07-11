@@ -1,10 +1,10 @@
 package controller.menu;
 
 import model.Model;
+import model.game.Game;
 import view.View;
 import view.impl.home.levelsMap.LevelDialog;
 import view.impl.home.levelsMap.LevelInfoDialog;
-import view.impl.home.levelsMap.LevelsMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ public class LevelInfoController {
     public void onPlay(ActionEvent e){
         assert e != null : "ActionEvent cannot be null. This method is intended to be called from a component's actionListener.";
 
-        View.getInstance().getGamePanel().getPauseButton().setEnabled(true);
+        View.getInstance().getGamePanel().setEnablePauseButton(true);
 
         // 1. Close the LevelPanel dialog after starting the game
         Window window = SwingUtilities.getWindowAncestor(infoDialog);
@@ -41,7 +41,8 @@ public class LevelInfoController {
         }
 
         // 2. Start the level showing the GamePanel
-        Model.getInstance().getGame().setLevel(levelIndex);
+        Game.getInstance().restart();
+        Game.getInstance().setLevel(levelIndex);
         View.getInstance().getGamePanel().repaintBackground();
         View.getInstance().showGame();
         infoDialog.requestFocusInWindow(); // needed to get user input

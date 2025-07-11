@@ -70,7 +70,7 @@ public class ShopPanel extends BasePanel {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setOpaque(false);
 
-        playerCoinsPanel.setCoins(ProfileManager.getLastProfile().getCoins() );
+        playerCoinsPanel.updateCoinCount(ProfileManager.getLastProfile().getCoins() );
         // Add vertical space above and under the coinCounterLabel
         topPanel.add(Box.createVerticalStrut(5));
         topPanel.add(playerCoinsPanel);

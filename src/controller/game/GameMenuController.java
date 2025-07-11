@@ -2,6 +2,7 @@ package controller.game;
 
 import model.game.Game;
 import view.View;
+import view.impl.game.GameMenu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,12 +11,13 @@ public class GameMenuController  {
 
     public void onResume (ActionEvent e){
         assert e != null : "ActionEvent cannot be null. This method is intended to be called from a component's actionListener.";
-        View.getInstance().getGamePanel().clickPause(); // unique behavior of PAUSE
+        View.getInstance().getGamePanel().closeMenu();
+        Game.getInstance().resume();
     }
 
     public void onRestart (ActionEvent e){
         assert e != null : "ActionEvent cannot be null. This method is intended to be called from a component's actionListener.";
-        GameLoop.getInstance().shutdown();
+        // trigger RESTART event in Game Controller
         Game.getInstance().restart();
         onResume(e);
     }
