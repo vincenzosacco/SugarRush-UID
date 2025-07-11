@@ -2,7 +2,7 @@ package view.impl.game;
 
 import config.ViewConfig;
 import model.game.GameConstants;
-import model.profile.ProfileManager;
+import persistance.profile.ProfileManager;
 import utils.Resources;
 
 import java.awt.image.BufferedImage;

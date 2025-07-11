@@ -33,12 +33,12 @@ public class ShopPanel extends BasePanel {
     }
 
     public void addCreatures(JPanel contentPanel) {
-        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature-n.jpg")), 0, creatures.get(0), 0);
-        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature2.png")), 100, creatures.get(1), 1);
-        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature3.png")), 200, creatures.get(2), 2);
-        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature4.png")), 400, creatures.get(3), 3);
-        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature5.png")), 800, creatures.get(4), 4);
-        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature6.png")), 1200, creatures.get(5), 5);
+        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature0/creature0-u.jpg")), 0, creatures.get(0), 0);
+        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature1/creature1-u.jpg")), 100, creatures.get(1), 1);
+        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature2/creature2-u.jpg")), 200, creatures.get(2), 2);
+        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature3/creature3-u.jpg")), 400, creatures.get(3), 3);
+        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature4/creature4-u.jpg")), 800, creatures.get(4), 4);
+        addCreatureLine(contentPanel, new ImageIcon(Resources.getImage("/imgs/game/blocks/creature/creature5/creature5-u.jpg")), 1200, creatures.get(5), 5);
     }
 
     private void addCreatureLine(JPanel parent, ImageIcon creatureIcon, int price, boolean bought, int creatureId) {

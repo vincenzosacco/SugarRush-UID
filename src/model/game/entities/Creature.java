@@ -43,28 +43,28 @@ public class Creature extends Entity {
         switch (this.direction) {
             case Direction.UP -> {
                 if (newCoord.getRow()==0){
-                    Model.getInstance().getGame().killCreature();
+//                    Model.getInstance().getGame().killCreature();
                     break;
                 }
                 newCoord.decrRow();
             } // going up means decrementing the row index by 1
             case Direction.DOWN ->{
                 if (newCoord.getRow()== ModelConfig.ROW_COUNT-1){
-                    Model.getInstance().getGame().killCreature();
+//                    Model.getInstance().getGame().killCreature();
                     break;
                 }
                 newCoord.incrRow();
             } // going down means incrementing the row index by 1
             case Direction.LEFT ->{
                 if (newCoord.getCol()==0){
-                    Model.getInstance().getGame().killCreature();
+//                    Model.getInstance().getGame().killCreature();
                     break;
                 }
                 newCoord.decrCol();
             } // going left means decrementing the col index by 1
             case Direction.RIGHT ->{
                 if (newCoord.getCol()==ModelConfig.COL_COUNT-1){
-                    Model.getInstance().getGame().killCreature();
+//                    Model.getInstance().getGame().killCreature();
                     break;
                 }
                 newCoord.incrCol();

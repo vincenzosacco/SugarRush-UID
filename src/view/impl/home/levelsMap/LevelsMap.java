@@ -1,6 +1,7 @@
 package view.impl.home.levelsMap;
 
 import config.ModelConfig;
+import controller.menu.LevelButtonController;
 import persistance.profile.ProfileManager;
 import utils.Resources;
 import view.base.BasePanel;
@@ -149,18 +150,18 @@ public class LevelsMap extends BasePanel {
         }
     }
 
-    /**
-     * Update icons and counter when panel becomes visible.
-     */
-    public void refreshLevelButtons() {
-        for (int i = 0; i < numLevels; i++) {
-            Boolean[] stars = ProfileManager.getLastProfile().getLevelStarsCount(i + 1);
-            levelButtons[i].setStarsCollected(stars);
-            levelButtons[i].repaint(); // Force repaint buttons
-        }
-//        coinPanel.setText(String.valueOf(ProfileManager.getLastProfile().getCoins()));
-        repaint(); // Also repaint the panel and background
-    }
+//    /**
+//     * Update icons and counter when panel becomes visible.
+//     */
+//    public void refreshLevelButtons() {
+//        for (int i = 0; i < numLevels; i++) {
+//            Boolean[] stars = ProfileManager.getLastProfile().getLevelStarsCount(i + 1);
+//            levelButtons[i].setStarsCollected(stars);
+//            levelButtons[i].repaint(); // Force repaint buttons
+//        }
+////        coinPanel.setText(String.valueOf(ProfileManager.getLastProfile().getCoins()));
+//        repaint(); // Also repaint the panel and background
+//    }
 
 // ----------------------------------------OVERRIDE METHODS-------------------------------------------------------------
 
@@ -188,6 +189,7 @@ public class LevelsMap extends BasePanel {
                 refreshLevelButtons();
             }
         });
+
     }
 
 
@@ -271,12 +273,12 @@ public class LevelsMap extends BasePanel {
      * Update icons and counter when panel becomes visible.
      */
     public void refreshLevelButtons() {
-        for (int i = 0; i < numLevel; i++) {
+        for (int i = 0; i < numLevels; i++) {
             Boolean[] stars = ProfileManager.getLastProfile().getLevelStarsCount(i + 1);
-            levelButton[i].setStarsCollected(stars);
+            levelButtons[i].setStarsCollected(stars);
             // Logic to enable/disable buttons
             if (i == 0) { // Level 1 is always enabled
-                levelButton[i].setEnabled(true);
+                levelButtons[i].setEnabled(true);
             } else {
                 // Check if the previous level has at least one star
                 Boolean[] previousLevelStars = ProfileManager.getLastProfile().getLevelStarsCount(i);
@@ -287,14 +289,15 @@ public class LevelsMap extends BasePanel {
                         break;
                     }
                 }
-                levelButton[i].setEnabled(hasAnyStarInPreviousLevel);
+                levelButtons[i].setEnabled(hasAnyStarInPreviousLevel);
             }
-            levelButton[i].repaint(); // Force repaint buttons
+            levelButtons[i].repaint(); // Force repaint buttons
         }
     }
 
     @Override
     public void addNotify(){
         refreshLevelButtons();
+        super.addNotify();
     }
 }
