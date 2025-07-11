@@ -2,6 +2,7 @@ package model.game;
 
 import controller.game.GameController;
 import model.game.entities.Creature;
+import model.game.entities.evil.Projectile;
 import model.game.utils.Cell;
 
 import java.beans.PropertyChangeEvent;
@@ -24,7 +25,8 @@ public class Game extends GameBoard {
         return instance;
     }
 
-    // GAMELOOP  //
+    // --------------------------------------- GAMELOOP -------------------------------------------------- //
+    private final Object updateLock = new Object();
 
     /**
      * <b>CRITICAL METHOD</b> -> this method is called many times(based on FPS) per second.
@@ -49,33 +51,64 @@ public class Game extends GameBoard {
      * preservation of each step's intended functionality.
      */
     public void updateState() {
-        // ASSERTIONS //
-        assert !entities.isEmpty() : "Entities list should not be empty when updating state.";
-        assert !matrix.isEmpty() : "Game matrix should not be null when updating state.";
+        synchronized (updateLock) {
 
-        // UPDATE ENTITIES //
-        List<Entity> currentEntities = new ArrayList<>(entities);
-        for (Entity ent : currentEntities) {
-            if (ent.shouldPerform()) {
-                // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
-                Cell oldCoord = ent.getCoord();
-                matrix.setCell(oldCoord, GameConstants.Block.SPACE);
+            // ASSERTIONS //
+            assert !entities.isEmpty() : "Entities list should not be empty when updating state.";
+            assert !matrix.isEmpty() : "Game matrix should not be null when updating state.";
 
-                // 1- COMPUTE ENTITIES ACTION  //
-                Cell toMove = ent.computeAction(); // tell the entity where he wants to move
+            // UPDATE ENTITIES //
+            // Take a snapshot of the entities list to avoid concurrent modification issues
+            List<Entity> snapshot = new ArrayList<>(entities);
+            for (Entity ent : snapshot) {
+                if (ent.shouldPerform()) {
+                    // CLEAN OLD MATRIX CELL OF THE ENTITY IN THE MATRIX//
+                    Cell oldCoord = ent.getCoord();
+                    matrix.setCell(oldCoord, GameConstants.Block.SPACE);
 
-                // 2- MANAGE COLLISIONS //
-                boolean canPerform = ent.manageCollision(matrix.getCell(toMove), toMove );
+                    // 1- COMPUTE ENTITIES ACTION  //
+                    Cell toMove = ent.computeAction(); // tell the entity where he wants to move
+                    if (ent instanceof Projectile && toMove == null) {
+                        // Entity wants to move out of bounds, remove it
+                        matrix.setCell(oldCoord, GameConstants.Block.SPACE);
+                        entities.remove(ent);
+                        continue;
+                    }
 
-                // 3- PERFORM ACTION //
-                if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates
+                    // 2- MANAGE COLLISIONS //
+                    boolean canPerform = ent.manageCollision(matrix.getCell(toMove), toMove);
 
-                // APPLY NEW COORDS IN THE GAME MATRIX //
-                Cell newCoord = ent.getCoord();
-                matrix.setCell(newCoord, ent.blockType());
+                    // 3- PERFORM ACTION //
+                    if (canPerform) ent.performAction(toMove); // if the entity moves, this will update its coordinates
+
+                    // 4 -APPLY NEW COORDS IN THE GAME MATRIX //
+                    Cell newCoord = ent.getCoord();
+                    matrix.setCell(newCoord, ent.blockType());
+
+                    // To delete the projectile
+                    if (!canPerform && ent instanceof Projectile) {
+                        // Free the cell and remove the projectile
+                        matrix.setCell(ent.getCoord(), GameConstants.Block.SPACE);
+                        entities.remove(ent);
+                    }
+                }
             }
         }
     }
+
+    public void addEntity(Entity e) {
+        synchronized (updateLock) {
+            entities.add(e);
+        }
+    }
+//    public void removeEntity(Entity e, Cell cell) {
+//        synchronized (updateLock) {
+//            assert entities.contains(e) : "Entity to remove must be in the entities list.";
+//            entities.remove(e);
+//            matrix.setCell(cell, GameConstants.Block.SPACE);
+//        }
+//    }
+
 
 
     //-------------------------------------- GAME STATE -----------------------------------------------//
@@ -140,6 +173,8 @@ public class Game extends GameBoard {
     public void addPropertyChangeListener(GameController gameController) {
         pcs.addPropertyChangeListener(gameController);
     }
+
+
 
     /**
      * Enum representing game events that can be observed.
