@@ -7,7 +7,7 @@ import view.base.BasePanel;
 import view.impl._common.buttons.CustomButton;
 import view.impl._common.buttons.LevelButton;
 import view.impl._common.panels.CoinCountPanel;
-import view.impl.home.levelsMap.tutorial.Tutorial;
+import view.impl.tutorial.Tutorial;
 
 import javax.swing.*;
 import java.awt.*;

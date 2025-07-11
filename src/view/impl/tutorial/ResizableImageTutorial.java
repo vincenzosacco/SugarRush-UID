@@ -1,10 +1,10 @@
-package view.impl.home.levelsMap.tutorial;
+package view.impl.tutorial;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ResizableImageTutorial extends JLabel {
-    private Image originalImage;
+    private final Image originalImage;
 
     // Constructor takes the original image to be displayed and resized
     public ResizableImageTutorial(Image originalImage) {
@@ -62,4 +62,3 @@ public class ResizableImageTutorial extends JLabel {
         }
     }
 }
-
