@@ -83,6 +83,7 @@ public class GamePanel extends BasePanel {
         //Menu panels (overlays)
         int levelIndex = Game.getInstance().getCurrLevel();
         gameMenu = new GameMenu(levelIndex);
+        gameMenu.setupKeyBindings(); // ESC -> close menu
 
         losePanel = new LoseDialog();
         winPanel = new WinDialog();

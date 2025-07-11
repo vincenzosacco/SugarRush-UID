@@ -42,7 +42,7 @@ public class LevelsMap extends BasePanel {
         levelButtons = new LevelButton[numLevels];
         // Default level dialog
         levelInfoDialog = new LevelInfoDialog(1);
-
+        levelInfoDialog.setupKeyBindings();
         // COIN COUNT PANEL //
         add(coinPanel);
 

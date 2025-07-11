@@ -8,6 +8,7 @@ import view.impl.home.levelsMap.LevelInfoDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Panel for game settings
@@ -374,6 +375,7 @@ public class GameMenu extends LevelInfoDialog {
 
         topArea.add(topLeftArea);
         topArea.add(levelLabel);
+        topArea.add(Box.createHorizontalGlue());
 
     }
 
@@ -406,6 +408,33 @@ public class GameMenu extends LevelInfoDialog {
         super.resizeComponents();// <-- calls repaint() and revalidate()
     }
 
+    /**
+     * Setup key bindings for the menu.
+     * The 'ESC' key will trigger the play(resume) button.
+     */
+    @Override
+    public void setupKeyBindings(){
+        // Get the InputMap for when the component is focused or one of its children is focused
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        // Get the ActionMap to associate keys with actions
+        ActionMap actionMap = this.getActionMap();
+
+        // --- Bind ESCAPE key to Play buttons ---
+        // Create an InputStroke for the ENTER key
+        KeyStroke enterKeyStroke = KeyStroke.getKeyStroke("ESCAPE");
+        // Put the KeyStroke and an identifier (e.g., "pressPlay") into the InputMap
+        inputMap.put(enterKeyStroke, "pressPlay");
+        // Associate the identifier with an AbstractAction in the ActionMap
+        actionMap.put("pressPlay", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Programmatically trigger the action listener of the playButton
+                playButton.doClick();
+            }
+        });
+
+    }
+
     //--------------------------------- CONTROLLER -----------------------------------------------------------------------------------
     @Override
     protected void bindControllers(){
@@ -414,7 +443,7 @@ public class GameMenu extends LevelInfoDialog {
         playButton.addActionListener(controller::onResume);
         settingsButton.addActionListener(controller::onSettings);
         restartButton.addActionListener(controller::onRestart);
-//        exitButton.addActionListener(controller::onExit);
+        exitButton.addActionListener(controller::onExit);
     }
 
 }

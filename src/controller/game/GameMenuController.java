@@ -22,18 +22,15 @@ public class GameMenuController  {
 
 
 
-//    public void onExit(ActionEvent e) {
+    public void onExit(ActionEvent e) {
 ////            View.getInstance().getGamePanel().getController().onExit(null);
 //            View.getInstance().getGamePanel().toggleMenu();
 //            View.getInstance().showHome();
-//    }
-
-    public  class onPause implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent e) {
-//            View.getInstance().getGamePanel().getController().onPause();
-        }
+        // trigger EXIT event
+        Game.getInstance().end(null);
+        View.getInstance().showHome();
     }
+
 
     public void onSettings(ActionEvent e){
         assert e != null : "ActionEvent cannot be null. This method is intended to be called from a component's actionListener.";

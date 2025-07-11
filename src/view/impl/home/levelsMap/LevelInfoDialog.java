@@ -65,8 +65,7 @@ public class LevelInfoDialog extends BaseDialog {
         add(bottomArea, BorderLayout.PAGE_END);
 
 
-        // --- KEY BINDINGS ---
-        setupKeyBindings();
+
 
         // --- COMPONENT RESIZING ---
         addComponentListener(new ComponentAdapter() {
@@ -190,9 +189,10 @@ public class LevelInfoDialog extends BaseDialog {
     }
 
 
-
-    // Method to set up key bindings
-    private void setupKeyBindings() {
+    /**
+     * Add key bindings to the components in this dialog.
+     */
+    public void setupKeyBindings() {
         // Get the InputMap for when the component is focused or one of its children is focused
         InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         // Get the ActionMap to associate keys with actions

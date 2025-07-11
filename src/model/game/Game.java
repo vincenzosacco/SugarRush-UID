@@ -145,15 +145,20 @@ public class Game extends GameBoard {
      * Enum representing game events that can be observed.
      */
     public enum Event {
-        WIN,LOSE,PLAY
+//        WIN,LOSE,
+        PLAY
     }
 
-    public void end(boolean isWin){
+    /**
+     * Ends the game by firing a property change event {@link Event#PLAY}, passing {@code isWin} as new value.
+     * @param isWin whether the game was won or not. If {@code null}, the event will be fired regardless of the win status (just EXIT).
+     */
+    public void end(Boolean isWin){
         assert pcs.getPropertyChangeListeners().length != 0 : "At least one listener is required";
 
         togglePause();
 
-        if (isWin) {
+        if (isWin!= null && isWin) {
             GameAudioController.getInstance().playSfx("win");
             // CHECK ADD STAR //
             if (getElapsedTime()< 60) {
@@ -165,7 +170,7 @@ public class Game extends GameBoard {
 
         pcs.firePropertyChange(new PropertyChangeEvent(this,
                 GameController.PropertyName.EXIT.toString(),
-                Event.PLAY, isWin ? Event.WIN : Event.LOSE));
+                Event.PLAY, isWin));
     }
 
     //------------------------------ GETTERS AND SETTERS -----------------------------------------------//

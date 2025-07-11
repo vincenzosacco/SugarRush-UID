@@ -35,6 +35,11 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
         GameLoop gl = GameLoop.getInstance();
         Game game = Game.getInstance();
 
+        // ESCAPE is used to toggle menu.
+        // I need to exclude it to avoid the game loop to start when the menu is opening
+        if ( e.getKeyCode() == KeyEvent.VK_ESCAPE)
+            return;
+
         // START GameLoop and Timer at the first key press
         if (!gl.isRunning()){
             gl.start();
@@ -71,9 +76,12 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
         SwingUtilities.invokeLater(() -> {
             String propertyName = e.getPropertyName();
             if (propertyName.equals(PropertyName.EXIT.toString())) {
-                Game.Event cause = (Game.Event) e.getNewValue();
-                assert (cause == Game.Event.WIN || cause == Game.Event.LOSE);
-                onExit(cause == Game.Event.WIN);
+//                Game.Event cause = (Game.Event) e.getNewValue();
+//                assert (cause == Game.Event.WIN || cause == Game.Event.LOSE);
+//                onExitProperty(cause == Game.Event.WIN);
+                Boolean cause = (Boolean) e.getNewValue();
+                onExitProperty(cause);
+
             }
             else throw new IllegalStateException("Unexpected value: " + propertyName);
         });
@@ -96,7 +104,12 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
     }
 
 
-    public void onExit(Boolean isWin) {
+    /**
+     * Cause the game to end and show the appropriate result.
+     * @param isWin whether the game was won or not. If {@code null}, just EXIT.
+     * @apiNote This method is called from {@link #propertyChange(PropertyChangeEvent) propertyChange}
+     */
+    private void onExitProperty(Boolean isWin) {
         // GAMELOOP //
         GameLoop gl = GameLoop.getInstance();
 
