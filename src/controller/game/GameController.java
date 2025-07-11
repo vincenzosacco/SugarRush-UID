@@ -119,7 +119,7 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
 
         // VIEW //
         GamePanel panel = View.getInstance().getGamePanel();
-        if (isWin != null) {   // JUST EXIT when isWin==null //
+        if (isWin != null) {
             // WIN
             if (isWin) {
                 ProfileManager.getLastProfile().sumCoins(Game.getInstance().getStarCount() * 10); // 10 coins per star
@@ -129,10 +129,9 @@ public class GameController extends KeyAdapter implements PropertyChangeListener
                 panel.loseLevel();
             }
         }
-
-
-        // At the end, i can reset the game
-//        game.clear(); // Clear the game model
+        else { // JUST EXIT when isWin==null //
+            View.getInstance().showHome();
+        }
     }
 
 }

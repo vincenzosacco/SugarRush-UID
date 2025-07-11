@@ -159,13 +159,10 @@ public class Game extends GameBoard {
         togglePause();
 
         if (isWin!= null && isWin) {
-            GameAudioController.getInstance().playSfx("win");
             // CHECK ADD STAR //
-            if (getElapsedTime()< 60) {
+            if (getElapsedTime() < 60) {
                 addstar(); // if the elapsed time is less than 60 seconds, add a star
             }
-        } else {
-//            GameAudioController.getInstance().playSfx("lose");
         }
 
         pcs.firePropertyChange(new PropertyChangeEvent(this,

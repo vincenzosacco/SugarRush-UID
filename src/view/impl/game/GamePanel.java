@@ -219,7 +219,7 @@ public class GamePanel extends BasePanel {
         return losePanel;
     }
     //WIN LEVEL
-    public WinDialog winLevel(){
+    public void winLevel(){
         int currentLevel = Model.getInstance().getGame().getCurrLevel();
         winPanel.setCurrentLevel(currentLevel);
         winPanel.updateLabels(currentLevel);
@@ -231,11 +231,6 @@ public class GamePanel extends BasePanel {
         GameAudioController.getInstance().stopBackgroundMusic(); // Stop game music
         this.revalidate();
         this.repaint();
-        return winPanel;
-    }
-    //END GAME
-    public void endGame(){
-        GameAudioController.getInstance().stopBackgroundMusic();
     }
 
     //------------------------------------- CONTROLLER RELATED METHODS -------------------------------------------------------

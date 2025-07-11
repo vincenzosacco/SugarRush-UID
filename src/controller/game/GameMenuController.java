@@ -23,12 +23,8 @@ public class GameMenuController  {
 
 
     public void onExit(ActionEvent e) {
-////            View.getInstance().getGamePanel().getController().onExit(null);
-//            View.getInstance().getGamePanel().toggleMenu();
-//            View.getInstance().showHome();
-        // trigger EXIT event
+        // trigger EXIT event in Game Controller
         Game.getInstance().end(null);
-        View.getInstance().showHome();
     }
 
 
